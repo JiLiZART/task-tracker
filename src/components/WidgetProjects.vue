@@ -1,0 +1,44 @@
+<template>
+  <div class="card widget-projects">
+    <div class="card-header">
+      Projects
+    </div>
+
+    <div class="card-block">
+      <template v-for="(item, index) in items">
+        <router-link class="btn btn-link" :to="{ name: 'project', params: { id: item._id }}">
+          {{ item.title }}
+          <span class="badge badge-default badge-pill">
+                        <i class="fa fa-tasks"></i>
+                            {{ tasksCount(item) }}
+                    </span>
+          <span class="badge badge-default badge-pill">
+                        <i class="fa fa-file-text"></i>
+                            {{ docsCount(item) }}
+                    </span>
+        </router-link>
+      </template>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'widget-projects',
+    props: {
+      items: {
+        type: Array
+      }
+    },
+
+    methods: {
+      tasksCount: function (prj) {
+        return (prj.tasks && prj.tasks.length) || 0
+      },
+
+      docsCount: function (prj) {
+        return (prj.docs && prj.docs.length) || 0
+      }
+    }
+  }
+</script>
