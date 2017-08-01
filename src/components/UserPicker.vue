@@ -1,40 +1,32 @@
 <template>
-  <b-dropdown class="user-picker" variant="link">
-
-    <div class="user-picker__toggle" slot="button-content">
-      <template v-if="currentSelected">
-        <span class="avatar user-picker__avatar">
-            <img
-              class="avatar__image rounded-circle"
-              :src="currentSelected.avatar"
-              :alt="currentSelected.username">
-        </span><span class="user-picker__username">{{ currentSelected.username }}</span>
-      </template>
-      <template v-else>
-        <span class="user-picker__placeholder avatar avatar_placeholded">
-            <i class="fa fa-plus"></i>
-        </span><span class="user-picker__label">{{ label }}</span>
-      </template>
-    </div>
-
-    <template v-for="(item, index) in members">
-      <b-dropdown-item>
-      <span v-on:click="selectMember(item)" class="user-picker__member">
-          <span class="avatar">
-              <img
-                class="avatar__image rounded-circle"
-                :src="item.avatar"
-                :alt="item.username">
-          </span>
-
-        <span class="user-picker__username">{{ item.username }}</span>
-      </span>
-      </b-dropdown-item>
+  <multiselect
+    v-model="selectedItems"
+    @input="selectMember"
+    @tag="addTag"
+    :placeholder="label"
+    select-label=""
+    tag-placeholder=""
+    class="user-picker"
+    label="username"
+    track-by="username"
+    :options="members"
+    :multiple="true"
+    :max="multiple == true ? 300 : 1"
+    :taggable="true"
+    :clear-on-select="false">
+    <template slot="tag" scope="props">
+      <author class="user-picker__tag" :item="props.option" :small="true" :haveLink="false" :haveName="true"></author>
     </template>
-  </b-dropdown>
+    <template slot="option" scope="props">
+      <author class="user-picker__option" :item="props.option" :small="true" :haveLink="false"></author>
+    </template>
+  </multiselect>
 </template>
 
 <script>
+  import Multiselect from 'vue-multiselect';
+  import Author from '@/components/Author';
+
   export default {
     name: 'user-picker',
 
@@ -43,67 +35,53 @@
         type: String
       },
 
-      selected: {
-        type: Object
-      },
+      selectedMembers: {},
 
       members: {
         type: Array
-      }
+      },
+
+      multiple: {type: Boolean}
     },
+
+    components: {Multiselect, Author},
 
     data: function () {
       return {
-        currentSelected: this.selected
+        selectedItems: this.selectedMembers
       };
     },
 
     methods: {
-      selectMember: function (member) {
-        this.currentSelected = member;
+      selectMember(values) {
 
-        this.$emit('update:selected', this.currentSelected);
-        this.$emit('change', this.currentSelected);
+        console.log('select member', values);
+
+        this.$emit('update:selected', this.selectedItems);
+        this.$emit('change', values);
+      },
+
+      addTag(values) {
+        console.log('add tag', values);
       }
     }
   }
 </script>
 
 <style lang="scss">
+  @import "~vue-multiselect/dist/vue-multiselect.min.css";
 
   .user-picker {
     display: inline-block;
+    max-width: 190px;
 
-    > .dropdown-toggle {
-      padding: 0;
+    .multiselect__option--highlight {
+      color: #000;
+      background: #fff;
     }
 
-    &__toggle {
-      display: inline-block;
-    }
-
-    &__members {
-      display: flex;
-      flex-direction: column;
-    }
-
-    &__member {
-      padding: .5rem;
-      display: flex;
-      align-items: center;
-    }
-
-    &__label,
-    &__avatar,
-    &__username {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    &__label,
-    &__username {
-      margin-left: 10px;
+    .multiselect__option--selected {
+      background: #fafafa;
     }
   }
-
 </style>

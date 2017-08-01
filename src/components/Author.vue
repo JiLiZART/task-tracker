@@ -1,16 +1,17 @@
 <template>
-  <router-link class="author" :class="{'author_size_small': small}" :to="{ name: 'member', params: { id: item._id }}">
-    <span class="avatar" :class="{'avatar_size_small': small}">
-            <img
-              class="avatar__image rounded-circle"
-              :src="item.avatar"
-              :alt="item.username">
-    </span>
+  <router-link class="author" :class="{'author_size_small': small}" :to="authorLink" v-if="haveLink">
+    <avatar :item="item" :small="small"></avatar>
     <span class="author__name" v-if="haveName">{{ item.username }}</span>
   </router-link>
+  <div class="author" :class="{'author_size_small': small}" v-else>
+    <avatar :item="item" :small="small"></avatar>
+    <span class="author__name" v-if="haveName">{{ authorName }}</span>
+  </div>
 </template>
 
 <script>
+  import Avatar from '@/components/Avatar';
+
   export default {
     name: 'author',
     props: {
@@ -23,7 +24,31 @@
       },
       haveName: {
         type: Boolean,
-        default: true
+        'default': true
+      },
+      haveLink: {
+        type: Boolean,
+        'default': true
+      }
+    },
+
+    components: {Avatar},
+
+    computed: {
+      authorLink() {
+        return {name: 'member', params: {id: this.item._id}};
+      },
+
+      authorName() {
+        return this.firstName ? `${this.firstName} ${this.lastName}` : this.item.username;
+      },
+
+      firstName() {
+        return this.item.firstName || '';
+      },
+
+      lastName() {
+        return this.item.lastName || '';
       }
     }
   }

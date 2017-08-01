@@ -12,6 +12,7 @@
 <script>
   import Navbar from './components/Navbar';
   import avatarUrl from '@/utils/avatarUrl';
+  import {clearStorage} from '@/store/index';
 
   export default {
     name: 'app',
@@ -33,7 +34,8 @@
       },
 
       clear() {
-        this.$store.commit('clear');
+        clearStorage();
+        location.reload(); //@TODO find workaround
       }
     },
 
@@ -82,35 +84,4 @@
     border: none;
     background: transparent;
   }
-
-  .avatar {
-    display: inline-flex;
-    align-content: center;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-
-    &_placeholded {
-      border: 1px dashed #ccc;
-      border-radius: 50%;
-    }
-
-    &__image {
-      width: 40px;
-      height: 40px;
-    }
-
-    &_size_small {
-      width: 22px;
-      height: 22px;
-    }
-
-    &_size_small &__image {
-      width: 22px;
-      height: 22px;
-    }
-  }
-
 </style>

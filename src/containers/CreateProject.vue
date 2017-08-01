@@ -12,6 +12,7 @@
         <label for="projectName" class="sr-only">Create a Project</label>
         <input type="text"
                v-model="title"
+               v-focus="focused"
                id="projectName" class="create-project__input form-control form-control-lg"
                placeholder="Project Name" required autofocus>
         <button class="btn btn-lg btn-success btn-block" type="submit">Create</button>
@@ -22,12 +23,16 @@
 
 <script>
   import uuidv4 from 'uuid/v4';
+  import {mixin as focusMixin}  from 'vue-focus';
 
   export default {
     name: 'create-project',
+    mixins: [focusMixin],
+
     data() {
       return {
-        title: ''
+        title: '',
+        focused: true,
       }
     },
 

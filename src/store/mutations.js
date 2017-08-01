@@ -1,8 +1,8 @@
 import uuidv4 from 'uuid/v4';
 import avatarUrl from '@/utils/avatarUrl';
-import {merge} from 'lodash';
+import merge from 'lodash/merge';
+import uniqBy from 'lodash/uniqBy';
 import Vue from 'vue'
-import {clearStorage} from './index';
 
 const mates = [
   'pedro1@runby.com',
@@ -22,20 +22,27 @@ export default {
 
     Vue.set(state.teammates, id, {_id: id, username: email, avatar: avatarUrl(email)});
 
-    mates.forEach((email) => {
-      const id = uuidv4();
-
-      Vue.set(state.teammates, id, {_id: id, username: email, avatar: avatarUrl(email)});
-    })
+    // mates.forEach((email) => {
+    //   const id = uuidv4();
+    //
+    //   Vue.set(state.teammates, id, {_id: id, username: email, avatar: avatarUrl(email)});
+    // })
   },
 
   logout(state) {
     Vue.set(state, 'user', {});
   },
 
-  clear(state) {
-    clearStorage();
-    location.reload(); //@TODO find workaround
+  updateUser(state, params) {
+    const current = state.user;
+
+    Vue.set(state, 'user', merge({}, current, params));
+  },
+
+  inviteTeamMate(state, email) {
+    const id = uuidv4();
+
+    Vue.set(state.teammates, id, {_id: id, username: email, avatar: avatarUrl(email)});
   },
 
   createWorkspace(state, params) {
@@ -67,6 +74,7 @@ export default {
 
   createTask(state, {task, project}) {
     task.comments = task.comments ? task.comments : [];
+    task.followers = task.followers ? task.followers : [];
     task.done = task.done ? task.done : false;
 
     state.projects[project._id].tasks.push(task._id);
@@ -80,8 +88,25 @@ export default {
     Vue.set(state.tasks, task._id, merge({}, current, task));
   },
 
+  removeTask(state, {task, project}) {
+    const tasks = state.projects[project._id].tasks;
+    const taskIndex = tasks.indexOf(task._id);
+
+    Vue.delete(state.tasks, task._id);
+
+    tasks.splice(taskIndex, 1);
+  },
+
+  addFollowersToTask(state, {task, users}) {
+    const tasks = state.tasks[task._id];
+    const followers = uniqBy(tasks.followers.concat(users), '_id');
+
+    Vue.set(tasks, 'followers', followers);
+  },
+
   createDoc(state, {doc, project}) {
     doc.comments = doc.comments ? doc.comments : [];
+    doc.followers = doc.followers ? doc.followers : [];
 
     state.projects[project._id].docs.push(doc._id);
 
@@ -92,6 +117,22 @@ export default {
     const current = state.docs[doc._id];
 
     Vue.set(state.docs, doc._id, merge({}, current, doc));
+  },
+
+  removeDoc(state, {doc, project}) {
+    const docs = state.projects[project._id].docs;
+    const docIndex = docs.indexOf(doc._id);
+
+    Vue.delete(state.docs, doc._id);
+
+    docs.splice(docIndex, 1);
+  },
+
+  addFollowersToDoc(state, {doc, users}) {
+    const docs = state.docs[doc._id];
+    const followers = users.lnegth ? uniqBy(docs.followers.concat(users), '_id') : [];
+
+    Vue.set(docs, 'followers', followers);
   },
 
   createComment(state, {comment, entity, type}) {

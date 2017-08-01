@@ -12,6 +12,7 @@
         <label for="workspaceName" class="sr-only">Create Workspace</label>
         <input type="text"
                v-model="title"
+               v-focus="focused"
                id="workspaceName" class="create-workspace__input form-control form-control-lg"
                placeholder="Workspace Name" required autofocus>
         <button class="btn btn-lg btn-success btn-block" type="submit">Create</button>
@@ -21,11 +22,14 @@
 </template>
 
 <script>
+  import {mixin as focusMixin}  from 'vue-focus';
+
   export default {
     name: 'create-workspace',
+    mixins: [focusMixin],
 
     data() {
-      return {title: ''}
+      return {title: '', focused: true}
     },
 
     methods: {

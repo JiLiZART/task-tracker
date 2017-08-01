@@ -6,6 +6,8 @@ import CreateWorkspace from '@/containers/CreateWorkspace'
 import Dashboard from '@/containers/Dashboard'
 import DocumentView from '@/containers/DocumentView'
 import InviteTeammates from '@/containers/InviteTeammates'
+import SettingsView from '@/containers/SettingsView'
+import SearchView from '@/containers/SearchView'
 import MemberView from '@/containers/MemberView'
 import ProjectView from '@/containers/ProjectView'
 import TaskView from '@/containers/TaskView'
@@ -54,6 +56,14 @@ export function createRouter() {
       {
         path: '/team-load',
         component: TeamLoadView
+      },
+      {
+        path: '/settings',
+        component: SettingsView
+      },
+      {
+        path: '/search/:query',
+        component: SearchView
       },
       {
         path: '/',

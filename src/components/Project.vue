@@ -12,7 +12,7 @@
           <label for="description" class="sr-only">Project Name</label>
           <input class="form-control" id="name" v-model="title"/>
 
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
         </form>
       </h4>
       <div class="card-text project__text">
@@ -33,7 +33,7 @@
             ></textarea>
           </div>
 
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" :disabled="!text">Save</button>
         </form>
       </div>
     </div>
@@ -46,6 +46,7 @@
             :index="index"
             :id="item._id"
             :task.sync="item"
+            :project="project"
             :teammates="teammates"
             v-on:change="onTaskChange"
           ></task>
@@ -76,6 +77,7 @@
             :index="index"
             :id="item._id"
             :doc.sync="item"
+            :project="project"
             :teammates="teammates"
             v-on:change="onDocChange"
           ></document>
@@ -116,11 +118,11 @@
       docs: {type: Array},
       canCreate: {
         type: Boolean,
-        default: true
+        'default': true
       },
       canEdit: {
         type: Boolean,
-        default: true
+        'default': true
       }
     },
 

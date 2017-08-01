@@ -7,15 +7,16 @@
             label="Add Performer"
             class="task__action"
             :members="teammates"
-            :selected="task.performer"
+            :selectedMembers="task.performer"
             v-on:change="onPerformerChange"
           />
           <user-picker
-            label="Add Follower"
-            class="task__action "
+            label="Add Followers"
+            class="task__action"
+            :multiple="true"
             :members="teammates"
-            :selected="task.follower"
-            v-on:change="onFollowerChange"
+            :selectedMembers="task.followers"
+            v-on:change="onFollowersChange"
           />
 
           <div class="task__action task__action_align_right task__action_last">
@@ -63,7 +64,10 @@
               ></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
+              <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
+            </div>
           </form>
         </div>
 
@@ -123,12 +127,15 @@
       task: {
         type: Object
       },
+      project: {
+        type: Object
+      },
       teammates: {
         type: Array
       },
       canExpand: {
         type: Boolean,
-        default: true
+        'default': true
       }
     },
     components: {Comments, UserPicker, Author},
@@ -191,19 +198,32 @@
         this.inEdit = true;
       },
 
+      onCancelClick() {
+        this.$store.commit('removeTask', {task: this.task, project: this.project});
+      },
+
       onPerformerChange(user) {
+        console.log('performer change', user);
+
         this.updateTask({performer: user});
         this.logAction('changed performer on');
       },
 
-      onFollowerChange(user) {
-        this.updateTask({follower: user});
-        this.logAction('changed follower on');
+      onFollowersChange(users) {
+        console.log('follower change', users);
+
+//        this.updateTask({follower: user});
+//        this.logAction('changed follower on');
+        this.$store.commit('addFollowersToTask', {task: this.task, users})
       },
 
       onDeadlineChange() {
         this.updateTask({deadline: this.deadline});
         this.logAction('changed deadline on');
+      },
+
+      onCancelClick() {
+        this.$store.commit('removeTask', {task: this.task, project: this.project});
       },
 
       toggleDone() {
@@ -215,7 +235,7 @@
     },
 
     filters: {
-      fromNow: fromNow
+      fromNow
     },
 
     computed: {
@@ -253,6 +273,11 @@
       border-left: 1px solid rgba(0, 0, 0, 0.125);
       border-bottom: 1px solid rgba(0, 0, 0, 0.125);
       border-radius: 0 0 0 0.25rem;
+    }
+
+    &__editable-title,
+    &__editable-text {
+      min-height: 28px;
     }
 
     &_done &__expander {

@@ -2,13 +2,22 @@
   <div class="doc card" :class="{ 'doc_expanded': isExpanded, 'doc_edit': inEdit }">
     <template v-if="isExpanded">
       <div class="card-block">
+        <div class="doc__actions">
+          <user-picker
+            label="Add Followers"
+            class="doc__action"
+            :multiple="true"
+            :members="teammates"
+            :selectedMembers="doc.followers"
+            v-on:change="onFollowersChange"
+          ></user-picker>
+        </div>
         <div class="doc__content">
           <h5 class="card-title" v-show="!inEdit" v-on:click="onTitleClick">{{ title }}</h5>
           <p class="card-text doc__text" v-show="!inEdit" v-on:click="onTextClick">{{ text }}</p>
 
           <form
             class="doc__edit-form"
-            action=""
             v-on:submit.prevent="onSubmit"
             v-show="inEdit"
           >
@@ -31,17 +40,19 @@
               ></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
+              <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
+            </div>
           </form>
         </div>
       </div>
 
       <comments
-        :items.sync="comments"
         type="docs"
+        :items.sync="comments"
         :entity="doc"
         v-if="!inEdit"
-        v-on:change="onCommentsChange"
       ></comments>
     </template>
     <template v-else>
@@ -69,22 +80,21 @@
 <script>
   import fromNow from '@/utils/fromNow';
   import Comments from '@/components/Comments';
+  import UserPicker from '@/components/UserPicker';
+  import Author from "@/components/Author";
 
   export default {
     name: 'document',
     props: {
-      doc: {
-        type: Object
-      },
-      teammates: {
-        type: Array
-      }
+      doc: {type: Object},
+      project: {type: Object},
+      teammates: {type: Array}
     },
-    components: {Comments},
+    components: {Author, Comments, UserPicker},
 
     data: function () {
-      var doc = this.doc || {};
-      var inEdit = !doc.title;
+      const doc = this.doc || {};
+      const inEdit = !doc.title;
 
       return {
         title: doc.title,
@@ -92,58 +102,50 @@
 
         inEdit: inEdit,
         isExpanded: inEdit === true,
-        isNew: !doc.title
+        isNew: !doc.title,
+
+        followers: []
       }
     },
 
     methods: {
-      onSubmit: function () {
-        this.inEdit = false;
-
-        this.updateDoc({title: this.title, text: this.text});
-
-//        this.$emit('update:task', this.doc);
-//        this.$emit('change', this.doc);
-
-//        logAction(this.isNew ? 'created document' : 'updated document', {
-//          title: this.doc.title,
-//          url: 'doc.html?id=' + this.doc.id
-//        });
-      },
-
       updateDoc(params) {
         params._id = this.doc._id;
 
         this.$store.commit('updateDoc', {doc: params});
       },
 
-      toggleExpanded: function () {
+      toggleExpanded() {
         this.isExpanded = !this.isExpanded;
       },
 
-      onTextClick: function () {
+      onSubmit() {
+        this.inEdit = false;
+
+        this.updateDoc({title: this.title, text: this.text});
+      },
+
+      onTextClick() {
         this.inEdit = true;
       },
 
-      onTitleClick: function () {
+      onTitleClick() {
         this.inEdit = true;
       },
 
-      onCommentsChange: function () {
-        this.doc.comments = this.comments;
+      onFollowersChange(users) {
+        //this.updateDoc({follower: user});
+        console.log('doc follower change', users);
+        this.$store.commit('addFollowersToDoc', {doc: this.doc, users})
+      },
 
-        this.$emit('update:task', this.doc);
-        this.$emit('change', this.doc);
-
-//        logAction('commented on document', {
-//          title: this.doc.title,
-//          url: 'doc.html?id=' + this.doc.id
-//        });
+      onCancelClick() {
+        this.$store.commit('removeDoc', {doc: this.doc, project: this.project});
       }
     },
 
     filters: {
-      fromNow: fromNow
+      fromNow
     },
 
     computed: {
@@ -181,6 +183,22 @@
 
     &__form-label {
       margin-right: .5rem;
+    }
+
+    &__actions {
+      margin-bottom: 1rem;
+      display: flex;
+    }
+
+    &__action {
+      margin-right: 1rem;
+      display: inline-block;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    &__action_align_right {
+      margin-left: auto;
     }
 
     &__teaser {
