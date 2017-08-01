@@ -6,14 +6,18 @@
     :placeholder="label"
     select-label=""
     tag-placeholder=""
+    deselect-label=""
     class="user-picker"
     label="username"
     track-by="username"
     :options="members"
     :multiple="true"
-    :max="multiple == true ? 300 : 1"
+    :max="max"
     :taggable="true"
     :clear-on-select="false">
+    <template slot="maxElements">
+      <span v-if="max === 1">Only one member can be selected</span>
+    </template>
     <template slot="tag" scope="props">
       <author class="user-picker__tag" :item="props.option" :small="true" :haveLink="false" :haveName="true"></author>
     </template>
@@ -64,6 +68,12 @@
       addTag(values) {
         console.log('add tag', values);
       }
+    },
+
+    computed: {
+      max() {
+        return this.multiple === true ? 300 : 1;
+      }
     }
   }
 </script>
@@ -73,7 +83,26 @@
 
   .user-picker {
     display: inline-block;
-    max-width: 190px;
+    max-width: 260px;
+    min-height: 38px;
+
+    .multiselect__tags {
+      min-height: 38px;
+      padding: 7px 40px 0 7px;
+    }
+
+    .multiselect__current {
+      min-height: 38px;
+    }
+
+    .multiselect__option {
+      max-width: 260px;
+      min-height: 38px;
+    }
+
+    .multiselect__option:after {
+      line-height: 38px;
+    }
 
     .multiselect__option--highlight {
       color: #000;

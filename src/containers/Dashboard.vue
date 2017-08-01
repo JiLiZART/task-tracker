@@ -4,16 +4,17 @@
       <widget-tasks
         class="dashboard__widget"
         :tasks="myTasks"
+        :teammates="teammates"
       ></widget-tasks>
-
-      <widget-updates
-        class="dashboard__widget"
-        :items="log"></widget-updates>
 
       <widget-projects
         class="dashboard__widget"
         :items="projects"
       ></widget-projects>
+
+      <widget-updates
+        class="dashboard__widget"
+        :items="log"></widget-updates>
 
       <widget-team
         class="dashboard__widget"
@@ -35,23 +36,21 @@
 
     computed: {
       myTasks() {
-        const tasks = this.$store.state.tasks;
-        const user = this.$store.state.user;
-        const myTasks = [];
+        const findPerformer = (users, id) => users.find((u) => u._id === id);
 
-        Object.keys(tasks).forEach((id) => {
-          const task = tasks[id];
+        return this.tasks.filter((task) => findPerformer(task.performers, this.user._id));
+      },
 
-          if (task.performer && task.performer._id === user._id) {
-            myTasks.push(task);
-          }
-        })
-
-        return myTasks;
+      user() {
+        return this.$store.state.user;
       },
 
       projects() {
         return this.$store.getters.projects;
+      },
+
+      tasks() {
+        return this.$store.getters.tasks;
       },
 
       teammates() {

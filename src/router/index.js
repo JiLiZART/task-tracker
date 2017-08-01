@@ -28,6 +28,7 @@ export function createRouter() {
       },
       {
         path: '/dashboard',
+        name: 'dashboard',
         component: Dashboard
       },
       {
@@ -63,6 +64,7 @@ export function createRouter() {
       },
       {
         path: '/search/:query',
+        name: 'search',
         component: SearchView
       },
       {

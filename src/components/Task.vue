@@ -1,5 +1,5 @@
 <template>
-  <div class="task card" :class="{ 'task_expanded': isExpanded, 'task_edit': inEdit, 'task_done': task.done, 'task_no-expand': !canExpand }">
+  <div class="task card" :class="classObject">
     <template v-if="isExpanded">
       <div class="card-block">
         <div class="task__actions">
@@ -7,7 +7,7 @@
             label="Add Performer"
             class="task__action"
             :members="teammates"
-            :selectedMembers="task.performer"
+            :selectedMembers="task.performers"
             v-on:change="onPerformerChange"
           />
           <user-picker
@@ -22,15 +22,7 @@
           <div class="task__action task__action_align_right task__action_last">
             <form action="" class="form-inline">
               <div class="form-group">
-                <label for="deadline" class="task__form-label">Deadline</label>
-
-                <input type="date"
-                       class="form-control"
-                       v-model="deadline"
-                       v-on:blur="onDeadlineChange"
-                       id="deadline"
-                       placeholder="Deadline"
-                />
+                <date-picker :value="deadline" placeholder="Deadline" @change="onDeadlineChange"></date-picker>
               </div>
             </form>
           </div>
@@ -38,7 +30,7 @@
 
         <div class="task__content">
           <h4 class="card-title" v-show="!inEdit" v-on:click="onTitleClick">{{ task.title }}</h4>
-          <p class="card-text task__text" v-show="!inEdit" v-on:click="onTextClick">{{ task.text }}</p>
+          <p class="card-text task__text" v-show="!inEdit" v-on:click="onTextClick" v-html="task.text"></p>
 
           <form
             class="task__edit-form"
@@ -95,10 +87,12 @@
     <template v-else>
       <div class="task__teaser">
         <div class="task__teaser-performer">
-          <author :item="task.performer" :small="true" :haveName="false"></author>
+          <template v-for="(item, index) in task.performers">
+            <author :item="item" :small="true" :haveName="false"></author>
+          </template>
         </div>
         <h5 class="card-title task__teaser-title">{{ task.title }}</h5>
-        <div class="task__teaser-deadline">{{ task.deadline | fromNow }}</div>
+        <div class="task__teaser-deadline" v-if="task.deadline">{{ task.deadline | fromNow }}</div>
         <div class="task__teaser-comments" v-if="commentsCount">
           <i class="fa fa-comment"></i>
           <span class="task__teaser-comments-label">{{ commentsCount }}</span>
@@ -119,6 +113,7 @@
   import fromNow from '@/utils/fromNow';
   import Comments from '@/components/Comments';
   import UserPicker from '@/components/UserPicker';
+  import DatePicker from '@/components/DatePicker';
   import Author from '@/components/Author';
 
   export default {
@@ -138,7 +133,7 @@
         'default': true
       }
     },
-    components: {Comments, UserPicker, Author},
+    components: {Comments, UserPicker, DatePicker, Author},
 
     data() {
       const task = this.task;
@@ -148,13 +143,13 @@
         title: task.title,
         text: task.text,
         deadline: task.deadline,
-        performer: task.performer,
-        follower: task.follower,
+        performers: task.performers,
+        followers: task.followers,
         done: task.done,
 
         inEdit: isTitleEmpty,
         isExpanded: (isTitleEmpty === true) || this.canExpand === false,
-        isNew: isTitleEmpty
+        isNew: task.isNew
       }
     },
 
@@ -162,7 +157,7 @@
       onSubmit() {
         this.inEdit = false;
 
-        this.updateTask({title: this.title, text: this.text});
+        this.updateTask({title: this.title, text: this.text, isNew: false});
         this.logAction(this.isNew ? 'created' : 'updated');
       },
 
@@ -173,15 +168,15 @@
       },
 
       logAction(action) {
+        const {_id, title} = this.task;
+        const author = this.user;
+
         if (this.task.title) {
           this.$store.commit('logAction', {
-            author: this.user,
+            author,
             action,
-            entity: {
-              _id: this.task._id,
-              title: this.task.title
-            },
-            route: {name: 'task', params: {id: this.task._id}}
+            entity: {_id, title},
+            route: {name: 'task', params: {id: _id}}
           });
         }
       },
@@ -199,13 +194,17 @@
       },
 
       onCancelClick() {
-        this.$store.commit('removeTask', {task: this.task, project: this.project});
+        if (this.isNew) {
+          this.$store.commit('removeTask', {task: this.task, project: this.project});
+        } else {
+          this.inEdit = false;
+        }
       },
 
-      onPerformerChange(user) {
-        console.log('performer change', user);
+      onPerformerChange(performers) {
+        console.log('performer change', performers);
 
-        this.updateTask({performer: user});
+        this.updateTask({performers});
         this.logAction('changed performer on');
       },
 
@@ -217,13 +216,9 @@
         this.$store.commit('addFollowersToTask', {task: this.task, users})
       },
 
-      onDeadlineChange() {
-        this.updateTask({deadline: this.deadline});
+      onDeadlineChange(deadline) {
+        this.updateTask({deadline});
         this.logAction('changed deadline on');
-      },
-
-      onCancelClick() {
-        this.$store.commit('removeTask', {task: this.task, project: this.project});
       },
 
       toggleDone() {
@@ -239,6 +234,15 @@
     },
 
     computed: {
+      classObject() {
+        return {
+          'task_expanded': this.isExpanded,
+          'task_edit': this.inEdit,
+          'task_done': this.task.done,
+          'task_no-expand': !this.canExpand
+        };
+      },
+
       commentsCount() {
         return this.comments.length ? this.comments.length : false
       },

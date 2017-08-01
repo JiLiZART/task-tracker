@@ -84,4 +84,28 @@
     border: none;
     background: transparent;
   }
+
+  .form-control_transparent {
+    border-color: transparent;
+
+    &:hover {
+      border-color: rgba(0, 0, 0, 0.05);
+    }
+
+    &:focus {
+      border-color: rgba(0, 0, 0, 0.15);
+    }
+
+    &:disabled,
+    &[readonly] {
+      background: transparent;
+      border-color: transparent;
+
+      &:focus,
+      &:hover {
+        background: transparent;
+        border-color: transparent;
+      }
+    }
+  }
 </style>

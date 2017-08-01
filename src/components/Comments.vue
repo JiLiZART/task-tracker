@@ -6,7 +6,7 @@
           <div class="mb-1">
             <author :item="item.user"></author>
           </div>
-          <small>{{ item.created | fromNow }}</small>
+          <small><timeago :since="item.created"></timeago></small>
         </div>
         <p class="mb-1">{{ item.text }}</p>
       </div>

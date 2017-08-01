@@ -75,7 +75,9 @@ export default {
   createTask(state, {task, project}) {
     task.comments = task.comments ? task.comments : [];
     task.followers = task.followers ? task.followers : [];
+    task.performers = task.performers ? task.performers : [];
     task.done = task.done ? task.done : false;
+    task.isNew = true;
 
     state.projects[project._id].tasks.push(task._id);
 
@@ -107,6 +109,7 @@ export default {
   createDoc(state, {doc, project}) {
     doc.comments = doc.comments ? doc.comments : [];
     doc.followers = doc.followers ? doc.followers : [];
+    doc.isNew = true;
 
     state.projects[project._id].docs.push(doc._id);
 

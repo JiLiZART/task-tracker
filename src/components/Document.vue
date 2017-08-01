@@ -14,7 +14,7 @@
         </div>
         <div class="doc__content">
           <h5 class="card-title" v-show="!inEdit" v-on:click="onTitleClick">{{ title }}</h5>
-          <p class="card-text doc__text" v-show="!inEdit" v-on:click="onTextClick">{{ text }}</p>
+          <p class="card-text doc__text" v-show="!inEdit" v-on:click="onTextClick" v-html="text"></p>
 
           <form
             class="doc__edit-form"
@@ -102,7 +102,7 @@
 
         inEdit: inEdit,
         isExpanded: inEdit === true,
-        isNew: !doc.title,
+        isNew: doc.isNew,
 
         followers: []
       }
@@ -122,7 +122,7 @@
       onSubmit() {
         this.inEdit = false;
 
-        this.updateDoc({title: this.title, text: this.text});
+        this.updateDoc({title: this.title, text: this.text, isNew: false});
       },
 
       onTextClick() {
@@ -140,7 +140,11 @@
       },
 
       onCancelClick() {
-        this.$store.commit('removeDoc', {doc: this.doc, project: this.project});
+        if (this.isNew) {
+          this.$store.commit('removeDoc', {doc: this.doc, project: this.project});
+        } else {
+          this.inEdit = false;
+        }
       }
     },
 

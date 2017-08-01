@@ -10,7 +10,8 @@
             :key="item._id"
             :index="index"
             :id="item._id"
-            :task="item"
+            :task.sync="item"
+            :project="project"
             :teammates="teammates"
           ></task>
         </div>
@@ -35,6 +36,9 @@
     props: {
       tasks: {
         type: Array
+      },
+      project: {
+        type: Object
       },
       teammates: {
         type: Array

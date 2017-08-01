@@ -66,6 +66,10 @@
       white-space: nowrap;
       padding: 0 5px;
     }
+
+    &_size_small &__name {
+      line-height: 22px;
+    }
   }
 
 </style>

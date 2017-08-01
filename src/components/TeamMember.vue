@@ -50,7 +50,9 @@
         const id = this.member._id;
 
         return tasks.map((id) => this.tasks[id]).filter(function (task) {
-          return task.performer && task.performer._id === id;
+          return task.performers && task.performers.find((user) => {
+              return user._id === id;
+            });
         });
       },
 

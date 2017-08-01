@@ -2,9 +2,25 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
-import {createApp} from './app';
+import VueTimeago from 'vue-timeago';
+import {DatePicker} from 'element-ui'
 
+import {createApp} from './app';
+import lang from 'element-ui/lib/locale/lang/en'
+import locale from 'element-ui/lib/locale'
+
+// configure language
+locale.use(lang);
+Vue.component(DatePicker.name, DatePicker);
 Vue.use(BootstrapVue);
+Vue.use(VueTimeago, {
+  locale: 'en-US',
+  locales: {
+    // you will need json-loader in webpack 1
+    'en-US': require('vue-timeago/locales/en-US.json')
+  }
+});
+
 Vue.config.productionTip = false;
 
 /* eslint-disable no-new */
@@ -15,7 +31,7 @@ Vue.config.productionTip = false;
 //   components: { App }
 // });
 
-const { app, router, store } = createApp();
+const {app, router, store} = createApp();
 
 // prime the store with server-initialized state.
 // the state is determined during SSR and inlined in the page markup.

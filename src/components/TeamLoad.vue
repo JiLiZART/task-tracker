@@ -12,6 +12,7 @@
           :teammates="teammates"
           :canCreate="false"
           :canEdit="false"
+          :filterCompleted="true"
           :index="index"
           :key="item._id">
         </project>

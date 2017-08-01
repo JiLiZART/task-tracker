@@ -20,7 +20,11 @@
 
       <div class="collapse navbar-collapse" id="navbarColor01">
         <form class="navbar__form form-inline">
-          <input class="form-control mr-sm-2 navbar__input" type="text" placeholder="Search">
+          <input class="form-control mr-sm-2 navbar__input"
+          type="text"
+          :value="searchValue"
+          @input="onSearch"
+          placeholder="Search">
         </form>
       </div>
 
@@ -48,11 +52,31 @@
     components: {Author},
 
     methods: {
+      onSearch(e) {
+        const query = e.target.value;
+
+        if (query.length > 0) {
+          this.$router.replace({name: 'search', params: {query}})
+        } else {
+          this.$router.replace({name: 'dashboard'});
+        }
+      },
+
       logout() {
         this.$emit('logout')
       },
       clear() {
         this.$emit('clear')
+      }
+    },
+
+    computed: {
+      searchValue() {
+        if (this.$route.name === 'search') {
+          return this.$route.params.query;
+        }
+
+        return '';
       }
     }
   }

@@ -1,55 +1,60 @@
 <template>
   <div class="card project" :class="{'project_editable': canEdit}">
     <div class="card-block">
-      <h4 class="card-title project__name">
-        <span v-show="!inEditName" v-on:click="onNameClick">{{ title }}</span>
-        <form
-          class="project__name-form form-inline"
-          v-show="inEditName"
-          v-on:submit.prevent="onNameSubmit"
-        >
-
-          <label for="description" class="sr-only">Project Name</label>
-          <input class="form-control" id="name" v-model="title"/>
-
-          <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
-        </form>
-      </h4>
-      <div class="card-text project__text">
-        <span v-show="!inEditText" v-on:click="onTextClick">{{ text }}</span>
-
-        <form
-          class="project__text-form"
-          v-on:submit.prevent="onTextSubmit"
-          v-show="inEditText"
-        >
-          <div class="form-group">
-            <label for="description" class="sr-only">Description</label>
-            <textarea
-              class="form-control"
-              id="description"
-              rows="3"
-              v-model="text"
-            ></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary" :disabled="!text">Save</button>
-        </form>
-      </div>
+      <form
+        class="project__form"
+        v-on:submit.prevent="onSubmit"
+      >
+        <h4 class="card-title project__name">
+          <input class="form-control form-control_transparent project__name-input" v-model="title" :readonly="!canEdit" />
+        </h4>
+        <div class="card-text project__text">
+          <textarea class="form-control form-control_transparent project__text-input" v-model="text" :readonly="!canEdit"></textarea>
+        </div>
+      </form>
     </div>
 
     <div class="project__tasks card-block">
       <template v-if="tasks && tasks.length">
-        <template v-for="(item, index) in tasks">
-          <task
-            :key="item._id"
-            :index="index"
-            :id="item._id"
-            :task.sync="item"
-            :project="project"
-            :teammates="teammates"
-            v-on:change="onTaskChange"
-          ></task>
+        <templaate v-if="filterCompleted">
+          <template v-for="(item, index) in filterUndoneTasks(tasks)">
+            <task
+              :key="item._id"
+              :index="index"
+              :id="item._id"
+              :task.sync="item"
+              :project="project"
+              :teammates="teammates"
+              v-on:change="onTaskChange"
+            ></task>
+          </template>
+
+          <h5>Recently done tasks</h5>
+
+          <template v-for="(item, index) in filterDoneTasks(tasks)">
+            <task
+              :key="item._id"
+              :index="index"
+              :id="item._id"
+              :task.sync="item"
+              :project="project"
+              :teammates="teammates"
+              v-on:change="onTaskChange"
+            ></task>
+          </template>
+        </templaate>
+        <template v-else>
+          <template v-for="(item, index) in tasks">
+            <task
+              :key="item._id"
+              :index="index"
+              :id="item._id"
+              :task.sync="item"
+              :project="project"
+              :teammates="teammates"
+              v-on:change="onTaskChange"
+            ></task>
+          </template>
         </template>
       </template>
       <template v-else>
@@ -105,7 +110,6 @@
 <script>
   import Document from '@/components/Document';
   import Task from '@/components/Task';
-  import fromNow from '@/utils/fromNow';
   import uuidv4 from 'uuid/v4';
 
   export default {
@@ -123,42 +127,28 @@
       canEdit: {
         type: Boolean,
         'default': true
+      },
+      filterCompleted: {
+        type: Boolean,
+        'default': false
       }
     },
 
     components: {Document, Task},
 
     data: function () {
-      const project = this.project;
+      //const project = this.project;
 
       return {
-        inEditName: !project.title,
-        inEditText: !project.text,
-        title: project.title,
-        text: project.text
+        //inEditName: !project.title,
+        //inEditText: !project.text,
+        //title: project.title,
+        //text: project.text
       }
     },
 
     methods: {
-      onTextSubmit: function () {
-        this.inEditText = false;
-
-        this.updateProject({text: this.text});
-      },
-
-      onTextClick: function () {
-        this.canEdit && (this.inEditText = true);
-      },
-
-      onNameSubmit: function () {
-        this.inEditName = false;
-
-        this.updateProject({title: this.title});
-
-      },
-
-      onNameClick: function () {
-        this.canEdit && (this.inEditName = true);
+      onSubmit() {
       },
 
       updateProject(params) {
@@ -185,6 +175,14 @@
         });
       },
 
+      filterUndoneTasks(tasks) {
+        return tasks.filter(t => !t.done);
+      },
+
+      filterDoneTasks(tasks) {
+        return tasks.filter(t => t.done);
+      },
+
       onTaskChange: function (task) {
         this.$emit('update:project', this.project);
         this.$emit('change:task', task);
@@ -197,6 +195,23 @@
     },
 
     computed: {
+      title: {
+        get() {
+          return this.project.title
+        },
+        set(title) {
+          this.updateProject({title});
+        }
+      },
+      text: {
+        get() {
+          return this.project.text
+        },
+        set(text) {
+          this.updateProject({text});
+        }
+      },
+
       teammates() {
         return this.$store.getters.teammates;
       }
@@ -207,6 +222,12 @@
 <style lang="scss">
   .project {
     margin-bottom: 30px;
+
+    &__name-input {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1.1;
+    }
 
     &_editable &__name,
     &_editable &__text {
