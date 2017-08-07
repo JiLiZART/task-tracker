@@ -6,17 +6,27 @@
         v-on:submit.prevent="onSubmit"
       >
         <h4 class="card-title project__name">
-          <input class="form-control form-control_transparent project__name-input" v-model="title" :readonly="!canEdit" />
+          <input class="form-control form-control_transparent project__name-input"
+                 v-model="title"
+                 :placeholder="titlePlaceholder"
+                 :readonly="!canEdit"
+                 required
+          />
         </h4>
         <div class="card-text project__text">
-          <textarea class="form-control form-control_transparent project__text-input" v-model="text" :readonly="!canEdit"></textarea>
+          <editor class="project__text-editor"
+                  :text="text"
+                  :placeholder="textPlaceholder"
+                  @change="onEditorChange"
+                  :canEdit="canEdit">
+          </editor>
         </div>
       </form>
     </div>
 
     <div class="project__tasks card-block">
       <template v-if="tasks && tasks.length">
-        <templaate v-if="filterCompleted">
+        <template v-if="filterCompleted">
           <template v-for="(item, index) in filterUndoneTasks(tasks)">
             <task
               :key="item._id"
@@ -29,7 +39,7 @@
             ></task>
           </template>
 
-          <h5>Recently done tasks</h5>
+          <h5 class="card-title">Recently done tasks</h5>
 
           <template v-for="(item, index) in filterDoneTasks(tasks)">
             <task
@@ -42,7 +52,7 @@
               v-on:change="onTaskChange"
             ></task>
           </template>
-        </templaate>
+        </template>
         <template v-else>
           <template v-for="(item, index) in tasks">
             <task
@@ -110,6 +120,8 @@
 <script>
   import Document from '@/components/Document';
   import Task from '@/components/Task';
+  import Editor from '@/components/Editor';
+
   import uuidv4 from 'uuid/v4';
 
   export default {
@@ -134,21 +146,18 @@
       }
     },
 
-    components: {Document, Task},
+    components: {Document, Task, Editor},
 
     data: function () {
-      //const project = this.project;
-
-      return {
-        //inEditName: !project.title,
-        //inEditText: !project.text,
-        //title: project.title,
-        //text: project.text
-      }
+      return {};
     },
 
     methods: {
       onSubmit() {
+      },
+
+      onEditorChange(text) {
+        this.updateProject({text});
       },
 
       updateProject(params) {
@@ -158,19 +167,13 @@
       },
 
       createTask() {
-        const id = uuidv4();
-
         this.$store.commit('createTask', {
-          task: {_id: id, title: ''},
           project: this.project
         });
       },
 
       createDoc() {
-        const id = uuidv4();
-
         this.$store.commit('createDoc', {
-          doc: {_id: id, title: ''},
           project: this.project
         });
       },
@@ -203,6 +206,11 @@
           this.updateProject({title});
         }
       },
+
+      titlePlaceholder() {
+        return this.canEdit ? 'Click to edit title' : '';
+      },
+
       text: {
         get() {
           return this.project.text
@@ -210,6 +218,10 @@
         set(text) {
           this.updateProject({text});
         }
+      },
+
+      textPlaceholder() {
+        return this.canEdit ? 'Click to edit description' : '';
       },
 
       teammates() {
@@ -227,11 +239,6 @@
       font-size: 1.5rem;
       font-weight: 500;
       line-height: 1.1;
-    }
-
-    &_editable &__name,
-    &_editable &__text {
-      cursor: pointer;
     }
 
     &__tasks .task {

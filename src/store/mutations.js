@@ -73,6 +73,8 @@ export default {
   },
 
   createTask(state, {task, project}) {
+    task._id = uuidv4();
+    task.title = '';
     task.comments = task.comments ? task.comments : [];
     task.followers = task.followers ? task.followers : [];
     task.performers = task.performers ? task.performers : [];
@@ -107,6 +109,8 @@ export default {
   },
 
   createDoc(state, {doc, project}) {
+    doc._id = uuidv4();
+    doc.title = '';
     doc.comments = doc.comments ? doc.comments : [];
     doc.followers = doc.followers ? doc.followers : [];
     doc.isNew = true;
@@ -139,9 +143,14 @@ export default {
   },
 
   createComment(state, {comment, entity, type}) {
-    state[type][entity._id].comments.push(comment._id);
+    const id = uuidv4();
 
-    Vue.set(state.comments, comment._id, comment);
+    comment._id = id;
+    comment.created = new Date();
+
+    state[type][entity._id].comments.push(id);
+
+    Vue.set(state.comments, id, comment);
   },
 
   updateComment(state, {comment}) {

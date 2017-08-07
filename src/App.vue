@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navbar v-if="isLoggedIn && isHaveProjects"
-      :workspace="workspace" :user="user" v-on:logout="logout" v-on:clear="clear"
+            :workspace="workspace" :user="user" @logout="logout" @clear="clear"
     ></navbar>
     <transition name="fade" mode="out-in">
       <router-view class="view"></router-view>
@@ -64,7 +64,6 @@
   @import "~font-awesome/css/font-awesome.css";
   @import '~bootstrap-vue/dist/bootstrap-vue.css';
 
-
   body {
     margin: 0;
   }
@@ -85,27 +84,36 @@
     background: transparent;
   }
 
-  .form-control_transparent {
-    border-color: transparent;
-
-    &:hover {
-      border-color: rgba(0, 0, 0, 0.05);
-    }
-
-    &:focus {
-      border-color: rgba(0, 0, 0, 0.15);
-    }
-
-    &:disabled,
-    &[readonly] {
-      background: transparent;
+  .form-control {
+    &_transparent {
       border-color: transparent;
 
-      &:focus,
       &:hover {
+        border-color: rgba(0, 0, 0, 0.05);
+      }
+
+      &:focus {
+        border-color: rgba(0, 0, 0, 0.15);
+      }
+
+      &:disabled,
+      &[readonly] {
         background: transparent;
         border-color: transparent;
+
+        &:focus,
+        &:hover {
+          background: transparent;
+          border-color: transparent;
+        }
       }
+    }
+
+    &::-webkit-input-placeholder,
+    &:-ms-input-placeholder,
+    &::placeholder {
+      color: #a5a5a5;
+      opacity: 1
     }
   }
 </style>
