@@ -4,6 +4,7 @@ import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import VueTimeago from 'vue-timeago';
 import {DatePicker} from 'element-ui'
+import VueQuillEditor from 'vue-quill-editor'
 
 import {createApp} from './app';
 import lang from 'element-ui/lib/locale/lang/en'
@@ -20,6 +21,7 @@ Vue.use(VueTimeago, {
     'en-US': require('vue-timeago/locales/en-US.json')
   }
 });
+Vue.use(VueQuillEditor);
 
 Vue.config.productionTip = false;
 
