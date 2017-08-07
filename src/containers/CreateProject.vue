@@ -1,21 +1,25 @@
 <template>
   <div class="create-project" id="create-project-page">
     <div class="create-project__container">
-      <div class="create-project__inner cover">
+      <div class="cover create-project__inner">
         <h1 class="cover-heading">Create your first Project.</h1>
-        <p class="lead">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-          laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae
-          vitae dicta sunt explicabo.</p>
       </div>
 
       <form class="create-project__form" v-on:submit.prevent="onSubmit">
         <label for="projectName" class="sr-only">Create a Project</label>
         <input type="text"
-               v-model="title"
                v-focus="focused"
-               id="projectName" class="create-project__input form-control form-control-lg"
+               v-model="title"
+               id="projectName" class="form-control form-control-lg create-project__input-title"
                placeholder="Project Name" required autofocus>
-        <button class="btn btn-lg btn-success btn-block" type="submit">Create</button>
+
+        <label for="projectText" class="sr-only">Describe Project</label>
+        <textarea
+               v-model="text"
+               id="projectText" class="form-control form-control-lg create-project__input-text"
+               placeholder="What is about? What goal do you want to achieve?"></textarea>
+
+        <button class="btn btn-lg btn-success btn-block create-project__submit-button" type="submit">Create</button>
       </form>
     </div>
   </div>
@@ -32,6 +36,7 @@
     data() {
       return {
         title: '',
+        text: '',
         focused: true,
       }
     },
@@ -40,7 +45,7 @@
       onSubmit() {
         const id = uuidv4();
 
-        this.$store.commit('createProject', {_id: id, title: this.title});
+        this.$store.commit('createProject', {_id: id, title: this.title, text: this.text});
         this.$router.push({name: 'project', params: {id}});
       }
     }
@@ -69,12 +74,18 @@
     }
 
     &__form {
-      max-width: 330px;
       width: 100%;
       margin: 0 auto;
     }
 
-    &__input {
+    &__input-title,
+    &__submit-button {
+      margin: 0 auto;
+      max-width: 330px;
+    }
+
+    &__input-title,
+    &__input-text {
       margin-bottom: 10px;
     }
   }
