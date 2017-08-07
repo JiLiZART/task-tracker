@@ -10,6 +10,7 @@
           v-if="haveMemberTasks(item.tasks)"
           :project="item"
           :tasks="findMemberTasks(item.tasks)"
+          :filterCompleted="true"
           :teammates="teammates"
           :canCreate="false"
           :canEdit="false"
