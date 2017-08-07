@@ -25,6 +25,35 @@
     },
 
     data() {
+      const fullToolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+        ['blockquote', 'code-block'],
+
+        [{'header': [3, 4, 5, 6, false]}],               // custom button values
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+        [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+        //[{'direction': 'rtl'}],                         // text direction
+
+        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+        //[{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+        //[{'font': []}],
+        [{'align': []}],
+
+        ['link', 'image'],
+
+        ['clean']                                         // remove formatting button
+      ];
+
+      const lightToolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        ['link', 'image'],
+        ['clean']
+      ];
+
       return {
         isFocused: false,
 
@@ -32,12 +61,7 @@
           theme: this.light ? 'bubble' : 'snow',
           placeholder: this.placeholder,
           modules: {
-            toolbar: this.light ? [
-              ['bold', 'italic', 'underline', 'strike'],
-              [{'list': 'ordered'}, {'list': 'bullet'}],
-              ['link', 'image'],
-              ['clean']
-            ] : null
+            toolbar: this.light ? lightToolbarOptions : fullToolbarOptions
           }
         }
       }
@@ -93,7 +117,7 @@
 
     display: block;
     width: 100%;
-    padding: 0.5rem 0.75rem;
+    padding: 0;
     font-size: 1rem;
     line-height: 1.25;
     background-color: #fff;
@@ -134,9 +158,15 @@
     }
 
     .ql-container {
+      padding: 0.5rem 0.75rem;
       font-size: 1rem;
       line-height: 1.25;
       font-family: inherit;
+    }
+
+    .ql-container.ql-snow,
+    .ql-toolbar.ql-snow {
+      border: none;
     }
   }
 </style>
