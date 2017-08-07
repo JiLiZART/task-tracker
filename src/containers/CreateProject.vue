@@ -61,7 +61,6 @@
     width: 100%;
     height: 100%;
     min-height: 100%;
-    box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
 
     &__container {
       max-width: 42rem;
