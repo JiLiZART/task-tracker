@@ -1,7 +1,13 @@
 <template>
   <div class="card widget-projects">
-    <div class="card-header">
-      Projects
+    <div class="card-header widget-projects__header">
+      <div class="widget-projects__title">Projects</div>
+
+      <ul class="nav nav-pills card-header-pills widget-projects__pills">
+        <li class="nav-item">
+          <router-link class="nav-link" to="/create-project">Create Project</router-link>
+        </li>
+      </ul>
     </div>
 
     <div class="card-block">
@@ -42,3 +48,16 @@
     }
   }
 </script>
+
+<style lang="scss">
+  .widget-projects {
+    &__header {
+      display: flex;
+      align-items: center;
+    }
+
+    &__pills {
+      margin-left: auto;
+    }
+  }
+</style>
