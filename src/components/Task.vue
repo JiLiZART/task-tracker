@@ -19,40 +19,48 @@
             v-on:change="onFollowersChange"
           />
 
-          <div class="task__action task__action_align_right task__action_last">
-            <form action="" class="form-inline">
-              <div class="form-group">
-                <date-picker :value="deadline" placeholder="Deadline" @change="onDeadlineChange"></date-picker>
-              </div>
-            </form>
+          <div class="task__action task__action_align_right">
+            <button
+              class="btn"
+              :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
+              v-if="!inEdit"
+              v-on:click="toggleDone"
+            >
+              {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
+            </button>
+          </div>
+
+          <div class="task__action task__action_last">
+            <form class="form-inline">
+                <div class="form-group">
+                  <date-picker :value="deadline" placeholder="Deadline" @change="onDeadlineChange"></date-picker>
+                </div>
+              </form>
           </div>
         </div>
 
         <div class="task__content">
-          <h4 class="card-title" v-show="!inEdit" v-on:click="onTitleClick">{{ task.title }}</h4>
-          <p class="card-text task__text" v-show="!inEdit" v-on:click="onTextClick" v-html="task.text"></p>
-
-          <form
-            class="task__edit-form"
-            v-on:submit.prevent="onSubmit"
-            v-show="inEdit"
-          >
+          <form class="task__new-form" v-on:submit.prevent="onSubmit" v-if="isNew">
             <div class="form-group">
               <label for="task-title" class="sr-only">Title</label>
-              <input
-                v-model="title"
-                type="text"
-                class="task__edit-input-title form-control"
-                id="task-title"
-                placeholder="Enter Task Title..."/>
+              <input class="form-control task__new-input-title"
+                     v-model="title"
+                     type="text"
+                     id="task-title"
+                     placeholder="Enter Task Title..." required/>
             </div>
             <div class="form-group">
-              <label for="task-description" class="sr-only">Description</label>
-              <textarea
-                v-model="text"
-                class="task__edit-input-desc form-control"
-                id="task-description"
-                rows="3"
+              <editor class="task__text-editor"
+                      :bordered="true"
+                      :text="text"
+                      :placeholder="textPlaceholder"
+                      @change="onEditorChange">
+              </editor>
+              <label for="task-description" class="sr-only" v-show="false">Description</label>
+              <textarea class="form-control task__new-input-text"
+                        v-show="false"
+                        v-model="text"
+                        id="task-description"
               ></textarea>
             </div>
 
@@ -61,28 +69,27 @@
               <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
             </div>
           </form>
+          <form class="task__edit-form" v-on:submit.prevent="onSubmit" v-else>
+            <h4 class="card-title task__title">
+              <input class="form-control form-control_transparent task__title-input"
+                     v-model="title"
+                     :placeholder="titlePlaceholder"
+                     :readonly="!canEdit"
+                     required
+              />
+            </h4>
+            <div class="card-text task__text">
+              <editor class="task__text-editor"
+                      :text="text"
+                      :placeholder="textPlaceholder"
+                      @change="onEditorChange">
+              </editor>
+            </div>
+          </form>
         </div>
-
-        <div class="task__meta" v-if="!inEdit">
-          <div class="task__meta-action task__meta-action_align_right">
-            <button
-              class="btn"
-              :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
-              v-on:click="toggleDone"
-            >
-              {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
-            </button>
-          </div>
-        </div>
-        <!-- /.task__meta -->
       </div>
 
-      <comments
-        :items.sync="comments"
-        type="tasks"
-        :entity="task"
-        v-if="!inEdit"
-      ></comments>
+      <comments :items.sync="comments" type="tasks" :entity="task" v-if="!inEdit"></comments>
     </template>
     <template v-else>
       <div class="task__teaser">
@@ -92,6 +99,7 @@
           </template>
         </div>
         <h5 class="card-title task__teaser-title">{{ task.title }}</h5>
+        <div class="task__teaser-spacer"></div>
         <div class="task__teaser-deadline" v-if="task.deadline">{{ task.deadline | fromNow }}</div>
         <div class="task__teaser-comments" v-if="commentsCount">
           <i class="fa fa-comment"></i>
@@ -115,6 +123,7 @@
   import UserPicker from '@/components/UserPicker';
   import DatePicker from '@/components/DatePicker';
   import Author from '@/components/Author';
+  import Editor from '@/components/Editor';
 
   export default {
     name: 'task',
@@ -131,17 +140,19 @@
       canExpand: {
         type: Boolean,
         'default': true
-      }
+      },
+      canEdit: {
+        type: Boolean,
+        'default': true
+      },
     },
-    components: {Comments, UserPicker, DatePicker, Author},
+    components: {Comments, UserPicker, DatePicker, Author, Editor},
 
     data() {
       const task = this.task;
       const isTitleEmpty = !task.title;
 
       return {
-        title: task.title,
-        text: task.text,
         deadline: task.deadline,
         performers: task.performers,
         followers: task.followers,
@@ -156,15 +167,20 @@
     methods: {
       onSubmit() {
         this.inEdit = false;
+        this.isNew = false;
 
-        this.updateTask({title: this.title, text: this.text, isNew: false});
+        this.updateTask({title: this.title, text: this.text, isNew: this.isNew});
         this.logAction(this.isNew ? 'created' : 'updated');
       },
 
-      updateTask(params) {
-        params._id = this.task._id;
+      onEditorChange(text) {
+        this.updateTask({text});
+      },
 
-        this.$store.commit('updateTask', {task: params});
+      updateTask(task) {
+        task._id = this.task._id;
+
+        this.$store.commit('updateTask', {task});
       },
 
       logAction(action) {
@@ -202,15 +218,11 @@
       },
 
       onPerformerChange(performers) {
-        console.log('performer change', performers);
-
         this.updateTask({performers});
         this.logAction('changed performer on');
       },
 
       onFollowersChange(users) {
-        console.log('follower change', users);
-
 //        this.updateTask({follower: user});
 //        this.logAction('changed follower on');
         this.$store.commit('addFollowersToTask', {task: this.task, users})
@@ -241,6 +253,32 @@
           'task_done': this.task.done,
           'task_no-expand': !this.canExpand
         };
+      },
+
+      title: {
+        get() {
+          return this.task.title
+        },
+        set(title) {
+          this.updateTask({title});
+        }
+      },
+
+      titlePlaceholder() {
+        return this.canEdit ? 'Click to edit title' : '';
+      },
+
+      text: {
+        get() {
+          return this.task.text
+        },
+        set(text) {
+          this.updateTask({text});
+        }
+      },
+
+      textPlaceholder() {
+        return this.canEdit ? 'Click to edit description' : '';
       },
 
       commentsCount() {
@@ -279,18 +317,19 @@
       border-radius: 0 0 0 0.25rem;
     }
 
-    &__editable-title,
-    &__editable-text {
-      min-height: 28px;
-    }
-
     &_done &__expander {
       color: white;
       background: #5cb85c;
     }
 
+    &__title-input {
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: 1.1;
+      color: #2c3e50;
+    }
+
     &__meta {
-      margin-top: .5rem;
       display: flex;
     }
 
@@ -323,10 +362,6 @@
       margin-right: 0;
     }
 
-    &__form-label {
-      margin-right: .5rem;
-    }
-
     &__teaser {
       padding: 0.5rem 1rem;
       padding-right: 38px;
@@ -346,9 +381,12 @@
       align-items: center;
     }
 
+    &__teaser-spacer {
+      margin-left: auto;
+    }
+
     &__teaser-deadline {
       margin-right: .5rem;
-      margin-left: auto;
       display: inline-flex;
       align-items: center;
     }
