@@ -38,7 +38,8 @@
       myTasks() {
         const findPerformer = (users, id) => users.find((u) => u._id === id);
 
-        return this.tasks.filter((task) => findPerformer(task.performers, this.user._id));
+        return this.tasks
+          .filter((task) => findPerformer(task.performers, this.user._id));
       },
 
       user() {
@@ -58,7 +59,7 @@
       },
 
       log() {
-        return this.$store.state.log;
+        return this.$store.state.log.slice(0, 10);
       }
     }
   }
