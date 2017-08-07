@@ -12,11 +12,8 @@
     <div class="card-block">
       <template v-for="(item, index) in members">
         <span class="widget-team__member">
-            <router-link class="avatar" :to="{ name: 'member', params: { id: item._id }}">
-                <img
-                  class="avatar__image rounded-circle"
-                  :src="item.avatar"
-                  :alt="item.username">
+            <router-link :to="{ name: 'member', params: { id: item._id }}">
+            <avatar :item="item"></avatar>
             </router-link>
         </span>
       </template>
@@ -25,18 +22,20 @@
 </template>
 
 <script>
+  import Avatar from '@/components/Avatar';
+
   export default {
     name: 'widget-team',
     props: {
       members: {
         type: Array
       }
-    }
+    },
+    components: {Avatar}
   }
 </script>
 
 <style lang="scss">
-
   .widget-team {
     &__header {
       display: flex;
@@ -51,5 +50,4 @@
       margin-right: 1rem;
     }
   }
-
 </style>
