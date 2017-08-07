@@ -3,9 +3,7 @@
     <div class="create-workspace__container">
       <div class="create-workspace__inner cover">
         <h1 class="cover-heading">Create your first Workspace.</h1>
-        <p class="lead">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-          laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae
-          vitae dicta sunt explicabo.</p>
+        <p class="lead">For your personal use or your company.</p>
       </div>
 
       <form class="create-workspace__form" v-on:submit.prevent="onSubmit">
