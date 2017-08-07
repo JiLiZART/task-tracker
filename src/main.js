@@ -5,10 +5,14 @@ import BootstrapVue from 'bootstrap-vue';
 import VueTimeago from 'vue-timeago';
 import {DatePicker} from 'element-ui'
 import VueQuillEditor from 'vue-quill-editor'
+import Raven from 'raven-js';
+import RavenVue from 'raven-js/plugins/vue';
 
 import {createApp} from './app';
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
+
+const RAVEN_URL = 'https://f8d92de3c927430781089b68eac53c16@sentry.io/200742';
 
 // configure language
 locale.use(lang);
@@ -23,15 +27,14 @@ Vue.use(VueTimeago, {
 });
 Vue.use(VueQuillEditor);
 
-Vue.config.productionTip = false;
+if (process.env.NODE_ENV === 'production') {
+  Raven
+    .config(RAVEN_URL)
+    .addPlugin(RavenVue, Vue)
+    .install();
+}
 
-/* eslint-disable no-new */
-// new Vue({
-//   el: '#app',
-//   router,
-//   template: '<App/>',
-//   components: { App }
-// });
+Vue.config.productionTip = false;
 
 const {app, router, store} = createApp();
 
