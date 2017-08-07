@@ -13,7 +13,7 @@
                  required
           />
         </h4>
-        <div class="card-text project__text">
+        <div class="card-text project__text" v-show="text && canEdit">
           <editor class="project__text-editor"
                   :text="text"
                   :placeholder="textPlaceholder"
