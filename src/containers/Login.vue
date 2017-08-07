@@ -4,7 +4,7 @@
       <div class="login__inner cover">
         <h1 class="cover-heading">Your team's message board and task tracker.</h1>
         <p class="lead">Runby is a messaging platform that makes teams more connected and aware of what's going on,
-          increases productivity, helps organize information and provides an environment for everyday work..</p>
+          increases productivity, helps organize information and provides an environment for everyday work.</p>
       </div>
 
       <template v-if="isLoggedIn == false">
@@ -14,16 +14,8 @@
                  v-model="email"
                  class="login__input-email form-control form-control-lg"
                  placeholder="Email address" required autofocus>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
         </form>
-      </template>
-
-      <template v-if="isLoggedIn == true">
-        <div>
-          <p>You already signed in</p>
-          <router-link :to="nextUrl" class="btn btn-lg btn-primary">{{ nextText }}</router-link>
-          <button class="btn btn-link" v-on:click="logout">Logout</button>
-        </div>
       </template>
     </div>
   </div>
@@ -34,9 +26,7 @@
     name: 'login',
     data() {
       return {
-        email: null,
-        nextUrl: null,
-        nextText: null
+        email: null
       }
     },
 
@@ -56,15 +46,12 @@
 
     methods: {
       onSubmit() {
-        //setItem('email', this.email);
         this.$store.commit('start', this.email);
         this.$router.push('/create-workspace');
       },
 
       logout() {
-        //removeItem('email');
         this.$store.commit('logout');
-        //refresh();
       }
     },
 
