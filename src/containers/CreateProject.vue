@@ -9,6 +9,7 @@
         <label for="projectName" class="sr-only">Create a Project</label>
         <input type="text"
                v-focus="focused"
+               @focus="focused = true" @blur="focused = false"
                v-model="title"
                id="projectName" class="form-control form-control-lg create-project__input-title"
                placeholder="Project Name" required autofocus>
