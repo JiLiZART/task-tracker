@@ -1,7 +1,7 @@
 <template>
-  <div class="card widget-projects">
+  <div class="card card-outline-secondary widget-projects">
     <div class="card-header widget-projects__header">
-      <div class="widget-projects__title">Projects</div>
+      <h5 class="card-title widget-projects__title">Projects</h5>
 
       <ul class="nav nav-pills card-header-pills widget-projects__pills">
         <li class="nav-item">
@@ -14,14 +14,8 @@
       <template v-for="(item, index) in items">
         <router-link class="btn btn-link" :to="{ name: 'project', params: { id: item._id }}">
           {{ item.title }}
-          <span class="badge badge-default badge-pill">
-                        <i class="fa fa-tasks"></i>
-                            {{ tasksCount(item) }}
-                    </span>
-          <span class="badge badge-default badge-pill">
-                        <i class="fa fa-file-text"></i>
-                            {{ docsCount(item) }}
-                    </span>
+          <span class="badge badge-default badge-pill"><i class="fa fa-tasks"></i>{{ tasksCount(item) }}</span>
+          <span class="badge badge-default badge-pill"><i class="fa fa-file-text"></i>{{ docsCount(item) }}</span>
         </router-link>
       </template>
     </div>
@@ -54,6 +48,11 @@
     &__header {
       display: flex;
       align-items: center;
+    }
+
+    &__title {
+      font-size: 1.5rem;
+      margin-bottom: 0;
     }
 
     &__pills {

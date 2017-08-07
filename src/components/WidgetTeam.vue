@@ -1,7 +1,7 @@
 <template>
-  <div class="card widget-team">
+  <div class="card card-outline-secondary widget-team">
     <div class="card-header widget-team__header">
-      <div class="widget-team__title">My Team</div>
+      <h5 class="card-title widget-team__title">My Team</h5>
 
       <ul class="nav nav-pills card-header-pills widget-team__pills">
         <li class="nav-item">
@@ -40,6 +40,11 @@
     &__header {
       display: flex;
       align-items: center;
+    }
+
+    &__title {
+      font-size: 1.5rem;
+      margin-bottom: 0;
     }
 
     &__pills {

@@ -1,5 +1,5 @@
 <template>
-  <div class="widget-updates card">
+  <div class="card card-outline-secondary widget-updates">
     <div class="card-block">
       <h5 class="card-title widget-updates__title">Updates</h5>
     </div>
@@ -20,10 +20,9 @@
       </template>
     </ul>
     <div class="card-block" v-else>
-      <div class="card card-outline-secondary">
+      <div class="card">
         <div class="card-block">
-          <h4 class="card-title">There are no updates</h4>
-          <p class="card-text">Try to do something.</p>
+          <p class="card-text">There are no updates. Try to do something.</p>
         </div>
       </div>
     </div>
@@ -45,10 +44,9 @@
 </script>
 
 <style lang="scss">
-
   .widget-updates {
     &__title {
-      font-size: 1.1rem;
+      font-size: 1.5rem;
       margin-bottom: 0;
     }
 
@@ -56,5 +54,4 @@
       margin-left: .5rem;
     }
   }
-
 </style>
