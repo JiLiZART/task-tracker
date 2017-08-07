@@ -30,11 +30,11 @@
               @change="onTextChange">
             </editor>
           </div>
-          <button
-            :disabled="!text"
-            type="submit"
-            class="btn btn-primary">Reply to
-          </button>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary" :disabled="!text">Reply to</button>
+            <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
+          </div>
         </form>
       </template>
       <template v-if="!isFormShown">
@@ -68,7 +68,7 @@
     },
 
     methods: {
-      onSubmit: function () {
+      onSubmit() {
         const comment = {
           user: this.user,
           text: this.text
@@ -79,11 +79,15 @@
         this.$store.commit('createComment', {comment, type: this.type, entity: this.entity});
       },
 
+      onCancelClick() {
+        this.isFormShown = false;
+      },
+
       onTextChange(text) {
         this.text = text;
       },
 
-      showForm: function () {
+      showForm() {
         this.isFormShown = true;
       }
     },

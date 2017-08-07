@@ -4,12 +4,6 @@ import merge from 'lodash/merge';
 import uniqBy from 'lodash/uniqBy';
 import Vue from 'vue'
 
-const mates = [
-  'pedro1@runby.com',
-  'silvio@runby.com',
-  'adren@runby.com'
-];
-
 export default {
   start(state, email) {
     const id = uuidv4();
@@ -153,6 +147,15 @@ export default {
     const current = state.comments[comment._id];
 
     Vue.set(state.comments, comment._id, merge({}, current, comment));
+  },
+
+  removeComment(state, {comment, entity, type}) {
+    const comments = state[type][entity._id].comments;
+    const commentIndex = comments.indexOf(comment._id);
+
+    comments.splice(commentIndex, 1);
+
+    Vue.delete(state.comments, comment._id);
   },
 
   logAction(state, params) {
