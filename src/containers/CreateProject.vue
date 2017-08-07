@@ -46,7 +46,7 @@
         const id = uuidv4();
 
         this.$store.commit('createProject', {_id: id, title: this.title, text: this.text});
-        this.$router.push({name: 'project', params: {id}});
+        this.$router.push({name: 'dashboard'});
       }
     }
   }
