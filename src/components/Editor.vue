@@ -1,7 +1,7 @@
 <template>
   <quill-editor class="editor"
                 ref="textEditor"
-                :class="{'editor_focused': isFocused, 'editor_disabled': disabled}"
+                :class="editorClasses"
                 :content="text"
                 :options="editorOption"
                 :placeholder="placeholder"
@@ -20,7 +20,8 @@
       placeholder: {type: String},
       text: {type: String},
       canEdit: {type: Boolean, 'default': true},
-      light: {type: Boolean, 'default': true}
+      light: {type: Boolean, 'default': true},
+      bordered: {type: Boolean, 'default': false}
     },
 
     data() {
@@ -67,6 +68,14 @@
     },
 
     computed: {
+      editorClasses() {
+        return {
+          'editor_focused': this.isFocused,
+          'editor_disabled': this.disabled,
+          'editor_bordered': this.bordered
+        };
+      },
+
       disabled() {
         return !this.canEdit;
       },
@@ -107,6 +116,14 @@
     &_disabled {
       &:hover {
         border-color: transparent;
+      }
+    }
+
+    &_bordered {
+      border-color: rgba(0, 0, 0, 0.15);
+
+      &:hover {
+        border-color: rgba(0, 0, 0, 0.15);
       }
     }
 
