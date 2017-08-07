@@ -5,18 +5,11 @@
 
     <b-collapse is-nav id="nav_collapse">
 
-      <b-dropdown class="navbar__workspace" variant="transparent">
-        <div class="navbar__workspace-title" slot="button-content">{{ workspace.title }}</div>
-        <router-link class="dropdown-item" to="/dashboard">
-          <i class="fa fa-tachometer" aria-hidden="true"></i>
-          My Dashboard
+      <div class="navbar__workspace-title">
+        <router-link class="navbar-brand navbar__workspace-link" to="/dashboard">
+          {{ workspace.title }}
         </router-link>
-        <b-dropdown-divider></b-dropdown-divider>
-        <router-link class="dropdown-item" to="/create-project">
-          <i class="fa fa-plus"></i>
-          Create new Project
-        </router-link>
-      </b-dropdown>
+      </div>
 
       <div class="collapse navbar-collapse" id="navbarColor01">
         <form class="navbar__form form-inline">
