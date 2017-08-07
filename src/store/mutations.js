@@ -21,12 +21,6 @@ export default {
     };
 
     Vue.set(state.teammates, id, {_id: id, username: email, avatar: avatarUrl(email)});
-
-    // mates.forEach((email) => {
-    //   const id = uuidv4();
-    //
-    //   Vue.set(state.teammates, id, {_id: id, username: email, avatar: avatarUrl(email)});
-    // })
   },
 
   logout(state) {
@@ -73,12 +67,13 @@ export default {
   },
 
   createTask(state, {task, project}) {
+    task = task || {};
     task._id = uuidv4();
-    task.title = '';
-    task.comments = task.comments ? task.comments : [];
-    task.followers = task.followers ? task.followers : [];
-    task.performers = task.performers ? task.performers : [];
-    task.done = task.done ? task.done : false;
+    task.title = task.title || '';
+    task.comments = task.comments || [];
+    task.followers = task.followers || [];
+    task.performers = task.performers || [];
+    task.done = task.done || false;
     task.isNew = true;
 
     state.projects[project._id].tasks.push(task._id);
@@ -109,10 +104,11 @@ export default {
   },
 
   createDoc(state, {doc, project}) {
+    doc = doc || {};
     doc._id = uuidv4();
-    doc.title = '';
-    doc.comments = doc.comments ? doc.comments : [];
-    doc.followers = doc.followers ? doc.followers : [];
+    doc.title = doc.title || '';
+    doc.comments = doc.comments || [];
+    doc.followers = doc.followers || [];
     doc.isNew = true;
 
     state.projects[project._id].docs.push(doc._id);
