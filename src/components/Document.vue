@@ -14,7 +14,16 @@
         </div>
         <div class="doc__content">
           <h5 class="card-title" v-show="!inEdit" v-on:click="onTitleClick">{{ title }}</h5>
-          <p class="card-text doc__text" v-show="!inEdit" v-on:click="onTextClick" v-html="text"></p>
+
+          <editor
+            v-show="!inEdit"
+            class="doc__text-editor"
+            :bordered="false"
+            :text="text"
+            :placeholder="textPlaceholder"
+            :canEdit="false"
+            @change="onEditorChange">
+          </editor>
 
           <form
             class="doc__edit-form"
@@ -31,13 +40,14 @@
                 placeholder="Enter Doc Title..."/>
             </div>
             <div class="form-group">
-              <label for="doc-description" class="sr-only">Description</label>
-              <textarea
-                v-model="text"
-                class="doc__edit-input-desc form-control"
-                id="doc-description"
-                rows="3"
-              ></textarea>
+              <editor
+                class="doc__text-editor"
+                :bordered="true"
+                :light="false"
+                :text="text"
+                :placeholder="textPlaceholder"
+                @change="onEditorChange">
+              </editor>
             </div>
 
             <div class="form-group">
@@ -82,6 +92,7 @@
   import Comments from '@/components/Comments';
   import UserPicker from '@/components/UserPicker';
   import Author from "@/components/Author";
+  import Editor from '@/components/Editor';
 
   export default {
     name: 'document',
@@ -90,7 +101,7 @@
       project: {type: Object},
       teammates: {type: Array}
     },
-    components: {Author, Comments, UserPicker},
+    components: {Author, Comments, UserPicker, Editor},
 
     data: function () {
       const doc = this.doc || {};
@@ -98,7 +109,7 @@
 
       return {
         title: doc.title,
-        text: doc.text,
+        //text: doc.text,
 
         inEdit: inEdit,
         isExpanded: inEdit === true,
@@ -123,6 +134,10 @@
         this.inEdit = false;
 
         this.updateDoc({title: this.title, text: this.text, isNew: false});
+      },
+
+      onEditorChange(text) {
+        this.updateDoc({text});
       },
 
       onTextClick() {
@@ -153,6 +168,19 @@
     },
 
     computed: {
+      text: {
+        get() {
+          return this.doc.text
+        },
+        set(text) {
+          this.updateDoc({text});
+        }
+      },
+
+      textPlaceholder() {
+        return this.canEdit ? 'Click to edit description' : '';
+      },
+
       commentsCount() {
         return this.comments.length ? this.comments.length : false
       },
