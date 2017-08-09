@@ -59,7 +59,7 @@
       },
 
       log() {
-        return this.$store.state.log.slice(0, 10);
+        return this.$store.getters.lastUpdates;
       }
     }
   }

@@ -23,4 +23,10 @@ export default {
     const docs = state.docs;
     return Object.keys(docs).map((id) => docs[id]);
   },
+
+  lastUpdates(state) {
+    return state.log.concat().sort((a, b) => {
+      return new Date(b.created) - new Date(a.created);
+    }).slice(0, 10);
+  }
 };

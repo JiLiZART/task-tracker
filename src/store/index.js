@@ -12,7 +12,7 @@ const store = {};
 
 const STATE_KEY = 'state';
 
-const localStoragePlugin = store => {
+const localStoragePlugin = (store) => {
   const state = getItem(STATE_KEY);
 
   state && store.replaceState(state);
@@ -25,13 +25,13 @@ const localStoragePlugin = store => {
 };
 
 function setItem(key, value) {
-  var data = JSON.stringify(value);
+  const data = JSON.stringify(value);
 
   return localStorage.setItem(key, data);
 }
 
 function getItem(key) {
-  var value = localStorage.getItem(key);
+  const value = localStorage.getItem(key);
 
   return value && JSON.parse(value);
 }
@@ -46,7 +46,7 @@ export function clearStorage() {
 
 export function createStore() {
   return new Vuex.Store({
-    strict: true,
+    strict: process.env.NODE_ENV !== 'production',
     state: {
       user: {},
       workspace: null,
