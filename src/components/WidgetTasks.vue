@@ -57,6 +57,10 @@
 
     &__task {
       margin-bottom: .5rem;
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
     }
   }
 </style>
