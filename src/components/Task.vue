@@ -219,18 +219,37 @@
 
       onPerformerChange(performers) {
         this.updateTask({performers});
-        this.logAction('changed performer on');
+
+        if (performers.length) {
+          if (this.task.performers.length) {
+            this.logAction('changed performer on');
+          } else {
+            this.logAction('assigned performer on');
+          }
+        } else {
+          this.logAction('removed performer on');
+        }
       },
 
       onFollowersChange(users) {
-//        this.updateTask({follower: user});
-//        this.logAction('changed follower on');
-        this.$store.commit('addFollowersToTask', {task: this.task, users})
+        this.$store.commit('addFollowersToTask', {task: this.task, users});
+
+        if (users.length) {
+          if (this.task.followers.length) {
+            this.logAction('changed followers on');
+          } else {
+            this.logAction('assigned followers on');
+          }
+        } else {
+          this.logAction('removed followers on');
+        }
       },
 
       onDeadlineChange(deadline) {
-        this.updateTask({deadline});
-        this.logAction('changed deadline on');
+        if (this.task.deadline !== deadline) {
+          this.updateTask({deadline});
+          this.logAction('changed deadline on');
+        }
       },
 
       toggleDone() {
