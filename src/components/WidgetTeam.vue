@@ -5,16 +5,16 @@
 
       <ul class="nav nav-pills card-header-pills widget-team__pills">
         <li class="nav-item">
-          <router-link class="nav-link" to="/team-load">View Team Load</router-link>
+          <router-link class="nav-link" to="/team-load">View Team Workload</router-link>
         </li>
       </ul>
     </div>
     <div class="card-block">
       <template v-for="(item, index) in members">
         <span class="widget-team__member">
-            <router-link :to="{ name: 'member', params: { id: item._id }}">
+          <router-link :to="{ name: 'member', params: { id: item._id }}">
             <avatar :item="item"></avatar>
-            </router-link>
+          </router-link>
         </span>
       </template>
     </div>
