@@ -3,7 +3,7 @@
     <navbar v-if="isLoggedIn && isHaveProjects"
             :workspace="workspace" :user="user" @logout="logout" @clear="clear"
     ></navbar>
-    <transition name="fade" mode="out-in">
+    <transition name="slide-x-transition" mode="out-in">
       <router-view class="view"></router-view>
     </transition>
   </div>
@@ -11,7 +11,6 @@
 
 <script>
   import Navbar from './components/Navbar';
-  import avatarUrl from '@/utils/avatarUrl';
   import {clearStorage} from '@/store/index';
 
   export default {
@@ -76,6 +75,37 @@
     position: absolute;
     width: 100%;
     height: 100%;
+  }
+
+  .slide-x-transition-enter-active, .slide-x-transition-leave-active {
+    transition: 150ms cubic-bezier(.25, .8, .25, 1)
+  }
+
+  .slide-x-transition-enter,
+  .slide-x-transition-leave-to {
+    opacity: 0;
+    transform: translateX(-15px)
+  }
+
+  .slide-x-reverse-transition-enter-active,
+  .slide-x-reverse-transition-leave-active {
+    transition: 150ms cubic-bezier(.25, .8, .25, 1)
+  }
+
+  .slide-x-reverse-transition-enter,
+  .slide-x-reverse-transition-leave-to {
+    opacity: 0;
+    transform: translateX(15px)
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 200ms
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0
   }
 
   .btn-transparent {
