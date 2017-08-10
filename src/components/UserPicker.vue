@@ -58,9 +58,6 @@
 
     methods: {
       selectMember(values) {
-
-        console.log('select member', values);
-
         this.$emit('update:selected', this.selectedItems);
         this.$emit('change', values);
       },
