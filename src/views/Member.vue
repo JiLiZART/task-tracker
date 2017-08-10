@@ -19,7 +19,7 @@
 </template>
 
 <script>
-  import TeamMember from '@/components/TeamMember';
+  import TeamMember from '@/containers/TeamMember';
 
   export default {
     name: 'member-view',

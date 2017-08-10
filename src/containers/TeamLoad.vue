@@ -1,11 +1,11 @@
 <template>
   <div class="card team-load">
     <div class="card-block">
-      <h4 class="card-title">Team load in {{ workspace.title }} </h4>
+      <h4 class="card-title">Team Work Load in {{ workspace.title }} </h4>
     </div>
 
     <template v-for="(item, index) in projects">
-      <div class="card-block">
+      <div class="card-block" v-if="projectHaveTasks(item)">
         <project
           :project="item"
           :tasks="projectTasks(item.tasks)"
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import Project from '@/components/Project';
+  import Project from '@/containers/Project';
 
   export default {
     name: 'team-load',
@@ -44,6 +44,10 @@
     methods: {
       projectTasks(tasks) {
         return tasks.map((id) => this.tasks[id]);
+      },
+
+      projectHaveTasks(project) {
+        return project.tasks.length;
       }
     }
   }

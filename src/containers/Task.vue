@@ -1,112 +1,113 @@
 <template>
   <div class="task card" :class="classObject">
-    <template v-if="isExpanded">
-      <div class="card-block">
-        <div class="task__actions">
-          <user-picker
-            label="Add Performer"
-            class="task__action"
-            :members="teammates"
-            :selectedMembers="task.performers"
-            v-on:change="onPerformerChange"
-          />
-          <user-picker
-            label="Add Followers"
-            class="task__action"
-            :multiple="true"
-            :members="teammates"
-            :selectedMembers="task.followers"
-            v-on:change="onFollowersChange"
-          />
+    <transition name="fade">
+      <div class="task__body" v-if="isExpanded">
+        <div class="card-block">
+          <div class="task__actions">
+            <user-picker
+              label="Add Performer"
+              class="task__action"
+              :members="teammates"
+              :selectedMembers="task.performers"
+              v-on:change="onPerformerChange"
+            />
+            <user-picker
+              label="Add Followers"
+              class="task__action"
+              :multiple="true"
+              :members="teammates"
+              :selectedMembers="task.followers"
+              v-on:change="onFollowersChange"
+            />
 
-          <div class="task__action task__action_align_right">
-            <button
-              class="btn"
-              :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
-              v-if="!inEdit"
-              v-on:click="toggleDone"
-            >
-              {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
-            </button>
-          </div>
+            <div class="task__action task__action_align_right">
+              <button
+                class="btn"
+                :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
+                v-if="!inEdit"
+                v-on:click="toggleDone"
+              >
+                {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
+              </button>
+            </div>
 
-          <div class="task__action task__action_last">
-            <form class="form-inline">
+            <div class="task__action task__action_last">
+              <form class="form-inline">
                 <div class="form-group">
                   <date-picker :value="deadline" placeholder="Deadline" @change="onDeadlineChange"></date-picker>
                 </div>
               </form>
+            </div>
+          </div>
+
+          <div class="task__content">
+            <form class="task__new-form" v-on:submit.prevent="onSubmit" v-if="isNew">
+              <div class="form-group">
+                <label for="task-title" class="sr-only">Title</label>
+                <input class="form-control task__new-input-title"
+                       v-model="title"
+                       type="text"
+                       id="task-title"
+                       placeholder="Enter Task Title..." required/>
+              </div>
+              <div class="form-group">
+                <editor class="task__text-editor"
+                        :bordered="true"
+                        :text="text"
+                        :placeholder="textPlaceholder"
+                        @change="onEditorChange">
+                </editor>
+                <label for="task-description" class="sr-only" v-show="false">Description</label>
+                <textarea class="form-control task__new-input-text"
+                          v-show="false"
+                          v-model="text"
+                          id="task-description"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
+                <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
+              </div>
+            </form>
+            <form class="task__edit-form" v-on:submit.prevent="onSubmit" v-else>
+              <h4 class="card-title task__title">
+                <input class="form-control form-control_transparent task__title-input"
+                       v-model="title"
+                       :placeholder="titlePlaceholder"
+                       :readonly="!canEdit"
+                       required
+                />
+              </h4>
+              <div class="card-text task__text">
+                <editor class="task__text-editor"
+                        :text="text"
+                        :placeholder="textPlaceholder"
+                        @change="onEditorChange">
+                </editor>
+              </div>
+            </form>
           </div>
         </div>
-
-        <div class="task__content">
-          <form class="task__new-form" v-on:submit.prevent="onSubmit" v-if="isNew">
-            <div class="form-group">
-              <label for="task-title" class="sr-only">Title</label>
-              <input class="form-control task__new-input-title"
-                     v-model="title"
-                     type="text"
-                     id="task-title"
-                     placeholder="Enter Task Title..." required/>
-            </div>
-            <div class="form-group">
-              <editor class="task__text-editor"
-                      :bordered="true"
-                      :text="text"
-                      :placeholder="textPlaceholder"
-                      @change="onEditorChange">
-              </editor>
-              <label for="task-description" class="sr-only" v-show="false">Description</label>
-              <textarea class="form-control task__new-input-text"
-                        v-show="false"
-                        v-model="text"
-                        id="task-description"
-              ></textarea>
-            </div>
-
-            <div class="form-group">
-              <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
-              <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
-            </div>
-          </form>
-          <form class="task__edit-form" v-on:submit.prevent="onSubmit" v-else>
-            <h4 class="card-title task__title">
-              <input class="form-control form-control_transparent task__title-input"
-                     v-model="title"
-                     :placeholder="titlePlaceholder"
-                     :readonly="!canEdit"
-                     required
-              />
-            </h4>
-            <div class="card-text task__text">
-              <editor class="task__text-editor"
-                      :text="text"
-                      :placeholder="textPlaceholder"
-                      @change="onEditorChange">
-              </editor>
-            </div>
-          </form>
-        </div>
+        <comments :items.sync="comments" type="tasks" :entity="task" v-if="!inEdit"></comments>
       </div>
-
-      <comments :items.sync="comments" type="tasks" :entity="task" v-if="!inEdit"></comments>
-    </template>
-    <template v-else>
-      <div class="task__teaser">
-        <div class="task__teaser-performer">
-          <template v-for="(item, index) in task.performers">
-            <author :item="item" :small="true" :haveName="false"></author>
-          </template>
-        </div>
-        <h5 class="card-title task__teaser-title">{{ task.title }}</h5>
-        <div class="task__teaser-spacer"></div>
-        <div class="task__teaser-deadline" v-if="task.deadline">{{ task.deadline | fromNow }}</div>
-        <div class="task__teaser-comments" v-if="commentsCount">
-          <i class="fa fa-comment"></i>
-          <span class="task__teaser-comments-label">{{ commentsCount }}</span>
-        </div>
+    </transition>
+    <div class="task__teaser" v-if="!isExpanded">
+      <div class="task__teaser-performer">
+        <template v-for="(item, index) in task.performers">
+          <author :item="item" :small="true" :haveName="false"></author>
+        </template>
       </div>
-    </template>
+      <h5 class="card-title task__teaser-title" v-on:click="toggleExpanded">{{ task.title }}</h5>
+      <div class="task__teaser-spacer" v-on:click="toggleExpanded"></div>
+      <div class="task__teaser-deadline" v-if="task.deadline">
+        {{ task.deadline | fromNow }}
+      </div>
+      <div class="task__teaser-comments" v-if="commentsCount">
+        <i class="fa fa-comment"></i>
+        <span class="task__teaser-comments-label">{{ commentsCount }}</span>
+      </div>
+    </div>
 
     <template v-if="!inEdit && canExpand">
       <div class="task__expander" v-on:click="toggleExpanded">
@@ -119,7 +120,7 @@
 
 <script>
   import fromNow from '@/utils/fromNow';
-  import Comments from '@/components/Comments';
+  import Comments from '@/containers/Comments';
   import UserPicker from '@/components/UserPicker';
   import DatePicker from '@/components/DatePicker';
   import Author from '@/components/Author';
@@ -165,18 +166,6 @@
     },
 
     methods: {
-      onSubmit() {
-        this.inEdit = false;
-        this.isNew = false;
-
-        this.updateTask({title: this.title, text: this.text, isNew: this.isNew});
-        this.logAction(this.isNew ? 'created' : 'updated');
-      },
-
-      onEditorChange(text) {
-        this.updateTask({text});
-      },
-
       updateTask(task) {
         task._id = this.task._id;
 
@@ -201,12 +190,23 @@
         this.isExpanded = !this.isExpanded;
       },
 
-      onTextClick() {
-        this.inEdit = true;
+      toggleDone() {
+        const done = !this.task.done;
+
+        this.updateTask({done});
+        this.logAction('marked as ' + (done ? 'done' : 'undone'));
       },
 
-      onTitleClick() {
-        this.inEdit = true;
+      onSubmit() {
+        this.inEdit = false;
+        this.isNew = false;
+
+        this.updateTask({title: this.title, text: this.text, isNew: this.isNew});
+        this.logAction(this.isNew ? 'created' : 'updated');
+      },
+
+      onEditorChange(text) {
+        this.updateTask({text});
       },
 
       onCancelClick() {
@@ -250,13 +250,6 @@
           this.updateTask({deadline});
           this.logAction('changed deadline on');
         }
-      },
-
-      toggleDone() {
-        const done = !this.task.done;
-
-        this.updateTask({done});
-        this.logAction('marked as ' + (done ? 'done' : 'undone'));
       }
     },
 
@@ -392,6 +385,8 @@
 
     &__teaser-title {
       margin-bottom: 0;
+      cursor: pointer;
+      flex: 1 1 0;
     }
 
     &__teaser-performer {
@@ -402,6 +397,7 @@
 
     &__teaser-spacer {
       margin-left: auto;
+      cursor: pointer;
     }
 
     &__teaser-deadline {

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import Project from '@/components/Project';
+  import Project from '@/containers/Project';
 
   export default {
     name: 'project-view',
@@ -30,11 +30,15 @@
       },
 
       docs() {
-        return this.$store.getters.docs;
+        return this.project.docs.map((id) => {
+          return this.$store.state.docs[id];
+        });
       },
 
       tasks() {
-        return this.$store.getters.tasks;
+        return this.project.tasks.map((id) => {
+          return this.$store.state.tasks[id];
+        });
       }
     }
   }

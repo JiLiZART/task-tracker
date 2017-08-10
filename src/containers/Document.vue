@@ -89,7 +89,7 @@
 
 <script>
   import fromNow from '@/utils/fromNow';
-  import Comments from '@/components/Comments';
+  import Comments from '@/containers/Comments';
   import UserPicker from '@/components/UserPicker';
   import Author from "@/components/Author";
   import Editor from '@/components/Editor';

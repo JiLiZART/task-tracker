@@ -24,7 +24,7 @@
       </form>
     </div>
 
-    <div class="project__tasks card-block">
+    <div class="project__tasks card-block" v-if="haveTasks || canCreate">
       <template v-if="tasks && tasks.length">
         <template v-if="filterCompleted">
           <template v-for="(item, index) in filterUndoneTasks(tasks)">
@@ -39,7 +39,7 @@
             ></task>
           </template>
 
-          <h5 class="card-title">Recently done tasks</h5>
+          <h5 class="card-title" v-if="filterDoneTasks(tasks).length">Recently done tasks</h5>
 
           <template v-for="(item, index) in filterDoneTasks(tasks)">
             <task
@@ -70,8 +70,7 @@
       <template v-else>
         <div class="card card-outline-secondary" v-if="canCreate">
           <div class="card-block">
-            <h4 class="card-title">There are no tasks</h4>
-            <p class="card-text">Try to create one and assign to someone.</p>
+            <p class="card-text">There are no tasks. Try to create one and assign to someone.</p>
           </div>
         </div>
       </template>
@@ -84,8 +83,8 @@
       </div>
     </div>
 
-    <div class="project__docs card-block">
-      <template v-if="docs && docs.length">
+    <div class="card-block project__docs" v-if="haveDocs || canCreate">
+      <template v-if="haveDocs">
         <template v-for="(item, index) in docs">
           <document
             :key="item._id"
@@ -98,11 +97,10 @@
           ></document>
         </template>
       </template>
-      <template v-else>
-        <div class="card card-outline-secondary" v-if="canCreate">
+      <template v-else-if="canCreate">
+        <div class="card card-outline-secondary">
           <div class="card-block">
-            <h4 class="card-title">There are no documents</h4>
-            <p class="card-text">Try to add one.</p>
+            <p class="card-text">There are no documents. Try to add one.</p>
           </div>
         </div>
       </template>
@@ -118,8 +116,8 @@
 </template>
 
 <script>
-  import Document from '@/components/Document';
-  import Task from '@/components/Task';
+  import Document from '@/containers/Document';
+  import Task from '@/containers/Task';
   import Editor from '@/components/Editor';
 
   import uuidv4 from 'uuid/v4';
@@ -127,9 +125,7 @@
   export default {
     name: 'project',
     props: {
-      project: {
-        type: Object
-      },
+      project: {type: Object},
       tasks: {type: Array},
       docs: {type: Array},
       canCreate: {
@@ -148,18 +144,7 @@
 
     components: {Document, Task, Editor},
 
-    data: function () {
-      return {};
-    },
-
     methods: {
-      onSubmit() {
-      },
-
-      onEditorChange(text) {
-        this.updateProject({text});
-      },
-
       updateProject(params) {
         params._id = this.project._id;
 
@@ -184,6 +169,13 @@
 
       filterDoneTasks(tasks) {
         return tasks.filter(t => t.done);
+      },
+
+      onSubmit() {
+      },
+
+      onEditorChange(text) {
+        this.updateProject({text});
       },
 
       onTaskChange: function (task) {
@@ -222,6 +214,14 @@
 
       textPlaceholder() {
         return this.canEdit ? 'Click to edit description' : '';
+      },
+
+      haveDocs() {
+        return this.docs && this.docs.length;
+      },
+
+      haveTasks() {
+        return this.tasks && this.tasks.length;
       },
 
       teammates() {

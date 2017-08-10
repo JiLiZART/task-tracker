@@ -25,10 +25,10 @@
 </template>
 
 <script>
-  import WidgetTasks from '@/components/WidgetTasks'
-  import WidgetProjects from '@/components/WidgetProjects'
-  import WidgetTeam from '@/components/WidgetTeam'
-  import WidgetUpdates from '@/components/WidgetUpdates'
+  import WidgetTasks from '@/containers/WidgetTasks'
+  import WidgetProjects from '@/containers/WidgetProjects'
+  import WidgetTeam from '@/containers/WidgetTeam'
+  import WidgetUpdates from '@/containers/WidgetUpdates'
 
   export default {
     name: 'dashboard',

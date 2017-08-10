@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import Task from '@/components/Task';
+  import Task from '@/containers/Task';
 
   export default {
     name: 'widget-tasks',

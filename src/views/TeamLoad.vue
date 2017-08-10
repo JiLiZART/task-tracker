@@ -10,7 +10,7 @@
 </template>
 
 <script>
-  import TeamLoad from '@/components/TeamLoad';
+  import TeamLoad from '@/containers/TeamLoad';
 
   export default {
     name: 'team-load-view',

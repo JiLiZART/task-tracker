@@ -32,7 +32,7 @@
 </template>
 
 <script>
-  import Project from '@/components/Project';
+  import Project from '@/containers/Project';
   import Author from '@/components/Author';
 
   export default {

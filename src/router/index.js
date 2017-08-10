@@ -1,17 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/containers/Login'
-import CreateProject from '@/containers/CreateProject'
-import CreateWorkspace from '@/containers/CreateWorkspace'
-import Dashboard from '@/containers/Dashboard'
-import DocumentView from '@/containers/DocumentView'
-import InviteTeammates from '@/containers/InviteTeammates'
-import SettingsView from '@/containers/SettingsView'
-import SearchView from '@/containers/SearchView'
-import MemberView from '@/containers/MemberView'
-import ProjectView from '@/containers/ProjectView'
-import TaskView from '@/containers/TaskView'
-import TeamLoadView from '@/containers/TeamLoadView'
+import Login from '@/views/Login'
+import CreateProject from '@/views/CreateProject'
+import CreateWorkspace from '@/views/CreateWorkspace'
+import Dashboard from '@/views/Dashboard'
+import Document from '@/views/Document'
+import InviteTeammates from '@/views/InviteTeammates'
+import Settings from '@/views/Settings'
+import Search from '@/views/Search'
+import Member from '@/views/Member'
+import Project from '@/views/Project'
+import Task from '@/views/Task'
+import TeamLoad from '@/views/TeamLoad'
 
 Vue.use(Router);
 
@@ -33,7 +33,7 @@ export function createRouter() {
       },
       {
         path: '/doc/:id',
-        component: DocumentView
+        component: Document
       },
       {
         path: '/invite-teammates',
@@ -42,30 +42,30 @@ export function createRouter() {
       {
         path: '/member/:id',
         name: 'member',
-        component: MemberView
+        component: Member
       },
       {
         path: '/project/:id',
         name: 'project',
-        component: ProjectView
+        component: Project
       },
       {
         path: '/task/:id',
         name: 'task',
-        component: TaskView
+        component: Task
       },
       {
         path: '/team-load',
-        component: TeamLoadView
+        component: TeamLoad
       },
       {
         path: '/settings',
-        component: SettingsView
+        component: Settings
       },
       {
         path: '/search/:query',
         name: 'search',
-        component: SearchView
+        component: Search
       },
       {
         path: '/',
