@@ -1,27 +1,30 @@
+const markType = (item, type) => {
+  item.type = type;
+  return item;
+};
+
+const typesAsArray = (items, type) =>
+  Object.keys(items).map((id) => markType(items[id], type));
+
 export default {
   workspace(state) {
-    const id = state.workspace;
-    return state.workspaces[id];
+    return state.workspaces[state.workspace];
   },
 
   teammates(state) {
-    const mates = state.teammates;
-    return Object.keys(mates).map((id) => mates[id]);
+    return typesAsArray(state.teammates, 'teammate');
   },
 
   projects(state) {
-    const projects = state.projects;
-    return Object.keys(projects).map((id) => projects[id]);
+    return typesAsArray(state.projects, 'project');
   },
 
   tasks(state) {
-    const tasks = state.tasks;
-    return Object.keys(tasks).map((id) => tasks[id]);
+    return typesAsArray(state.tasks, 'task');
   },
 
   docs(state) {
-    const docs = state.docs;
-    return Object.keys(docs).map((id) => docs[id]);
+    return typesAsArray(state.docs, 'doc');
   },
 
   lastUpdates(state) {

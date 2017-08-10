@@ -45,8 +45,8 @@ export default {
   },
 
   createProject(state, params) {
-    params.docs = params.docs ? params.docs : [];
-    params.tasks = params.tasks ? params.tasks : [];
+    params.docs = params.docs || [];
+    params.tasks = params.tasks || [];
 
     Vue.set(state.projects, params._id, params);
   },
@@ -65,8 +65,8 @@ export default {
     task.followers = task.followers || [];
     task.performers = task.performers || [];
     task.done = task.done || false;
-    task.isNew = true;
     task.created = task.created || new Date();
+    task.isNew = true;
 
     state.projects[project._id].tasks.push(task._id);
 
@@ -77,8 +77,6 @@ export default {
     const current = state.tasks[task._id];
 
     Vue.set(state.tasks, task._id, Object.assign({}, current, task));
-
-    console.log('updated task', state.tasks[task._id]);
   },
 
   removeTask(state, {task, project}) {
