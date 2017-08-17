@@ -9,7 +9,7 @@
         </li>
       </ul>
     </div>
-    <div class="card-block" v-if="members && members.length">
+    <div class="card-body" v-if="members && members.length">
       <template v-for="(item, index) in members">
         <span class="widget-team__member">
           <router-link :to="{ name: 'member', params: { id: item._id }}">
@@ -18,9 +18,9 @@
         </span>
       </template>
     </div>
-    <div class="card-block" v-else>
+    <div class="card-body" v-else>
       <div class="card">
-        <div class="card-block">
+        <div class="card-body">
           <p class="card-text">There are no teammates.</p>
           <router-link class="btn btn-primary" to="/invite-teammates">Invite Teammates</router-link>
         </div>

@@ -8,7 +8,7 @@
       ></project>
     </div>
     <div class="card card-outline-secondary" v-else>
-      <div class="card-block">
+      <div class="card-body">
         <h4 class="card-title">Project not found</h4>
         <p class="card-text">Try to add one.</p>
         <router-link class="btn btn-primary" to="/">Go Home</router-link>

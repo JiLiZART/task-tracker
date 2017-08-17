@@ -10,12 +10,12 @@
       </ul>
     </div>
 
-    <div class="card-block">
+    <div class="card-body">
       <template v-for="(item, index) in items">
-        <router-link class="btn btn-link" :to="{ name: 'project', params: { id: item._id }}">
+        <router-link class="btn btn-light" :to="{ name: 'project', params: { id: item._id }}">
           {{ item.title }}
-          <span class="badge badge-default badge-pill"><i class="fa fa-tasks"></i>{{ tasksCount(item) }}</span>
-          <span class="badge badge-default badge-pill"><i class="fa fa-file-text"></i>{{ docsCount(item) }}</span>
+          <span class="badge badge-light"><i class="fa fa-tasks"></i>{{ tasksCount(item) }}</span>
+          <span class="badge badge-light"><i class="fa fa-file-text"></i>{{ docsCount(item) }}</span>
         </router-link>
       </template>
     </div>

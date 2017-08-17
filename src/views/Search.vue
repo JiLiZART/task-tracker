@@ -1,11 +1,11 @@
 <template>
   <div class="container">
     <div class="card search-view">
-      <div class="card-block">
+      <div class="card-body">
         <h4 class="card-title">Search results for "{{query}}"</h4>
 
         <div class="card search-view__section" v-if="foundTasks.length">
-          <div class="card-block">
+          <div class="card-body">
             <h5 class="card-title">Tasks</h5>
             <template v-for="(item, index) in foundTasks">
               <div class="search-view__item">
@@ -22,7 +22,7 @@
         </div>
 
         <div class="card search-view__section" v-if="foundDocs.length">
-          <div class="card-block">
+          <div class="card-body">
             <h5 class="card-title">Docs</h5>
             <template v-for="(item, index) in foundDocs">
               <div class="search-view__item">
@@ -39,20 +39,20 @@
         </div>
 
         <div class="card search-view__section" v-if="foundProjects.length">
-          <div class="card-block">
+          <div class="card-body">
             <h5 class="card-title">Projects</h5>
             <template v-for="(item, index) in foundProjects">
-              <router-link class="btn btn-link" :to="{ name: 'project', params: { id: item._id }}">
+              <router-link class="btn btn-light" :to="{ name: 'project', params: { id: item._id }}">
                 {{ item.title }}
-                <span class="badge badge-default badge-pill"><i class="fa fa-tasks"></i>{{ tasksCount(item) }}</span>
-                <span class="badge badge-default badge-pill"><i class="fa fa-file-text"></i>{{ docsCount(item) }}</span>
+                <span class="badge badge-light"><i class="fa fa-tasks"></i>{{ tasksCount(item) }}</span>
+                <span class="badge badge-light"><i class="fa fa-file-text"></i>{{ docsCount(item) }}</span>
               </router-link>
             </template>
           </div>
         </div>
 
         <div class="card search-view__section" v-if="foundMates && foundMates.length">
-          <div class="card-block">
+          <div class="card-body">
             <h5 class="card-title">Teammates</h5>
             <template v-for="(item, index) in foundMates">
               <router-link :to="{ name: 'member', params: { id: item._id }}">

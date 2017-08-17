@@ -2,7 +2,7 @@
   <div class="task card" :class="classObject">
     <transition name="fade" :duration="200">
       <div class="task__body" v-if="isExpanded">
-        <div class="card-block">
+        <div class="card-body">
           <div class="task__actions">
             <user-picker
                 label="Add Performer"
@@ -347,6 +347,11 @@
     &__actions {
       margin-bottom: 1rem;
       display: flex;
+      flex-direction: column;
+
+      @media (min-width: 992px) {
+        flex-direction: row;
+      }
     }
 
     &__action-members {
@@ -354,14 +359,20 @@
     }
 
     &__action {
-      margin-right: 1rem;
+      margin-bottom: 1rem;
       display: inline-block;
       font-size: 13px;
       cursor: pointer;
+
+      @media (min-width: 992px) {
+        margin-right: 1rem;
+      }
     }
 
     &__action_align_right {
-      margin-left: auto;
+      @media (min-width: 992px) {
+        margin-left: auto;
+      }
     }
 
     &_no-expand &__action_last,

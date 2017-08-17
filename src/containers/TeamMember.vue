@@ -1,10 +1,10 @@
 <template>
   <div class="card team-member">
-    <div class="card-block">
+    <div class="card-body">
       <author :item="member"></author>
     </div>
 
-    <div class="card-block" v-if="performAnyTask">
+    <div class="card-body" v-if="performAnyTask">
       <template v-for="(item, index) in projects">
         <project
             v-if="haveMemberTasks(item.tasks)"
@@ -19,9 +19,9 @@
         </project>
       </template>
     </div>
-    <div class="card-block" v-else>
+    <div class="card-body" v-else>
       <div class="card card-outline-secondary">
-        <div class="card-block">
+        <div class="card-body">
           <h4 class="card-title">There are no tasks assigned</h4>
           <p class="card-text">You can assign a task to him.</p>
           <router-link to="/dashboard" class="btn btn-primary">Go to Dashboard</router-link>

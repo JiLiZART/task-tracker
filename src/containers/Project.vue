@@ -1,6 +1,6 @@
 <template>
   <div class="card project" :class="{'project_editable': canEdit}">
-    <div class="card-block">
+    <div class="card-body">
       <form
           class="project__form"
           @blur="onCancelClick"
@@ -36,7 +36,7 @@
       </form>
     </div>
 
-    <div class="project__tasks card-block" v-if="haveTasks || canCreate">
+    <div class="project__tasks card-body" v-if="haveTasks || canCreate">
       <template v-if="tasks && tasks.length">
         <template v-if="filterCompleted">
           <template v-for="(item, index) in filterUndoneTasks(tasks)">
@@ -81,21 +81,21 @@
       </template>
       <template v-else>
         <div class="card card-outline-secondary" v-if="canCreate">
-          <div class="card-block">
+          <div class="card-body">
             <p class="card-text">There are no tasks. Try to create one and assign to someone.</p>
           </div>
         </div>
       </template>
 
       <div class="project__actions" v-if="canCreate">
-        <button class="btn btn-link card-link" @click="createTask">
+        <button class="btn btn-link card-link project__action-button" @click="createTask">
           <i class="fa fa-tasks"></i>
           Create Task
         </button>
       </div>
     </div>
 
-    <div class="card-block project__docs" v-if="haveDocs || canCreate">
+    <div class="card-body project__docs" v-if="haveDocs || canCreate">
       <template v-if="haveDocs">
         <template v-for="(item, index) in docs">
           <document
@@ -111,14 +111,14 @@
       </template>
       <template v-else-if="canCreate">
         <div class="card card-outline-secondary">
-          <div class="card-block">
+          <div class="card-body">
             <p class="card-text">There are no documents and conversations. Try to add one.</p>
           </div>
         </div>
       </template>
 
       <div class="project__actions" v-if="canCreate">
-        <button class="btn btn-link card-link" @click="createDoc">
+        <button class="btn btn-link card-link project__action-button" @click="createDoc">
           <i class="fa fa-file-text"></i>
           Add document or start a conversation
         </button>
@@ -291,6 +291,12 @@
 
     &__docs .doc {
       margin-bottom: .5rem;
+    }
+
+    &__actions {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 </style>

@@ -3,7 +3,7 @@
     <div class="card-header">
       <h5 class="card-title widget-tasks__title">My Tasks</h5>
     </div>
-    <div class="card-block" v-if="tasks && tasks.length">
+    <div class="card-body" v-if="tasks && tasks.length">
       <template v-for="(item, index) in tasks">
         <div class="widget-tasks__task">
           <task
@@ -17,9 +17,9 @@
         </div>
       </template>
     </div>
-    <div class="card-block" v-else>
+    <div class="card-body" v-else>
       <div class="card">
-        <div class="card-block">
+        <div class="card-body">
           <p class="card-text">There are no tasks assigned to you. Ask someone for a task.</p>
         </div>
       </div>

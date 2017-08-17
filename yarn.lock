@@ -1023,24 +1023,20 @@ boom@2.x.x:
   dependencies:
     hoek "2.x.x"
 
-bootstrap-vue@^0.18.0:
-  version "0.18.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-0.18.0.tgz#e8570724dd0dd4cba82344aec9acd7d7b8a9dfec"
+bootstrap-vue@^1.0.0-beta.4:
+  version "1.0.0-beta.4"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-1.0.0-beta.4.tgz#fc80bf284fd5e439aa370b1524185228f5acb341"
   dependencies:
-    bootstrap "^4.0.0-alpha.6"
+    bootstrap "^4.0.0-beta"
+    jquery "^3.0.0"
+    popper.js "^1.11.0"
     tether latest
-    vue "^2.3.3"
+    vue "^2.4.2"
+    vue-functional-data-merge "^1.0.6"
 
-bootstrap@4.0.0-beta:
+bootstrap@4.0.0-beta, bootstrap@^4.0.0-beta:
   version "4.0.0-beta"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.0.0-beta.tgz#dc5928175d2e71310bc668cf9e05a907211b72a6"
-
-bootstrap@^4.0.0-alpha.6:
-  version "4.0.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.0.0-alpha.6.tgz#4f54dd33ac0deac3b28407bc2df7ec608869c9c8"
-  dependencies:
-    jquery ">=1.9.1"
-    tether "^1.4.0"
 
 boxen@^0.6.0:
   version "0.6.0"
@@ -3831,7 +3827,7 @@ joi@^6.10.1:
     moment "2.x.x"
     topo "1.x.x"
 
-jquery@>=1.9.1:
+jquery@^3.0.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
@@ -5321,6 +5317,10 @@ pluralize@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
 
+popper.js@^1.11.0:
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.12.2.tgz#6c4f5b3453a8bff6d8c632ff7b9b55f031bfd570"
+
 postcss-calc@^5.2.0:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/postcss-calc/-/postcss-calc-5.3.1.tgz#77bae7ca928ad85716e2fda42f261bf7c1d65b5e"
@@ -6629,6 +6629,10 @@ stdout-stream@^1.4.0:
   dependencies:
     readable-stream "^2.0.1"
 
+store@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/store/-/store-2.0.12.tgz#8c534e2a0b831f72b75fc5f1119857c44ef5d593"
+
 stream-browserify@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/stream-browserify/-/stream-browserify-2.0.1.tgz#66266ee5f9bdb9940a4e4514cafb43bb71e5c9db"
@@ -6893,7 +6897,7 @@ test-exclude@^4.1.1:
     read-pkg-up "^1.0.1"
     require-main-filename "^1.0.1"
 
-tether@^1.4.0, tether@latest:
+tether@latest:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/tether/-/tether-1.4.0.tgz#0f9fa171f75bf58485d8149e94799d7ae74d1c1a"
 
@@ -7251,6 +7255,10 @@ vue-focus@^2.1.0:
   dependencies:
     loose-envify "^1.2.0"
 
+vue-functional-data-merge@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-1.0.6.tgz#cde4f0cf3f251f7f0196341156d2c936cca63d40"
+
 vue-gravatar@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/vue-gravatar/-/vue-gravatar-1.1.3.tgz#9a701f84200edc0a9ed7c2d58ab5be1336967a5d"
@@ -7315,7 +7323,7 @@ vue-timeago@^3.3.5:
   version "3.3.5"
   resolved "https://registry.yarnpkg.com/vue-timeago/-/vue-timeago-3.3.5.tgz#5af549aa9a48bdfc769895d32f457f2e365946aa"
 
-vue@^2.3.3:
+vue@^2.3.3, vue@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.4.2.tgz#a9855261f191c978cc0dc1150531b8d08149b58c"
 

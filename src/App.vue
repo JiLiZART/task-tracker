@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <navbar v-if="isLoggedIn && haveWorkspaces"
+    <navbar v-if="isLoggedIn && haveWorkspaces && haveProjects"
             :workspace="workspace"
             :workspaces="workspaces"
             :user="user"
@@ -54,6 +54,7 @@
         'isLoggedIn',
         'user',
         'haveWorkspaces',
+        'haveProjects',
         'workspace',
         'workspaces'
       ])
@@ -78,9 +79,12 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    min-width: 100%;
+    min-height: 100%;
   }
 
-  .slide-x-transition-enter-active, .slide-x-transition-leave-active {
+  .slide-x-transition-enter-active,
+  .slide-x-transition-leave-active {
     transition: 150ms cubic-bezier(.25, .8, .25, 1)
   }
 

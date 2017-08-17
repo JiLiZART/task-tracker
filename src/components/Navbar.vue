@@ -1,10 +1,5 @@
 <template>
-
   <b-navbar toggleable type="inverse" variant="primary">
-    <b-nav-toggle target="nav_collapse"></b-nav-toggle>
-
-    <b-collapse is-nav id="nav_collapse">
-
       <div class="navbar__workspace-title">
         <router-link class="navbar-brand navbar__workspace-link" to="/dashboard">
           {{ workspace.title }}
@@ -24,14 +19,12 @@
         </b-dropdown>
       </div>
 
-      <div class="collapse navbar-collapse" id="navbarColor01">
-        <form class="form-inline navbar__form">
-          <input class="form-control mr-sm-2 navbar__input"
-                 :value="searchValue"
-                 @input="onSearch"
-                 placeholder="Search">
-        </form>
-      </div>
+      <form class="form-inline navbar__form">
+        <input class="form-control mr-sm-2 navbar__input"
+               :value="searchValue"
+               @input="onSearch"
+               placeholder="Search">
+      </form>
 
       <b-dropdown class="navbar__user" variant="transparent" :right="true">
         <author class="navbar__user-toggle" slot="button-content" :item="user" :haveLink="false"></author>
@@ -41,8 +34,6 @@
         <b-dropdown-divider></b-dropdown-divider>
         <span class="dropdown-item" @click="clear">Clear sandbox</span>
       </b-dropdown>
-
-    </b-collapse>
   </b-navbar>
 </template>
 
@@ -98,11 +89,15 @@
     margin-bottom: 30px;
 
     &__form {
-      width: 100%;
+      flex: 1 1 0;
     }
 
     &__input.navbar__input {
       width: 100%;
+    }
+
+    &-inverse &__workspace-link {
+      color: white;
     }
 
     &__workspace {

@@ -9,7 +9,7 @@
       ></team-member>
     </template>
     <template v-if="!member">
-      <div class="card-block">
+      <div class="card-body">
         <h4 class="card-title">Member not found</h4>
         <p class="card-text">He was lost somewhere in the abyss of immense tasks.</p>
         <router-link to="/dashboard" class="btn btn-primary">Go to Dashboard</router-link>

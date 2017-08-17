@@ -8,22 +8,22 @@
           </li>
         </ul>
       </div>
-      <div class="card-block">
+      <div class="card-body">
         <div class="form-group row">
-          <label for="first-name" class="col-2 col-form-label">First Name</label>
-          <div class="col-10">
+          <label for="first-name" class="col-lg-2 col-md-12 col-form-label">First Name</label>
+          <div class="col-lg-10 col-md-12">
             <input class="form-control" :value="firstName" @input.lazy="updateFirstName" id="first-name">
           </div>
         </div>
         <div class="form-group row">
-          <label for="last-name" class="col-2 col-form-label">Last Name</label>
-          <div class="col-10">
+          <label for="last-name" class="col-lg-2 col-md-12 col-form-label">Last Name</label>
+          <div class="col-lg-10 col-md-12">
             <input class="form-control" :value="lastName" @input.lazy="updateLastName" id="last-name">
           </div>
         </div>
         <div class="form-group row">
-          <label for="email" class="col-2 col-form-label">Email</label>
-          <div class="col-10">
+          <label for="email" class="col-lg-2 col-md-12 col-form-label">Email</label>
+          <div class="col-lg-10 col-md-12">
             <input class="form-control" type="email" :value="email" @input="updateEmail" value="How do I shoot web" id="email">
           </div>
         </div>

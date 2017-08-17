@@ -3,7 +3,7 @@
     <div class="login__container">
       <logo class="login__logo"></logo>
       <div class="login__inner cover">
-        <h1 class="cover-heading">Your team's task tracker and project management tool.</h1>
+        <h2 class="cover-heading">Your team's task tracker and project management tool.</h2>
         <p class="lead">Runby makes it easy to organize your tasks, projects and conversations in a shared space.</p>
       </div>
 
@@ -83,6 +83,7 @@
       max-width: 42rem;
       width: 100%;
       margin: 0 auto;
+      padding: 1rem;
     }
 
     &__inner {
@@ -90,7 +91,7 @@
     }
 
     &__logo.login__logo {
-      margin: 30px auto;
+      margin: 1rem auto;
       max-width: 120px;
       max-height: 120px;
     }

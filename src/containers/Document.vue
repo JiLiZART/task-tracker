@@ -1,7 +1,7 @@
 <template>
   <div class="doc card" :class="{ 'doc_expanded': isExpanded, 'doc_edit': inEdit }">
     <template v-if="isExpanded">
-      <div class="card-block">
+      <div class="card-body">
         <div class="doc__actions">
           <user-picker
             label="Add Followers"

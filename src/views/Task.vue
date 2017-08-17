@@ -10,7 +10,7 @@
       ></task>
     </template>
     <template v-if="!task">
-      <div class="card-block">
+      <div class="card-body">
         <h4 class="card-title">Task not found</h4>
         <p class="card-text">Hmm.</p>
         <router-link to="/dashboard" class="btn btn-primary">Go to Dashboard</router-link>

@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "bootstrap": "4.0.0-beta",
-    "bootstrap-vue": "^0.18.0",
+    "bootstrap-vue": "^1.0.0-beta.4",
     "element-datepicker": "^1.2.0",
     "element-ui": "^1.4.1",
     "font-awesome": "^4.7.0",
@@ -26,6 +26,7 @@
     "lodash": "^4.17.4",
     "pouchdb": "^6.3.4",
     "raven-js": "^3.17.0",
+    "store": "^2.0.12",
     "uuid": "^3.1.0",
     "vue": "^2.3.3",
     "vue-focus": "^2.1.0",
