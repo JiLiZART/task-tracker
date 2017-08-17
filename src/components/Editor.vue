@@ -21,7 +21,8 @@
       text: {type: String},
       canEdit: {type: Boolean, 'default': true},
       light: {type: Boolean, 'default': true},
-      bordered: {type: Boolean, 'default': false}
+      bordered: {type: Boolean, 'default': false},
+      focused: {type: Boolean, 'default': false}
     },
 
     data() {
@@ -55,7 +56,7 @@
       ];
 
       return {
-        isFocused: false,
+        isFocused: this.focused,
 
         editorOption: {
           theme: this.light ? 'bubble' : 'snow',
@@ -70,6 +71,16 @@
     mounted() {
       if (this.disabled) {
         this.editor.disable();
+      }
+
+      if (this.focused === true) {
+        this.editor.focus();
+      }
+    },
+
+    updated() {
+      if (this.focused === true) {
+        this.editor.focus();
       }
     },
 
