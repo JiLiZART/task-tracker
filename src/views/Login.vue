@@ -2,9 +2,8 @@
   <div class="login" id="login-page">
     <div class="login__container">
       <div class="login__inner cover">
-        <h1 class="cover-heading">Your team's message board and task tracker.</h1>
-        <p class="lead">Runby is a messaging platform that makes teams more connected and aware of what's going on,
-          increases productivity, helps organize information and provides an environment for everyday work.</p>
+        <h1 class="cover-heading">Your team's task tracker and project management tool.</h1>
+        <p class="lead">Runby makes it easy to organize your tasks, projects and conversations in a shared space.</p>
       </div>
 
       <template v-if="isLoggedIn == false">
@@ -12,9 +11,9 @@
           <label for="inputEmail" class="sr-only">Email address</label>
           <input type="email" id="inputEmail"
                  v-model="email"
-                 class="login__input-email form-control form-control-lg"
+                 class="form-control form-control-lg login__input-email"
                  placeholder="Email address" required autofocus>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+          <button class="btn btn-lg btn-primary btn-block">Sign Up</button>
         </form>
       </template>
     </div>
@@ -34,11 +33,11 @@
       if (this.isLoggedIn) {
         if (!this.workspace) {
           this.$router.replace('/create-workspace');
-        } else if (!this.isHaveProjects) {
+        } else if (!this.haveProjects) {
           this.$router.replace('/create-project');
         }
 
-        if (this.workspace && this.isHaveProjects) {
+        if (this.workspace && this.haveProjects) {
           this.$router.replace('/dashboard');
         }
       }
@@ -64,7 +63,7 @@
         return this.$store.state.user;
       },
 
-      isHaveProjects() {
+      haveProjects() {
         return Boolean(Object.keys(this.$store.state.projects).length > 0);
       },
 
