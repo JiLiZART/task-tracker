@@ -16,7 +16,7 @@
     "deploy:firebase": "npm run build && firebase deploy"
   },
   "dependencies": {
-    "bootstrap": "4.0.0-alpha.6",
+    "bootstrap": "4.0.0-beta",
     "bootstrap-vue": "^0.18.0",
     "element-datepicker": "^1.2.0",
     "element-ui": "^1.4.1",
