@@ -40,11 +40,11 @@
 
     computed: {
       isLoggedIn() {
-        return Boolean(this.user && this.user.username);
+        return this.$store.getters.isLoggedIn;
       },
 
       user() {
-        return this.$store.state.user;
+        return this.$store.getters.user;
       },
 
       isHaveProjects() {
