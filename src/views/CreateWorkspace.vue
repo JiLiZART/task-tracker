@@ -6,7 +6,7 @@
         <p class="lead">A workspace is where you can work with tasks and documents personally or with a team.</p>
       </div>
 
-      <form class="create-workspace__form" v-on:submit.prevent="onSubmit">
+      <form class="create-workspace__form" @submit.prevent="onSubmit">
         <label for="workspaceName" class="sr-only">Create Workspace</label>
         <input v-model="title"
                v-focus="focused"

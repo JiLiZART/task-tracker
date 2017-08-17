@@ -5,10 +5,9 @@
         <h1 class="cover-heading">Create your first Project.</h1>
       </div>
 
-      <form class="create-project__form" v-on:submit.prevent="onSubmit">
+      <form class="create-project__form" @submit.prevent="onSubmit">
         <label for="projectName" class="sr-only">Create a Project</label>
-        <input type="text"
-               v-focus="focused"
+        <input v-focus="focused"
                @focus="focused = true" @blur="focused = false"
                v-model="title"
                id="projectName" class="form-control form-control-lg create-project__input-title"
@@ -27,7 +26,6 @@
 </template>
 
 <script>
-  import uuidv4 from 'uuid/v4';
   import {mixin as focusMixin}  from 'vue-focus';
 
   export default {

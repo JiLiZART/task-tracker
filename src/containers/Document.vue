@@ -9,11 +9,11 @@
             :multiple="true"
             :members="teammates"
             :selectedMembers="doc.followers"
-            v-on:change="onFollowersChange"
+            @change="onFollowersChange"
           ></user-picker>
         </div>
         <div class="doc__content">
-          <h5 class="card-title" v-show="!inEdit" v-on:click="onTitleClick">{{ title }}</h5>
+          <h5 class="card-title" v-show="!inEdit" @click="onTitleClick">{{ title }}</h5>
 
           <editor
             v-show="!inEdit"
@@ -21,13 +21,12 @@
             :bordered="false"
             :text="text"
             :placeholder="textPlaceholder"
-            :canEdit="false"
-            @change="onEditorChange">
+            :canEdit="false">
           </editor>
 
           <form
             class="doc__edit-form"
-            v-on:submit.prevent="onSubmit"
+            @submit.prevent="onSubmit"
             v-show="inEdit"
           >
             <div class="form-group">
@@ -51,7 +50,7 @@
 
             <div class="form-group">
               <button class="btn btn-primary" :disabled="!title">Save</button>
-              <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
+              <button class="btn btn-secondary" type="button" @click="onCancelClick">Cancel</button>
             </div>
           </form>
         </div>
@@ -78,7 +77,7 @@
     </template>
 
     <template v-if="!inEdit">
-      <div class="doc__expander" v-on:click="toggleExpanded">
+      <div class="doc__expander" @click="toggleExpanded">
         <i class="fa fa-angle-double-up" v-if="isExpanded"></i>
         <i class="fa fa-angle-double-down" v-else></i>
       </div>
@@ -102,16 +101,16 @@
     },
     components: {Author, Comments, UserPicker, Editor},
 
-    data: function () {
+    data() {
       const doc = this.doc || {};
-      const inEdit = !doc.title;
+      const isTitleEmpty = !doc.title;
 
       return {
         title: doc.title,
         //text: doc.text,
 
-        inEdit: inEdit,
-        isExpanded: inEdit === true,
+        inEdit: doc.isNew || isTitleEmpty,
+        isExpanded: isTitleEmpty === true,
         isNew: doc.isNew,
 
         followers: []
@@ -147,10 +146,10 @@
         this.inEdit = true;
       },
 
-      onFollowersChange(users) {
-        //this.updateDoc({follower: user});
+      onFollowersChange(followers) {
+        this.updateDoc({followers});
         console.log('doc follower change', users);
-        this.$store.commit('addFollowersToDoc', {doc: this.doc, users})
+        //this.$store.commit('addFollowersToDoc', {doc: this.doc, users})
       },
 
       onCancelClick() {

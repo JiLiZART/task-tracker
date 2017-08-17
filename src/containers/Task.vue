@@ -9,23 +9,23 @@
                 class="task__action"
                 :members="teammates"
                 :selectedMembers="task.performers"
-                v-on:change="onPerformerChange"
-            />
+                @change="onPerformerChange"
+            ></user-picker>
+
             <user-picker
                 label="Add Followers"
                 class="task__action"
                 :multiple="true"
                 :members="teammates"
                 :selectedMembers="task.followers"
-                v-on:change="onFollowersChange"
-            />
+                @change="onFollowersChange"
+            ></user-picker>
 
             <div class="task__action task__action_align_right">
-              <button
-                  class="btn"
-                  :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
-                  v-if="!inEdit"
-                  v-on:click="toggleDone"
+              <button class="btn"
+                      :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
+                      v-if="!inEdit"
+                      @click="toggleDone"
               >
                 {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
               </button>
@@ -41,13 +41,24 @@
           </div>
 
           <div class="task__content">
-            <form class="task__new-form" v-on:submit.prevent="onSubmit" v-if="isNew">
+            <h4 class="card-title task__title" v-show="!inEdit" @click="onTitleClick">{{title}}</h4>
+
+            <editor class="task__text-editor"
+                    v-show="!inEdit"
+                    :bordered="false"
+                    :text="text"
+                    :placeholder="textPlaceholder"
+                    :canEdit="false">
+            </editor>
+
+            <form class="task__edit-form" @submit.prevent="onSubmit" v-if="inEdit">
               <div class="form-group">
                 <label for="task-title" class="sr-only">Title</label>
-                <input class="form-control task__new-input-title"
+                <input class="form-control task__input-title"
                        v-model="title"
                        id="task-title"
-                       placeholder="Enter Task Title..." required/>
+                       placeholder="Enter Title..."
+                       required/>
               </div>
               <div class="form-group">
                 <editor class="task__text-editor"
@@ -56,39 +67,15 @@
                         :placeholder="textPlaceholder"
                         @change="onEditorChange">
                 </editor>
-                <label for="task-description" class="sr-only" v-show="false">Description</label>
-                <textarea class="form-control task__new-input-text"
-                          v-show="false"
-                          v-model="text"
-                          id="task-description"
-                ></textarea>
               </div>
-
               <div class="form-group">
                 <button class="btn btn-primary" :disabled="!title">Save</button>
-                <button class="btn btn-secondary" v-on:click="onCancelClick" v-if="canCancel">Cancel</button>
-              </div>
-            </form>
-            <form class="task__edit-form" v-on:submit.prevent="onSubmit" v-else>
-              <h4 class="card-title task__title">
-                <input class="form-control form-control_transparent task__title-input"
-                       v-model="title"
-                       :placeholder="titlePlaceholder"
-                       :readonly="!canEdit"
-                       required
-                />
-              </h4>
-              <div class="card-text task__text">
-                <editor class="task__text-editor"
-                        :text="text"
-                        :placeholder="textPlaceholder"
-                        @change="onEditorChange">
-                </editor>
+                <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel</button>
               </div>
             </form>
           </div>
         </div>
-        <comments :items.sync="comments" type="tasks" :entity="task" v-if="!inEdit"></comments>
+        <comments type="tasks" :items.sync="comments" :entity="task" v-if="!inEdit"></comments>
       </div>
     </transition>
 
@@ -98,8 +85,8 @@
           <author :item="item" :small="true" :haveName="false"></author>
         </template>
       </div>
-      <h5 class="card-title task__teaser-title" v-on:click="toggleExpanded">{{ task.title }}</h5>
-      <div class="task__teaser-spacer" v-on:click="toggleExpanded"></div>
+      <h5 class="card-title task__teaser-title" @click="toggleExpanded">{{ task.title }}</h5>
+      <div class="task__teaser-spacer" @click="toggleExpanded"></div>
       <div class="task__teaser-deadline" v-if="task.deadline">
         {{ task.deadline | fromNow }}
       </div>
@@ -110,7 +97,7 @@
     </div>
 
     <template v-if="!inEdit && canExpand">
-      <button class="btn btn-link task__expander" v-on:click="toggleExpanded">
+      <button class="btn btn-link task__expander" @click="toggleExpanded">
         <i class="fa fa-angle-double-up" v-if="isExpanded"></i>
         <i class="fa fa-angle-double-down" v-else></i>
       </button>
@@ -159,9 +146,8 @@
         followers: task.followers,
         done: task.done,
 
-        inEdit: isTitleEmpty,
-        isExpanded: (isTitleEmpty === true) || this.canExpand === false,
-        isNew: task.isNew
+        inEdit: task.isNew || isTitleEmpty,
+        isExpanded: (isTitleEmpty === true) || this.canExpand === false
       }
     },
 
@@ -199,14 +185,21 @@
 
       onSubmit() {
         this.inEdit = false;
-        this.isNew = false;
 
-        this.updateTask({title: this.title, text: this.text, isNew: this.isNew});
-        this.logAction(this.isNew ? 'created' : 'updated');
+        this.updateTask({title: this.title, text: this.text, isNew: false});
+        this.logAction(this.task.isNew ? 'created' : 'updated');
       },
 
       onEditorChange(text) {
         this.updateTask({text});
+      },
+
+      onTextClick() {
+        this.inEdit = true;
+      },
+
+      onTitleClick() {
+        this.inEdit = true;
       },
 
       onCancelClick() {
@@ -223,11 +216,10 @@
         this.logUsersChange(performers, this.task.performers, 'performer');
       },
 
-      onFollowersChange(users) {
-        //this.$store.commit('addFollowersToTask', {task: this.task, users});
+      onFollowersChange(followers) {
         this.updateTask({followers});
 
-        this.logUsersChange(users, this.task.followers, 'followers');
+        this.logUsersChange(followers, this.task.followers, 'followers');
       },
 
       logUsersChange(newUsers, currentUsers, label) {
@@ -306,7 +298,7 @@
       },
 
       user() {
-        return this.$store.state.user;
+        return this.$store.getters.user;
       }
     }
   }
@@ -420,5 +412,4 @@
       margin-left: 4px;
     }
   }
-
 </style>

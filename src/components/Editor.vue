@@ -22,7 +22,6 @@
       canEdit: {type: Boolean, 'default': true},
       light: {type: Boolean, 'default': true},
       bordered: {type: Boolean, 'default': false},
-      focused: {type: Boolean, 'default': false}
     },
 
     data() {
@@ -56,7 +55,7 @@
       ];
 
       return {
-        isFocused: this.focused,
+        isFocused: false,
 
         editorOption: {
           theme: this.light ? 'bubble' : 'snow',
@@ -70,31 +69,41 @@
 
     mounted() {
       if (this.disabled) {
-        this.editor.disable();
-      }
-
-      if (this.focused === true) {
-        this.editor.focus();
-      }
-    },
-
-    updated() {
-      if (this.focused === true) {
-        this.editor.focus();
+        this.disable();
       }
     },
 
     methods: {
+      disable() {
+        this.editor.disable();
+      },
+
+      enable() {
+        this.editor.enable();
+      },
+
+      focus() {
+        this.editor.focus();
+      },
+
+      blur() {
+        this.editor.blur();
+      },
+
       onFocus() {
         if (!this.disabled) {
           this.isFocused = true
         }
+
+        this.$emit('focus');
       },
 
       onBlur() {
         if (!this.disabled) {
           this.isFocused = false
         }
+
+        this.$emit('blur');
       },
 
       onChange({editor, html, text}) {

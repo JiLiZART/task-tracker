@@ -8,9 +8,10 @@
       </div>
 
       <template v-if="isLoggedIn == false">
-        <form class="login__form" v-on:submit.prevent="onSubmit">
+        <form class="login__form" @submit.prevent="onSubmit">
           <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" id="inputEmail"
+          <input type="email"
+                 id="inputEmail"
                  v-model="email"
                  class="form-control form-control-lg login__input-email"
                  placeholder="Email address" required autofocus>

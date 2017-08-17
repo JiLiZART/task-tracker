@@ -3,10 +3,11 @@
     <div class="card-block">
       <form
           class="project__form"
-          v-on:submit.prevent="onSubmit"
+          @blur="onCancelClick"
+          @submit.prevent="onSubmit"
       >
         <div class="form-group">
-          <h4 class="card-title project__name" v-on:click="onTitleClick">
+          <h4 class="card-title project__name" @click="onTitleClick">
             <input class="form-control project__name-input"
                    :class="{'form-control_transparent': !inEdit}"
                    v-model="title"
@@ -16,11 +17,11 @@
                    required
             />
           </h4>
-          <div class="card-text project__text" v-show="text || inEdit" v-on:click="onTextClick">
+          <div class="card-text project__text" v-show="text || inEdit" @click="onTextClick">
             <editor class="project__text-editor"
                     @change="onEditorChange"
+                    ref="textEditor"
                     :text="text"
-                    :focused="textFocused"
                     :placeholder="textPlaceholder"
                     :bordered="inEdit"
                     :canEdit="inEdit">
@@ -30,7 +31,7 @@
 
         <div class="form-group" v-show="inEdit">
           <button class="btn btn-primary" :disabled="!title">Save</button>
-          <button class="btn btn-secondary" type="button" v-on:click="onCancelClick">Cancel</button>
+          <button class="btn btn-secondary" type="button" @click="onCancelClick">Cancel</button>
         </div>
       </form>
     </div>
@@ -46,7 +47,7 @@
                 :task.sync="item"
                 :project="project"
                 :teammates="teammates"
-                v-on:change="onTaskChange"
+                @change="onTaskChange"
             ></task>
           </template>
 
@@ -60,7 +61,7 @@
                 :task.sync="item"
                 :project="project"
                 :teammates="teammates"
-                v-on:change="onTaskChange"
+                @change="onTaskChange"
             ></task>
           </template>
         </template>
@@ -73,7 +74,7 @@
                 :task.sync="item"
                 :project="project"
                 :teammates="teammates"
-                v-on:change="onTaskChange"
+                @change="onTaskChange"
             ></task>
           </template>
         </template>
@@ -87,7 +88,7 @@
       </template>
 
       <div class="project__actions" v-if="canCreate">
-        <button class="btn btn-link card-link" v-on:click="createTask">
+        <button class="btn btn-link card-link" @click="createTask">
           <i class="fa fa-tasks"></i>
           Create Task
         </button>
@@ -104,7 +105,7 @@
               :doc.sync="item"
               :project="project"
               :teammates="teammates"
-              v-on:change="onDocChange"
+              @change="onDocChange"
           ></document>
         </template>
       </template>
@@ -117,7 +118,7 @@
       </template>
 
       <div class="project__actions" v-if="canCreate">
-        <button class="btn btn-link card-link" v-on:click="createDoc">
+        <button class="btn btn-link card-link" @click="createDoc">
           <i class="fa fa-file-text"></i>
           Add document or start a conversation
         </button>
@@ -127,6 +128,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import {mixin as focusMixin} from 'vue-focus';
 
   import Document from '@/containers/Document';
@@ -169,8 +171,7 @@
         inEdit: project.isNew || isTitleEmpty,
         isNew: project.isNew,
 
-        titleFocused: false,
-        textFocused: false
+        titleFocused: false
       }
     },
 
@@ -204,7 +205,6 @@
       onSubmit() {
         this.inEdit = false;
         this.titleFocused = false;
-        this.textFocused = false;
 
         this.updateProject({title: this.title, text: this.text, isNew: false});
       },
@@ -220,7 +220,10 @@
 
       onTextClick() {
         this.inEdit = true;
-        this.textFocused = true;
+
+        Vue.nextTick(() => {
+          this.textEditor.focus();
+        });
       },
 
       onCancelClick() {
@@ -248,6 +251,10 @@
 
       textPlaceholder() {
         return this.canEdit ? 'Click to edit description' : '';
+      },
+
+      textEditor() {
+        return this.$refs.textEditor
       },
 
       haveDocs() {

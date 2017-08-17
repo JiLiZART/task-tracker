@@ -1,30 +1,27 @@
 <template>
   <div class="container">
     <div class="dashboard">
-      <widget-tasks
-        class="dashboard__widget"
-        :tasks="myTasks"
-        :teammates="teammates"
+      <widget-tasks class="dashboard__widget"
+                    :tasks="myTasks"
+                    :teammates="teammates"
       ></widget-tasks>
 
-      <widget-projects
-        class="dashboard__widget"
-        :items="projects"
+      <widget-projects class="dashboard__widget"
+                       :items="projects"
       ></widget-projects>
 
-      <widget-updates
-        class="dashboard__widget"
-        :items="log"></widget-updates>
+      <widget-updates class="dashboard__widget"
+                      :items="lastUpdates"></widget-updates>
 
-      <widget-team
-        class="dashboard__widget"
-        :members="teammates"
+      <widget-team class="dashboard__widget"
+                   :members="teammates"
       ></widget-team>
     </div>
   </div>
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   import WidgetTasks from '@/containers/WidgetTasks'
   import WidgetProjects from '@/containers/WidgetProjects'
   import WidgetTeam from '@/containers/WidgetTeam'
@@ -38,29 +35,16 @@
       myTasks() {
         const findPerformer = (users, id) => users.find((u) => u._id === id);
 
-        return this.tasks
-          .filter((task) => findPerformer(task.performers, this.user._id));
+        return this.tasks.filter((task) => findPerformer(task.performers, this.user._id));
       },
 
-      user() {
-        return this.$store.getters.user;
-      },
-
-      projects() {
-        return this.$store.getters.projects;
-      },
-
-      tasks() {
-        return this.$store.getters.tasks;
-      },
-
-      teammates() {
-        return this.$store.getters.teammates;
-      },
-
-      log() {
-        return this.$store.getters.lastUpdates;
-      }
+      ...mapGetters([
+        'user',
+        'projects',
+        'tasks',
+        'teammates',
+        'lastUpdates'
+      ]),
     }
   }
 </script>

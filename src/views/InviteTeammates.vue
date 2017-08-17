@@ -5,7 +5,7 @@
         <h1 class="cover-heading">Invite Your Teammates.</h1>
       </div>
 
-      <form class="invite-teammates__form" v-on:submit.prevent="onSubmit">
+      <form class="invite-teammates__form" @submit.prevent="onSubmit">
         <label for="mate1" class="sr-only">Mate 1</label>
         <input type="email" id="mate1" class="invite-teammates__input form-control form-control-lg"
                v-model="mate1"

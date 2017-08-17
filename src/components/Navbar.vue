@@ -12,7 +12,7 @@
       </div>
 
       <div class="collapse navbar-collapse" id="navbarColor01">
-        <form class="navbar__form form-inline">
+        <form class="form-inline navbar__form">
           <input class="form-control mr-sm-2 navbar__input"
                  :value="searchValue"
                  @input="onSearch"
@@ -24,9 +24,9 @@
         <author class="navbar__user-toggle" slot="button-content" :item="user" :haveLink="false"></author>
 
         <router-link class="dropdown-item" to="/settings">Settings</router-link>
-        <span class="dropdown-item" v-on:click="logout">Sign out</span>
+        <span class="dropdown-item" @click="logout">Sign out</span>
         <b-dropdown-divider></b-dropdown-divider>
-        <span class="dropdown-item" v-on:click="clear">Clear sandbox</span>
+        <span class="dropdown-item" @click="clear">Clear sandbox</span>
       </b-dropdown>
 
     </b-collapse>
