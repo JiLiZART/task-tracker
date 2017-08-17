@@ -13,7 +13,7 @@
                  required
           />
         </h4>
-        <div class="card-text project__text" v-show="text && canEdit">
+        <div class="card-text project__text" v-show="text || canEdit">
           <editor class="project__text-editor"
                   :text="text"
                   :placeholder="textPlaceholder"
@@ -100,7 +100,7 @@
       <template v-else-if="canCreate">
         <div class="card card-outline-secondary">
           <div class="card-block">
-            <p class="card-text">There are no documents. Try to add one.</p>
+            <p class="card-text">There are no documents and conversations. Try to add one.</p>
           </div>
         </div>
       </template>
@@ -108,7 +108,7 @@
       <div class="project__actions" v-if="canCreate">
         <button class="btn btn-link card-link" v-on:click="createDoc">
           <i class="fa fa-file-text"></i>
-          Create Document
+          Add document or start a conversation
         </button>
       </div>
     </div>
