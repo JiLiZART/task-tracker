@@ -87,6 +87,8 @@ export default {
   createWorkspace(state, params) {
     const entity = createWorkspace(params);
 
+    entity.teammates.push(state.user);
+
     Vue.set(state.workspaces, entity._id, entity);
 
     state.workspace = entity._id;
