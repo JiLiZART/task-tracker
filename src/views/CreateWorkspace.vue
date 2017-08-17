@@ -2,14 +2,13 @@
   <div class="create-workspace">
     <div class="create-workspace__container">
       <div class="create-workspace__inner cover">
-        <h1 class="cover-heading">Create your first Workspace.</h1>
-        <p class="lead">For your personal use or your company.</p>
+        <h1 class="cover-heading">Create a workspace.</h1>
+        <p class="lead">A workspace is where you can work with tasks and documents personally or with a team.</p>
       </div>
 
       <form class="create-workspace__form" v-on:submit.prevent="onSubmit">
         <label for="workspaceName" class="sr-only">Create Workspace</label>
-        <input type="text"
-               v-model="title"
+        <input v-model="title"
                v-focus="focused"
                id="workspaceName" class="create-workspace__input form-control form-control-lg"
                placeholder="Workspace Name" required autofocus>
@@ -20,10 +19,10 @@
 </template>
 
 <script>
-  import {mixin as focusMixin}  from 'vue-focus';
+  import {mixin as focusMixin} from 'vue-focus';
 
   export default {
-    name: 'create-workspace',
+    name: 'create-workspace-view',
     mixins: [focusMixin],
 
     data() {
