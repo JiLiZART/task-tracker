@@ -1,21 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import PouchDB from 'pouchdb'
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
+import store from 'store';
 
 Vue.use(Vuex);
 
-const db = new PouchDB('runby');
-const store = {};
-
-const STATE_KEY = 'state_$Id:$';
+const STATE_KEY = 'state';
 
 const localStoragePlugin = (store) => {
   const state = getItem(STATE_KEY);
 
   state && store.replaceState(state);
+
   // вызывается после инициализации хранилища
   store.subscribe((mutation, state) => {
     // вызывается после каждой мутации
@@ -25,23 +23,19 @@ const localStoragePlugin = (store) => {
 };
 
 function setItem(key, value) {
-  const data = JSON.stringify(value);
-
-  return localStorage.setItem(key, data);
+  return store.set(key, value)
 }
 
 function getItem(key) {
-  const value = localStorage.getItem(key);
-
-  return value && JSON.parse(value);
+  return store.get(key);
 }
 
 function removeItem(key) {
-  return localStorage.removeItem(key);
+  return store.remove(key)
 }
 
 export function clearStorage() {
-  removeItem(STATE_KEY);
+  return removeItem(STATE_KEY);
 }
 
 export function createStore() {
