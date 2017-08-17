@@ -34,10 +34,9 @@
               <label for="doc-title" class="sr-only">Title</label>
               <input
                 v-model="title"
-                type="text"
                 class="doc__edit-input-title form-control"
                 id="doc-title"
-                placeholder="Enter Doc Title..."/>
+                placeholder="Title..."/>
             </div>
             <div class="form-group">
               <editor
@@ -51,7 +50,7 @@
             </div>
 
             <div class="form-group">
-              <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
+              <button class="btn btn-primary" :disabled="!title">Save</button>
               <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
             </div>
           </form>
@@ -80,8 +79,8 @@
 
     <template v-if="!inEdit">
       <div class="doc__expander" v-on:click="toggleExpanded">
-        <i class="fa fa-angle-double-up" aria-hidden="true" v-if="isExpanded"></i>
-        <i class="fa fa-angle-double-down" aria-hidden="true" v-else></i>
+        <i class="fa fa-angle-double-up" v-if="isExpanded"></i>
+        <i class="fa fa-angle-double-down" v-else></i>
       </div>
     </template>
   </div>

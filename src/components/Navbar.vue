@@ -14,10 +14,9 @@
       <div class="collapse navbar-collapse" id="navbarColor01">
         <form class="navbar__form form-inline">
           <input class="form-control mr-sm-2 navbar__input"
-          type="text"
-          :value="searchValue"
-          @input="onSearch"
-          placeholder="Search">
+                 :value="searchValue"
+                 @input="onSearch"
+                 placeholder="Search">
         </form>
       </div>
 
@@ -101,6 +100,10 @@
       display: inline-flex;
       align-items: center;
       padding: 0;
+    }
+
+    .dropdown-toggle:focus {
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.25);
     }
   }
 </style>

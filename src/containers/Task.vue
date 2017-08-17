@@ -1,31 +1,31 @@
 <template>
   <div class="task card" :class="classObject">
-    <transition name="fade">
+    <transition name="fade" :duration="200">
       <div class="task__body" v-if="isExpanded">
         <div class="card-block">
           <div class="task__actions">
             <user-picker
-              label="Add Performer"
-              class="task__action"
-              :members="teammates"
-              :selectedMembers="task.performers"
-              v-on:change="onPerformerChange"
+                label="Add Performer"
+                class="task__action"
+                :members="teammates"
+                :selectedMembers="task.performers"
+                v-on:change="onPerformerChange"
             />
             <user-picker
-              label="Add Followers"
-              class="task__action"
-              :multiple="true"
-              :members="teammates"
-              :selectedMembers="task.followers"
-              v-on:change="onFollowersChange"
+                label="Add Followers"
+                class="task__action"
+                :multiple="true"
+                :members="teammates"
+                :selectedMembers="task.followers"
+                v-on:change="onFollowersChange"
             />
 
             <div class="task__action task__action_align_right">
               <button
-                class="btn"
-                :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
-                v-if="!inEdit"
-                v-on:click="toggleDone"
+                  class="btn"
+                  :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
+                  v-if="!inEdit"
+                  v-on:click="toggleDone"
               >
                 {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
               </button>
@@ -46,7 +46,6 @@
                 <label for="task-title" class="sr-only">Title</label>
                 <input class="form-control task__new-input-title"
                        v-model="title"
-                       type="text"
                        id="task-title"
                        placeholder="Enter Task Title..." required/>
               </div>
@@ -66,8 +65,8 @@
               </div>
 
               <div class="form-group">
-                <button type="submit" class="btn btn-primary" :disabled="!title">Save</button>
-                <button class="btn btn-secondary" v-on:click="onCancelClick">Cancel</button>
+                <button class="btn btn-primary" :disabled="!title">Save</button>
+                <button class="btn btn-secondary" v-on:click="onCancelClick" v-if="canCancel">Cancel</button>
               </div>
             </form>
             <form class="task__edit-form" v-on:submit.prevent="onSubmit" v-else>
@@ -92,6 +91,7 @@
         <comments :items.sync="comments" type="tasks" :entity="task" v-if="!inEdit"></comments>
       </div>
     </transition>
+
     <div class="task__teaser" v-if="!isExpanded">
       <div class="task__teaser-performer">
         <template v-for="(item, index) in task.performers">
@@ -110,10 +110,10 @@
     </div>
 
     <template v-if="!inEdit && canExpand">
-      <div class="task__expander" v-on:click="toggleExpanded">
-        <i class="fa fa-angle-double-up" aria-hidden="true" v-if="isExpanded"></i>
-        <i class="fa fa-angle-double-down" aria-hidden="true" v-else></i>
-      </div>
+      <button class="btn btn-link task__expander" v-on:click="toggleExpanded">
+        <i class="fa fa-angle-double-up" v-if="isExpanded"></i>
+        <i class="fa fa-angle-double-down" v-else></i>
+      </button>
     </template>
   </div>
 </template>
@@ -220,28 +220,25 @@
       onPerformerChange(performers) {
         this.updateTask({performers});
 
-        if (performers.length) {
-          if (this.task.performers.length) {
-            this.logAction('changed performer on');
-          } else {
-            this.logAction('assigned performer on');
-          }
-        } else {
-          this.logAction('removed performer on');
-        }
+        this.logUsersChange(performers, this.task.performers, 'performer');
       },
 
       onFollowersChange(users) {
-        this.$store.commit('addFollowersToTask', {task: this.task, users});
+        //this.$store.commit('addFollowersToTask', {task: this.task, users});
+        this.updateTask({followers});
 
-        if (users.length) {
-          if (this.task.followers.length) {
-            this.logAction('changed followers on');
+        this.logUsersChange(users, this.task.followers, 'followers');
+      },
+
+      logUsersChange(newUsers, currentUsers, label) {
+        if (newUsers.length) {
+          if (currentUsers.length) {
+            this.logAction(`changed ${label} on`);
           } else {
-            this.logAction('assigned followers on');
+            this.logAction(`assigned ${label} on`);
           }
         } else {
-          this.logAction('removed followers on');
+          this.logAction(`removed ${label} on`);
         }
       },
 
@@ -267,11 +264,16 @@
         };
       },
 
+      canCancel() {
+        //@TODO move cancel logic to parent component
+        return this.project && this.project._id;
+      },
+
       title: {
-        get() {
+        get () {
           return this.task.title
         },
-        set(title) {
+        set (title) {
           this.updateTask({title});
         }
       },
@@ -281,10 +283,10 @@
       },
 
       text: {
-        get() {
+        get () {
           return this.task.text
         },
-        set(text) {
+        set (text) {
           this.updateTask({text});
         }
       },
@@ -313,6 +315,7 @@
 <style lang="scss">
   .task {
     position: relative;
+    transition: height 200ms ease-in-out;
 
     &__expander {
       padding: 0.5rem;

@@ -100,7 +100,7 @@
 
   .fade-enter-active,
   .fade-leave-active {
-    transition: opacity 200ms
+    transition: opacity 200ms ease-in-out
   }
 
   .fade-enter,

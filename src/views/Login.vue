@@ -1,6 +1,7 @@
 <template>
   <div class="login" id="login-page">
     <div class="login__container">
+      <logo class="login__logo"></logo>
       <div class="login__inner cover">
         <h1 class="cover-heading">Your team's task tracker and project management tool.</h1>
         <p class="lead">Runby makes it easy to organize your tasks, projects and conversations in a shared space.</p>
@@ -21,8 +22,13 @@
 </template>
 
 <script>
+  import Logo from '@/components/Logo';
+
   export default {
     name: 'login',
+
+    components: {Logo},
+
     data() {
       return {
         email: null
@@ -31,22 +37,14 @@
 
     created() {
       if (this.isLoggedIn) {
-        if (!this.workspace) {
-          this.$router.replace('/create-workspace');
-        } else if (!this.haveProjects) {
-          this.$router.replace('/create-project');
-        }
-
-        if (this.workspace && this.haveProjects) {
-          this.$router.replace('/dashboard');
-        }
+        this.$router.replace(this.nextRoute);
       }
     },
 
     methods: {
       onSubmit() {
         this.$store.commit('start', this.email);
-        this.$router.push('/create-workspace');
+        this.$router.push(this.nextRoute);
       },
 
       logout() {
@@ -55,6 +53,18 @@
     },
 
     computed: {
+      nextRoute() {
+        if (this.haveProjects) {
+          if (this.workspace) {
+            return '/dashboard';
+          }
+        } else {
+          return '/create-project';
+        }
+
+        return '/create-workspace';
+      },
+
       isLoggedIn() {
         return Boolean(this.user.username);
       },
@@ -92,6 +102,12 @@
 
     &__inner {
       text-align: center;
+    }
+
+    &__logo.login__logo {
+      margin: 30px auto;
+      max-width: 120px;
+      max-height: 120px;
     }
 
     &__form {
