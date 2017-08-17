@@ -1,5 +1,4 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
-.gitattributes
 
 # dependencies
 /node_modules
