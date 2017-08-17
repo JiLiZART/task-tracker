@@ -26,7 +26,7 @@
 
     computed: {
       project() {
-        return this.$store.state.projects[this.$route.params.id]
+        return this.$store.getters.projects.find((prj) => prj._id === this.$route.params.id)
       },
 
       docs() {

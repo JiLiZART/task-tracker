@@ -1,15 +1,16 @@
 <template>
   <div class="container">
     <team-load
-      :workspace="workspace"
-      :teammates="teammates"
-      :tasks="tasks"
-      :projects="projects"
+        :workspace="workspace"
+        :teammates="teammates"
+        :tasks="tasks"
+        :projects="projects"
     ></team-load>
   </div>
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   import TeamLoad from '@/containers/TeamLoad';
 
   export default {
@@ -18,24 +19,15 @@
     components: {TeamLoad},
 
     computed: {
-      projects() {
-        return this.$store.getters.projects;
-      },
-
-      teammates() {
-        return this.$store.getters.teammates;
-      },
+      ...mapGetters([
+        'projects',
+        'teammates',
+        'haveProjects',
+        'workspace'
+      ]),
 
       tasks() {
         return this.$store.state.tasks;
-      },
-
-      isHaveProjects() {
-        return Boolean(Object.keys(this.$store.state.projects).length > 0);
-      },
-
-      workspace() {
-        return this.$store.getters.workspace;
       }
     }
   }

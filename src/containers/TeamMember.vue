@@ -7,15 +7,15 @@
     <div class="card-block" v-if="performAnyTask">
       <template v-for="(item, index) in projects">
         <project
-          v-if="haveMemberTasks(item.tasks)"
-          :project="item"
-          :tasks="findMemberTasks(item.tasks)"
-          :filterCompleted="true"
-          :teammates="teammates"
-          :canCreate="false"
-          :canEdit="false"
-          :index="index"
-          :key="item._id">
+            v-if="haveMemberTasks(item.tasks)"
+            :project="item"
+            :tasks="findMemberTasks(item.tasks)"
+            :filterCompleted="true"
+            :teammates="teammates"
+            :canCreate="false"
+            :canEdit="false"
+            :index="index"
+            :key="item._id">
         </project>
       </template>
     </div>
@@ -48,13 +48,9 @@
 
     methods: {
       findMemberTasks(tasks) {
-        const id = this.member._id;
-
-        return tasks.map((id) => this.tasks[id]).filter(function (task) {
-          return task.performers && task.performers.find((user) => {
-              return user._id === id;
-            });
-        });
+        return tasks
+          .map((id) => this.tasks[id])
+          .filter((task) => task.performers && task.performers.find((u) => u._id === this.member._id));
       },
 
       haveMemberTasks(tasks) {
@@ -64,9 +60,7 @@
 
     computed: {
       performAnyTask() {
-        return this.projects.filter(function (prj) {
-          return this.haveMemberTasks(prj.tasks);
-        }.bind(this)).length;
+        return this.projects.filter((prj) => this.haveMemberTasks(prj.tasks)).length;
       }
     }
   }

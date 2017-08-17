@@ -27,7 +27,7 @@
     components: {Task},
     computed: {
       task() {
-        return this.$store.state.tasks[this.$route.params.id]
+        return this.$store.getters.tasks.find((t) => t._id === this.$route.params.id);
       },
 
       teammates() {

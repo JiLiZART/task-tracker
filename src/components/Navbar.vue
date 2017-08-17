@@ -11,6 +11,19 @@
         </router-link>
       </div>
 
+      <div class="navbar__workspaces">
+        <b-dropdown class="navbar__workspaces-dropdown" variant="transparent">
+          <i class="fa fa-desktop" slot="button-content"></i>
+          <template v-for="(item, index) in workspaces">
+            <b-dropdown-item
+            :disabled="isWorkspaceActive(item)" :key="item._id"
+            @click="changeWorkspace(item)">{{ item.title }}</b-dropdown-item>
+          </template>
+          <b-dropdown-divider></b-dropdown-divider>
+          <router-link class="dropdown-item" to="/create-workspace">Create Workspace</router-link>
+        </b-dropdown>
+      </div>
+
       <div class="collapse navbar-collapse" id="navbarColor01">
         <form class="form-inline navbar__form">
           <input class="form-control mr-sm-2 navbar__input"
@@ -39,26 +52,32 @@
   export default {
     name: 'navbar',
 
-    props: ['workspace', 'user'],
+    props: ['workspace', 'workspaces', 'user'],
 
     components: {Author},
 
     methods: {
       onSearch(e) {
         const query = e.target.value;
+        const route = query.length > 0 ? {name: 'search', params: {query}} : {name: 'dashboard'};
 
-        if (query.length > 0) {
-          this.$router.replace({name: 'search', params: {query}})
-        } else {
-          this.$router.replace({name: 'dashboard'});
-        }
+        this.$router.replace(route);
       },
 
       logout() {
         this.$emit('logout')
       },
+
       clear() {
         this.$emit('clear')
+      },
+
+      changeWorkspace(item) {
+        this.$emit('changeWorkspace', item)
+      },
+
+      isWorkspaceActive(item) {
+        return item._id === this.workspace._id;
       }
     },
 
@@ -87,6 +106,11 @@
     }
 
     &__workspace {
+      padding: 0 .5rem;
+    }
+
+    &__workspaces-dropdown {
+      height: 40px;
       padding: 0 .5rem;
     }
 

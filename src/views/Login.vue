@@ -23,6 +23,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   import Logo from '@/components/Logo';
 
   export default {
@@ -58,21 +59,12 @@
         return this.workspace ? (this.haveProjects ? '/dashboard' : '/create-project') : '/create-workspace';
       },
 
-      isLoggedIn() {
-        return this.$store.getters.isLoggedIn;
-      },
-
-      user() {
-        return this.$store.getters.user;
-      },
-
-      haveProjects() {
-        return Boolean(Object.keys(this.$store.state.projects).length > 0);
-      },
-
-      workspace() {
-        return this.$store.getters.workspace;
-      }
+      ...mapGetters([
+        'isLoggedIn',
+        'user',
+        'haveProjects',
+        'workspace'
+      ]),
     }
   }
 </script>

@@ -1,7 +1,12 @@
 <template>
   <div id="app">
-    <navbar v-if="isLoggedIn && isHaveProjects"
-            :workspace="workspace" :user="user" @logout="logout" @clear="clear"
+    <navbar v-if="isLoggedIn && haveWorkspaces"
+            :workspace="workspace"
+            :workspaces="workspaces"
+            :user="user"
+            @logout="logout"
+            @clear="clear"
+            @changeWorkspace="changeWorkspace"
     ></navbar>
     <transition name="slide-x-transition" mode="out-in">
       <router-view class="view"></router-view>
@@ -10,6 +15,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   import Navbar from './components/Navbar';
   import {clearStorage} from '@/store/index';
 
@@ -35,25 +41,22 @@
       clear() {
         clearStorage();
         location.reload(); //@TODO find workaround
+      },
+
+      changeWorkspace(item) {
+        this.$store.commit('changeWorkspace', item._id);
+        this.$router.push('/dashboard');
       }
     },
 
     computed: {
-      isLoggedIn() {
-        return this.$store.getters.isLoggedIn;
-      },
-
-      user() {
-        return this.$store.getters.user;
-      },
-
-      isHaveProjects() {
-        return Boolean(Object.keys(this.$store.state.projects).length > 0);
-      },
-
-      workspace() {
-        return this.$store.getters.workspace;
-      }
+      ...mapGetters([
+        'isLoggedIn',
+        'user',
+        'haveWorkspaces',
+        'workspace',
+        'workspaces'
+      ])
     }
   }
 </script>

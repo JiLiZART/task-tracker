@@ -1,43 +1,58 @@
-const markType = (item, type) => {
-  item.type = type;
-  return item;
-};
+const typesAsArray = (items) => Object.keys(items).map((id) => items[id]);
 
-const typesAsArray = (items, type) =>
-  Object.keys(items).map((id) => markType(items[id], type));
+const selectUser = ({teammates, user}) => teammates[user];
+const selectWorkspace = ({workspaces, workspace}) => workspaces[workspace];
+const selectProjects = ({projects}, {workspace = {}}) => (workspace.projects || []).map((id) => projects[id]);
+const selectTeamMates = ({teammates}, {workspace = {}}) => (workspace.teammates || []).map((id) => teammates[id]);
+const selectTasks = ({tasks}, {projects}) => projects.reduce((a, b) => a.concat(b.tasks), []).map((id) => tasks[id]);
+const selectDocs = ({docs}, {projects}) => projects.reduce((a, b) => a.concat(b.docs), []).map((id) => docs[id]);
 
 export default {
-  workspace(state) {
-    return state.workspaces[state.workspace];
-  },
-
   user(state) {
-    return state.teammates[state.user];
+    return selectUser(state);
   },
 
   isLoggedIn(state) {
     return Boolean(state.user);
   },
 
-  teammates(state) {
-    return typesAsArray(state.teammates, 'teammate');
+  workspace(state) {
+    return selectWorkspace(state);
   },
 
-  projects(state) {
-    return typesAsArray(state.projects, 'project');
+  workspaces(state, getters) {
+    return typesAsArray(state.workspaces);
   },
 
-  tasks(state) {
-    return typesAsArray(state.tasks, 'task');
+  haveWorkspaces(state, getters) {
+    return Boolean(getters.workspaces.length > 0);
   },
 
-  docs(state) {
-    return typesAsArray(state.docs, 'doc');
+  projects(state, getters) {
+    return selectProjects(state, getters);
+  },
+
+  haveProjects(state, getters) {
+    return Boolean(getters.projects.length > 0);
+  },
+
+  teammates(state, getters) {
+    return selectTeamMates(state, getters);
+  },
+
+  tasks(state, getters) {
+    return selectTasks(state, getters);
+  },
+
+  docs(state, getters) {
+    return selectDocs(state, getters);
   },
 
   lastUpdates(state) {
-    return state.log.concat().sort((a, b) => {
-      return new Date(b.created) - new Date(a.created);
-    }).slice(0, 10);
+    return state.log
+      .filter((item) => item.workspace === state.workspace)
+      .concat()
+      .sort((a, b) => new Date(b.created) - new Date(a.created))
+      .slice(0, 10);
   }
 };

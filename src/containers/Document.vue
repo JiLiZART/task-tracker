@@ -148,7 +148,6 @@
 
       onFollowersChange(followers) {
         this.updateDoc({followers});
-        console.log('doc follower change', users);
         //this.$store.commit('addFollowersToDoc', {doc: this.doc, users})
       },
 

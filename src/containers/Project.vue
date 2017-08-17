@@ -135,8 +135,6 @@
   import Task from '@/containers/Task';
   import Editor from '@/components/Editor';
 
-  import uuidv4 from 'uuid/v4';
-
   export default {
     name: 'project',
     props: {

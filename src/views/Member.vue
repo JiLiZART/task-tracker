@@ -44,7 +44,7 @@
       },
 
       member() {
-        return this.$store.state.teammates[this.$route.params.id]
+        return this.teammates.find((t) => t._id === this.$route.params.id)
       }
     }
   }

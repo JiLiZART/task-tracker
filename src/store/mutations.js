@@ -80,6 +80,8 @@ export default {
     const entity = createTeamMate({username});
 
     Vue.set(state.teammates, entity._id, entity);
+
+    state.workspaces[state.workspace].teammates.push(entity._id);
   },
 
   createWorkspace(state, params) {
@@ -210,6 +212,7 @@ export default {
 
   logAction(state, params) {
     params.created = params.created || new Date();
+    params.workspace = state.workspace;
 
     state.log.push(params);
   }

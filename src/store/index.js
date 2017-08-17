@@ -10,7 +10,7 @@ Vue.use(Vuex);
 const db = new PouchDB('runby');
 const store = {};
 
-const STATE_KEY = 'state';
+const STATE_KEY = 'state_$Id:$';
 
 const localStoragePlugin = (store) => {
   const state = getItem(STATE_KEY);
