@@ -31,7 +31,7 @@
   import {mixin as focusMixin}  from 'vue-focus';
 
   export default {
-    name: 'create-project',
+    name: 'create-project-view',
     mixins: [focusMixin],
 
     data() {
@@ -44,9 +44,7 @@
 
     methods: {
       onSubmit() {
-        const id = uuidv4();
-
-        this.$store.commit('createProject', {_id: id, title: this.title, text: this.text});
+        this.$store.commit('createProject', {title: this.title, text: this.text});
         this.$router.push({name: 'dashboard'});
       }
     }

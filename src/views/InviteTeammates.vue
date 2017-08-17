@@ -34,7 +34,7 @@
   import {mixin as focusMixin}  from 'vue-focus';
 
   export default {
-    name: 'invite-teammates',
+    name: 'invite-teammates-view',
     mixins: [focusMixin],
 
     data() {

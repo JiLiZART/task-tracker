@@ -12,13 +12,13 @@
         <div class="form-group row">
           <label for="first-name" class="col-2 col-form-label">First Name</label>
           <div class="col-10">
-            <input class="form-control" type="text" :value="firstName" @input="updateFirstName" id="first-name">
+            <input class="form-control" :value="firstName" @input.lazy="updateFirstName" id="first-name">
           </div>
         </div>
         <div class="form-group row">
           <label for="last-name" class="col-2 col-form-label">Last Name</label>
           <div class="col-10">
-            <input class="form-control" type="text" :value="lastName" @input="updateLastName" id="last-name">
+            <input class="form-control" :value="lastName" @input.lazy="updateLastName" id="last-name">
           </div>
         </div>
         <div class="form-group row">
@@ -33,11 +33,13 @@
 </template>
 
 <script>
+  import {mapMutations} from 'vuex';
+
   export default {
     name: 'settings-view',
 
     data() {
-      const user = this.$store.state.user;
+      const user = this.$store.getters.user || {};
 
       return {
         firstName: user.firstName || '',
@@ -48,21 +50,25 @@
 
     methods: {
       updateFirstName(e) {
-        this.$store.commit('updateUser', {firstName: e.target.value})
+        this.updateUser({firstName: e.target.value})
       },
 
       updateLastName(e) {
-        this.$store.commit('updateUser', {lastName: e.target.value})
+        this.updateUser({lastName: e.target.value})
       },
 
       updateEmail(e) {
-        this.$store.commit('updateUser', {username: e.target.value})
-      }
+        this.updateUser({username: e.target.value})
+      },
+
+      ...mapMutations([
+        'updateUser'
+      ])
     },
 
     computed: {
       user() {
-        return this.$store.state.user;
+        return this.$store.getters.user;
       },
     }
   }

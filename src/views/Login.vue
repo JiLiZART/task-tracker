@@ -25,7 +25,7 @@
   import Logo from '@/components/Logo';
 
   export default {
-    name: 'login',
+    name: 'login-view',
 
     components: {Logo},
 
@@ -54,23 +54,15 @@
 
     computed: {
       nextRoute() {
-        if (this.haveProjects) {
-          if (this.workspace) {
-            return '/dashboard';
-          }
-        } else {
-          return '/create-project';
-        }
-
-        return '/create-workspace';
+        return this.workspace ? (this.haveProjects ? '/dashboard' : '/create-project') : '/create-workspace';
       },
 
       isLoggedIn() {
-        return Boolean(this.user.username);
+        return this.$store.getters.isLoggedIn;
       },
 
       user() {
-        return this.$store.state.user;
+        return this.$store.getters.user;
       },
 
       haveProjects() {

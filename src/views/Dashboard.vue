@@ -31,7 +31,7 @@
   import WidgetUpdates from '@/containers/WidgetUpdates'
 
   export default {
-    name: 'dashboard',
+    name: 'dashboard-view',
     components: {WidgetTasks, WidgetProjects, WidgetTeam, WidgetUpdates},
 
     computed: {
@@ -43,7 +43,7 @@
       },
 
       user() {
-        return this.$store.state.user;
+        return this.$store.getters.user;
       },
 
       projects() {
