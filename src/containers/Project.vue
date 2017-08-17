@@ -2,24 +2,35 @@
   <div class="card project" :class="{'project_editable': canEdit}">
     <div class="card-block">
       <form
-        class="project__form"
-        v-on:submit.prevent="onSubmit"
+          class="project__form"
+          v-on:submit.prevent="onSubmit"
       >
-        <h4 class="card-title project__name">
-          <input class="form-control form-control_transparent project__name-input"
-                 v-model="title"
-                 :placeholder="titlePlaceholder"
-                 :readonly="!canEdit"
-                 required
-          />
-        </h4>
-        <div class="card-text project__text" v-show="text || canEdit">
-          <editor class="project__text-editor"
-                  :text="text"
-                  :placeholder="textPlaceholder"
-                  @change="onEditorChange"
-                  :canEdit="canEdit">
-          </editor>
+        <div class="form-group">
+          <h4 class="card-title project__name" v-on:click="onTitleClick">
+            <input class="form-control project__name-input"
+                   :class="{'form-control_transparent': !inEdit}"
+                   v-model="title"
+                   v-focus="titleFocused"
+                   :placeholder="titlePlaceholder"
+                   :readonly="!inEdit"
+                   required
+            />
+          </h4>
+          <div class="card-text project__text" v-show="text || inEdit" v-on:click="onTextClick">
+            <editor class="project__text-editor"
+                    @change="onEditorChange"
+                    :text="text"
+                    :focused="textFocused"
+                    :placeholder="textPlaceholder"
+                    :bordered="inEdit"
+                    :canEdit="inEdit">
+            </editor>
+          </div>
+        </div>
+
+        <div class="form-group" v-show="inEdit">
+          <button class="btn btn-primary" :disabled="!title">Save</button>
+          <button class="btn btn-secondary" type="button" v-on:click="onCancelClick">Cancel</button>
         </div>
       </form>
     </div>
@@ -29,13 +40,13 @@
         <template v-if="filterCompleted">
           <template v-for="(item, index) in filterUndoneTasks(tasks)">
             <task
-              :key="item._id"
-              :index="index"
-              :id="item._id"
-              :task.sync="item"
-              :project="project"
-              :teammates="teammates"
-              v-on:change="onTaskChange"
+                :key="item._id"
+                :index="index"
+                :id="item._id"
+                :task.sync="item"
+                :project="project"
+                :teammates="teammates"
+                v-on:change="onTaskChange"
             ></task>
           </template>
 
@@ -43,26 +54,26 @@
 
           <template v-for="(item, index) in filterDoneTasks(tasks)">
             <task
-              :key="item._id"
-              :index="index"
-              :id="item._id"
-              :task.sync="item"
-              :project="project"
-              :teammates="teammates"
-              v-on:change="onTaskChange"
+                :key="item._id"
+                :index="index"
+                :id="item._id"
+                :task.sync="item"
+                :project="project"
+                :teammates="teammates"
+                v-on:change="onTaskChange"
             ></task>
           </template>
         </template>
         <template v-else>
           <template v-for="(item, index) in tasks">
             <task
-              :key="item._id"
-              :index="index"
-              :id="item._id"
-              :task.sync="item"
-              :project="project"
-              :teammates="teammates"
-              v-on:change="onTaskChange"
+                :key="item._id"
+                :index="index"
+                :id="item._id"
+                :task.sync="item"
+                :project="project"
+                :teammates="teammates"
+                v-on:change="onTaskChange"
             ></task>
           </template>
         </template>
@@ -87,13 +98,13 @@
       <template v-if="haveDocs">
         <template v-for="(item, index) in docs">
           <document
-            :key="item._id"
-            :index="index"
-            :id="item._id"
-            :doc.sync="item"
-            :project="project"
-            :teammates="teammates"
-            v-on:change="onDocChange"
+              :key="item._id"
+              :index="index"
+              :id="item._id"
+              :doc.sync="item"
+              :project="project"
+              :teammates="teammates"
+              v-on:change="onDocChange"
           ></document>
         </template>
       </template>
@@ -116,6 +127,8 @@
 </template>
 
 <script>
+  import {mixin as focusMixin} from 'vue-focus';
+
   import Document from '@/containers/Document';
   import Task from '@/containers/Task';
   import Editor from '@/components/Editor';
@@ -142,7 +155,24 @@
       }
     },
 
+    mixins: [focusMixin],
     components: {Document, Task, Editor},
+
+    data() {
+      const project = this.project || {};
+      const isTitleEmpty = !project.title;
+
+      return {
+        title: project.title,
+        text: project.text,
+
+        inEdit: project.isNew || isTitleEmpty,
+        isNew: project.isNew,
+
+        titleFocused: false,
+        textFocused: false
+      }
+    },
 
     methods: {
       updateProject(params) {
@@ -172,10 +202,32 @@
       },
 
       onSubmit() {
+        this.inEdit = false;
+        this.titleFocused = false;
+        this.textFocused = false;
+
+        this.updateProject({title: this.title, text: this.text, isNew: false});
       },
 
       onEditorChange(text) {
-        this.updateProject({text});
+        this.text = text;
+      },
+
+      onTitleClick() {
+        this.inEdit = true;
+        this.titleFocused = true;
+      },
+
+      onTextClick() {
+        this.inEdit = true;
+        this.textFocused = true;
+      },
+
+      onCancelClick() {
+        this.inEdit = false;
+
+        this.title = this.project.title;
+        this.text = this.project.text;
       },
 
       onTaskChange: function (task) {
@@ -190,26 +242,8 @@
     },
 
     computed: {
-      title: {
-        get() {
-          return this.project.title
-        },
-        set(title) {
-          this.updateProject({title});
-        }
-      },
-
       titlePlaceholder() {
         return this.canEdit ? 'Click to edit title' : '';
-      },
-
-      text: {
-        get() {
-          return this.project.text
-        },
-        set(text) {
-          this.updateProject({text});
-        }
       },
 
       textPlaceholder() {
@@ -239,6 +273,11 @@
       font-size: 1.5rem;
       font-weight: 500;
       line-height: 1.1;
+    }
+
+    &__name-input:hover,
+    &__text-editor:hover {
+      cursor: text;
     }
 
     &__tasks .task {
