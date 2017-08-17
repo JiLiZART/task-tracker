@@ -1,76 +1,128 @@
 import uuidv4 from 'uuid/v4';
-import uniqBy from 'lodash/uniqBy';
+// import uniqBy from 'lodash/uniqBy';
 import Vue from 'vue'
 
+const createTeamMate = ({username}) => ({
+  _id: uuidv4(),
+  username,
+  type: 'teammate'
+});
+
+const createWorkspace = ({title}) => ({
+  _id: uuidv4(),
+  title,
+  projects: [],
+  teammates: [],
+  type: 'workspace'
+});
+
+const createProject = ({title, text}) => ({
+  _id: uuidv4(),
+  title,
+  text,
+  docs: [],
+  tasks: [],
+  type: 'project'
+});
+
+const createTask = ({title = '', text = '', created = new Date()}) => ({
+  _id: uuidv4(),
+  title,
+  text,
+  created,
+  comments: [],
+  followers: [],
+  performers: [],
+  done: false,
+  isNew: true,
+  type: 'task'
+});
+
+const createDoc = ({title = '', text = '', created = new Date()}) => ({
+  _id: uuidv4(),
+  title,
+  text,
+  created,
+  comments: [],
+  followers: [],
+  isNew: true,
+  type: 'doc'
+});
+
+const createComment = ({user, text, created = new Date()}) => ({
+  _id: uuidv4(),
+  user,
+  text,
+  created,
+  type: 'comment'
+});
+
 export default {
-  start(state, email) {
-    const id = uuidv4();
+  start(state, username) {
+    const entity = createTeamMate({username});
 
-    state.user = {
-      _id: id,
-      username: email
-    };
+    Vue.set(state.teammates, entity._id, entity);
 
-    Vue.set(state.teammates, id, {_id: id, username: email});
+    state.user = entity._id;
   },
 
   logout(state) {
-    Vue.set(state, 'user', {});
+    Vue.set(state, 'user', null);
   },
 
   updateUser(state, params) {
-    const current = state.user;
+    const current = state.teammates[state.user];
 
-    Vue.set(state, 'user', Object.assign({}, current, params));
+    Vue.set(state.teammates, state.user, Object.assign({}, current, params));
   },
 
-  inviteTeamMate(state, email) {
-    const id = uuidv4();
+  inviteTeamMate(state, username) {
+    const entity = createTeamMate({username});
 
-    Vue.set(state.teammates, id, {_id: id, username: email});
+    Vue.set(state.teammates, entity._id, entity);
   },
 
   createWorkspace(state, params) {
-    const id = uuidv4();
+    const entity = createWorkspace(params);
 
-    params._id = id;
+    Vue.set(state.workspaces, entity._id, entity);
 
-    Vue.set(state.workspaces, id, params);
-
-    state.workspace = id;
+    state.workspace = entity._id;
   },
 
   changeWorkspace(state, id) {
     state.workspace = id;
   },
 
+  /**
+   * Projects
+   */
+
   createProject(state, params) {
-    params.docs = params.docs || [];
-    params.tasks = params.tasks || [];
+    const entity = createProject(params);
 
-    Vue.set(state.projects, params._id, params);
+    Vue.set(state.projects, entity._id, entity);
+
+    state.workspaces[state.workspace].projects.push(entity._id);
   },
 
-  updateProject(state, params) {
-    const current = state.projects[params._id];
+  updateProject(state, {_id, title, text}) {
+    const current = state.projects[_id];
+    const entity = {title, text};
 
-    Vue.set(state.projects, params._id, Object.assign({}, current, params));
+    Vue.set(state.projects, _id, Object.assign({}, current, entity));
   },
+
+  /**
+   * Tasks
+   */
 
   createTask(state, {task, project}) {
-    task = task || {};
-    task._id = uuidv4();
-    task.title = task.title || '';
-    task.comments = task.comments || [];
-    task.followers = task.followers || [];
-    task.performers = task.performers || [];
-    task.done = task.done || false;
-    task.created = task.created || new Date();
-    task.isNew = true;
+    const entity = createTask(task || {});
 
-    state.projects[project._id].tasks.push(task._id);
+    Vue.set(state.tasks, entity._id, entity);
 
-    Vue.set(state.tasks, task._id, task);
+    state.projects[project._id].tasks.push(entity._id);
   },
 
   updateTask(state, {task}) {
@@ -88,25 +140,23 @@ export default {
     tasks.splice(taskIndex, 1);
   },
 
-  addFollowersToTask(state, {task, users}) {
-    const tasks = state.tasks[task._id],
-      followers = uniqBy(tasks.followers.concat(users), '_id');
+  // addFollowersToTask(state, {task, users}) {
+  //   const tasks = state.tasks[task._id],
+  //     followers = uniqBy(tasks.followers.concat(users), '_id');
+  //
+  //   Vue.set(tasks, 'followers', followers);
+  // },
 
-    Vue.set(tasks, 'followers', followers);
-  },
+  /**
+   * Documents
+   */
 
   createDoc(state, {doc, project}) {
-    doc = doc || {};
-    doc._id = uuidv4();
-    doc.title = doc.title || '';
-    doc.comments = doc.comments || [];
-    doc.followers = doc.followers || [];
-    doc.isNew = true;
-    doc.created = doc.created || new Date();
+    const entity = createDoc(doc || {});
 
-    state.projects[project._id].docs.push(doc._id);
+    Vue.set(state.docs, entity._id, entity);
 
-    Vue.set(state.docs, doc._id, doc);
+    state.projects[project._id].docs.push(entity._id);
   },
 
   updateDoc(state, {doc}) {
@@ -124,22 +174,23 @@ export default {
     docs.splice(docIndex, 1);
   },
 
-  addFollowersToDoc(state, {doc, users}) {
-    const docs = state.docs[doc._id];
-    const followers = users.length ? uniqBy(docs.followers.concat(users), '_id') : [];
+  // addFollowersToDoc(state, {doc, users}) {
+  //   const docs = state.docs[doc._id];
+  //   const followers = users.length ? uniqBy(docs.followers.concat(users), '_id') : [];
+  //
+  //   Vue.set(docs, 'followers', followers);
+  // },
 
-    Vue.set(docs, 'followers', followers);
-  },
+  /**
+   * Comments
+   */
 
-  createComment(state, {comment, entity, type}) {
-    const id = uuidv4();
+  createComment(state, {comment, typeId, type}) {
+    const entity = createComment(comment);
 
-    comment._id = id;
-    comment.created = comment.created || new Date();
+    Vue.set(state.comments, entity._id, entity);
 
-    state[type][entity._id].comments.push(id);
-
-    Vue.set(state.comments, id, comment);
+    state[type][typeId].comments.push(entity._id);
   },
 
   updateComment(state, {comment}) {
@@ -148,8 +199,8 @@ export default {
     Vue.set(state.comments, comment._id, Object.assign({}, current, comment));
   },
 
-  removeComment(state, {comment, entity, type}) {
-    const comments = state[type][entity._id].comments;
+  removeComment(state, {comment, typeId, type}) {
+    const comments = state[type][typeId].comments;
     const commentIndex = comments.indexOf(comment._id);
 
     comments.splice(commentIndex, 1);

@@ -48,7 +48,7 @@ export function createStore() {
   return new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production',
     state: {
-      user: {},
+      user: null,
       workspace: null,
       workspaces: {},
       projects: {},
@@ -56,6 +56,8 @@ export function createStore() {
       docs: {},
       comments: {},
       teammates: {},
+
+      entities: {}, // place for docs, tasks, comments, teammates, workspaces, projects
       log: []
     },
     plugins: [localStoragePlugin],

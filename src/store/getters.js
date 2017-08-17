@@ -11,6 +11,14 @@ export default {
     return state.workspaces[state.workspace];
   },
 
+  user(state) {
+    return state.teammates[state.user];
+  },
+
+  isLoggedIn(state) {
+    return Boolean(state.user);
+  },
+
   teammates(state) {
     return typesAsArray(state.teammates, 'teammate');
   },
