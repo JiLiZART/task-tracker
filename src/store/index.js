@@ -7,7 +7,7 @@ import store from 'store';
 
 Vue.use(Vuex);
 
-const STATE_KEY = 'state';
+const STATE_KEY = 'storage';
 
 const localStoragePlugin = (store) => {
   const state = getItem(STATE_KEY);
