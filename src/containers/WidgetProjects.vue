@@ -12,7 +12,7 @@
 
     <div class="card-body">
       <template v-for="(item, index) in items">
-        <router-link class="btn btn-light" :to="{ name: 'project', params: { id: item._id }}">
+        <router-link class="btn btn-light widget-projects__item" :to="{ name: 'project', params: { id: item._id }}">
           {{ item.title }}
           <span class="badge badge-light"><i class="fa fa-tasks"></i>{{ tasksCount(item) }}</span>
           <span class="badge badge-light"><i class="fa fa-file-text"></i>{{ docsCount(item) }}</span>
@@ -57,6 +57,10 @@
 
     &__pills {
       margin-left: auto;
+    }
+
+    &__item {
+      margin-right: 1rem;
     }
   }
 </style>
