@@ -37,46 +37,31 @@
     </div>
 
     <div class="project__tasks card-body" v-if="haveTasks || canCreate">
-      <template v-if="tasks && tasks.length">
-        <template v-if="filterCompleted">
-          <template v-for="(item, index) in filterUndoneTasks(tasks)">
-            <task
-                :key="item._id"
-                :index="index"
-                :id="item._id"
-                :task.sync="item"
-                :project="project"
-                :teammates="teammates"
-                @change="onTaskChange"
-            ></task>
-          </template>
-
-          <h5 class="card-title" v-if="filterDoneTasks(tasks).length">Recently done tasks</h5>
-
-          <template v-for="(item, index) in filterDoneTasks(tasks)">
-            <task
-                :key="item._id"
-                :index="index"
-                :id="item._id"
-                :task.sync="item"
-                :project="project"
-                :teammates="teammates"
-                @change="onTaskChange"
-            ></task>
-          </template>
+      <template v-if="haveTasks">
+        <template v-for="(item, index) in undoneTasks">
+          <task
+              :key="item._id"
+              :index="index"
+              :id="item._id"
+              :task.sync="item"
+              :project="project"
+              :teammates="teammates"
+              @change="onTaskChange"
+          ></task>
         </template>
-        <template v-else>
-          <template v-for="(item, index) in tasks">
-            <task
-                :key="item._id"
-                :index="index"
-                :id="item._id"
-                :task.sync="item"
-                :project="project"
-                :teammates="teammates"
-                @change="onTaskChange"
-            ></task>
-          </template>
+
+        <h5 class="card-title" v-if="doneTasks.length">Recently done tasks</h5>
+
+        <template v-for="(item, index) in doneTasks">
+          <task
+              :key="item._id"
+              :index="index"
+              :id="item._id"
+              :task.sync="item"
+              :project="project"
+              :teammates="teammates"
+              @change="onTaskChange"
+          ></task>
         </template>
       </template>
       <template v-else>
@@ -192,14 +177,6 @@
         });
       },
 
-      filterUndoneTasks(tasks) {
-        return tasks.filter(t => !t.done);
-      },
-
-      filterDoneTasks(tasks) {
-        return tasks.filter(t => t.done);
-      },
-
       onSubmit() {
         this.inEdit = false;
         this.titleFocused = false;
@@ -261,6 +238,14 @@
 
       haveTasks() {
         return this.tasks && this.tasks.length;
+      },
+
+      doneTasks() {
+        return this.tasks.filter(t => t.done);
+      },
+
+      undoneTasks() {
+        return this.tasks.filter(t => !t.done);
       },
 
       teammates() {
