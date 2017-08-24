@@ -3,6 +3,7 @@
     <div class="dashboard">
       <widget-tasks class="dashboard__widget"
                     :tasks="myTasks"
+                    :projects="projects"
                     :teammates="teammates"
       ></widget-tasks>
 
