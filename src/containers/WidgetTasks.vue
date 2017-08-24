@@ -4,18 +4,26 @@
       <h5 class="card-title widget-tasks__title">My Tasks</h5>
     </div>
     <div class="card-body" v-if="tasks && tasks.length">
-      <template v-for="(item, index) in tasks">
-        <div class="widget-tasks__task">
-          <task
-            :key="item._id"
-            :index="index"
-            :id="item._id"
-            :task.sync="item"
-            :project="project"
-            :teammates="teammates"
-          ></task>
-        </div>
+      <template v-if="undoneTasks.length">
+        <template v-for="(item, index) in undoneTasks">
+          <div class="widget-tasks__task">
+            <task
+                :key="item._id"
+                :index="index"
+                :id="item._id"
+                :task.sync="item"
+                :project="getTaskProject(item)"
+                :teammates="teammates"
+                :showProjectTitle="true"
+            ></task>
+          </div>
+        </template>
       </template>
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">You already done all tasks. Ask someone for a task.</p>
+        </div>
+      </div>
     </div>
     <div class="card-body" v-else>
       <div class="card">
@@ -36,15 +44,33 @@
       tasks: {
         type: Array
       },
-      project: {
-        type: Object
+      projects: {
+        type: Array
       },
       teammates: {
         type: Array
       }
     },
 
-    components: {Task}
+    components: {Task},
+
+    methods: {
+      getTaskProject(task) {
+        const isContainTask = (tasks) => tasks.indexOf(task._id) !== -1;
+
+        const prj = this.projects.find((p) => isContainTask(p.tasks));
+
+        console.log('get task project', task, prj, this.projects);
+
+        return prj;
+      }
+    },
+
+    computed: {
+      undoneTasks() {
+        return this.tasks.filter(t => !t.done);
+      }
+    }
   }
 </script>
 

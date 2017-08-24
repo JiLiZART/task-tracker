@@ -41,7 +41,10 @@
           </div>
 
           <div class="task__content">
-            <h4 class="card-title task__title" v-show="!inEdit" @click="onTitleClick">{{title}}</h4>
+            <div class="task__header">
+              <h4 class="card-title task__title" v-show="!inEdit" @click="onTitleClick">{{title}}</h4>
+              <div class="task__project-title" v-if="project && showProjectTitle">{{project.title}}</div>
+            </div>
 
             <editor class="task__text-editor"
                     v-show="!inEdit"
@@ -87,6 +90,7 @@
       </div>
       <h5 class="card-title task__teaser-title" @click="toggleExpanded">{{ task.title }}</h5>
       <div class="task__teaser-spacer" @click="toggleExpanded"></div>
+      <div class="task__teaser-project" v-if="project && showProjectTitle">{{project.title}}</div>
       <div class="task__teaser-deadline" v-if="task.deadline">
         {{ task.deadline | fromNow }}
       </div>
@@ -133,6 +137,10 @@
         type: Boolean,
         'default': true
       },
+      showProjectTitle: {
+        type: Boolean,
+        'default': false
+      }
     },
     components: {Comments, UserPicker, DatePicker, Author, Editor},
 
@@ -329,6 +337,15 @@
       background: #5cb85c;
     }
 
+    &__header {
+      display: flex;
+      align-items: center;
+    }
+
+    &__header &__project-title {
+      margin-left: auto
+    }
+
     &__title-input {
       font-size: 1.5rem;
       font-weight: 500;
@@ -404,6 +421,11 @@
     &__teaser-spacer {
       margin-left: auto;
       cursor: pointer;
+    }
+
+    &__project-title,
+    &__teaser-project {
+      color: hsla(0, 0%, 0%, .5)
     }
 
     &__teaser-deadline {
