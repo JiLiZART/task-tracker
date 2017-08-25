@@ -38,31 +38,35 @@
 
     <div class="project__tasks card-body" v-if="haveTasks || canCreate">
       <template v-if="haveTasks">
-        <template v-for="(item, index) in undoneTasks">
-          <task
-              :key="item._id"
-              :index="index"
-              :id="item._id"
-              :task.sync="item"
-              :project="project"
-              :teammates="teammates"
-              @change="onTaskChange"
-          ></task>
-        </template>
+        <div class="project__done-tasks" v-if="undoneTasks.length">
+          <template v-for="(item, index) in undoneTasks">
+            <task
+                v-if="isCanShowTask(item)"
+                :key="item._id"
+                :index="index"
+                :id="item._id"
+                :task.sync="item"
+                :project="project"
+                :teammates="teammates"
+                @change="onTaskChange"
+            ></task>
+          </template>
+        </div>
+        <div class="project__undone-tasks" v-if="doneTasks.length">
+          <h5 class="card-title">Recently done tasks</h5>
 
-        <h5 class="card-title" v-if="doneTasks.length">Recently done tasks</h5>
-
-        <template v-for="(item, index) in doneTasks">
-          <task
-              :key="item._id"
-              :index="index"
-              :id="item._id"
-              :task.sync="item"
-              :project="project"
-              :teammates="teammates"
-              @change="onTaskChange"
-          ></task>
-        </template>
+          <template v-for="(item, index) in doneTasks">
+            <task
+                :key="item._id"
+                :index="index"
+                :id="item._id"
+                :task.sync="item"
+                :project="project"
+                :teammates="teammates"
+                @change="onTaskChange"
+            ></task>
+          </template>
+        </div>
       </template>
       <template v-else>
         <div class="card card-outline-secondary" v-if="canCreate">
@@ -134,9 +138,9 @@
         type: Boolean,
         'default': true
       },
-      filterCompleted: {
+      canDisplayEmptyTasks: {
         type: Boolean,
-        'default': false
+        'default': true
       }
     },
 
@@ -175,6 +179,14 @@
         this.$store.commit('createDoc', {
           project: this.project
         });
+      },
+
+      isCanShowTask(task) {
+        if (this.canDisplayEmptyTasks) {
+          return true;
+        } else {
+          return !task.isNew
+        }
       },
 
       onSubmit() {
@@ -272,6 +284,10 @@
 
     &__tasks .task {
       margin-bottom: .5rem;
+    }
+
+    &__done-tasks {
+      margin-bottom: 1rem;
     }
 
     &__docs .doc {
