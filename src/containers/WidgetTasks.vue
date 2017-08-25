@@ -4,7 +4,7 @@
       <h5 class="card-title widget-tasks__title">My Tasks</h5>
     </div>
     <div class="card-body" v-if="tasks && tasks.length">
-      <template v-if="undoneTasks.length">
+      <div class="widget-tasks__done-tasks" v-if="undoneTasks.length">
         <template v-for="(item, index) in undoneTasks">
           <div class="widget-tasks__task">
             <task
@@ -18,11 +18,23 @@
             ></task>
           </div>
         </template>
-      </template>
-      <div class="card">
-        <div class="card-body">
-          <p class="card-text">You already done all tasks. Ask someone for a task.</p>
-        </div>
+      </div>
+      <div class="widget-tasks__undone-tasks" v-if="doneTasks.length">
+        <h5 class="card-title">Recently done tasks</h5>
+
+        <template v-for="(item, index) in doneTasks">
+          <div class="widget-tasks__task">
+            <task
+                :key="item._id"
+                :index="index"
+                :id="item._id"
+                :task.sync="item"
+                :project="getTaskProject(item)"
+                :teammates="teammates"
+                :showProjectTitle="true"
+            ></task>
+          </div>
+        </template>
       </div>
     </div>
     <div class="card-body" v-else>
@@ -67,6 +79,10 @@
     },
 
     computed: {
+      doneTasks() {
+        return this.tasks.filter(t => t.done);
+      },
+
       undoneTasks() {
         return this.tasks.filter(t => !t.done);
       }
@@ -87,6 +103,10 @@
       &:last-of-type {
         margin-bottom: 0;
       }
+    }
+
+    &__done-tasks {
+      margin-bottom: 1rem;
     }
   }
 </style>
