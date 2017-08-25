@@ -12,6 +12,8 @@ import Member from '@/views/Member'
 import Project from '@/views/Project'
 import Task from '@/views/Task'
 import TeamLoad from '@/views/TeamLoad'
+import Team from '@/views/Team'
+import TeamAddUsers from '@/views/TeamAddUsers'
 
 Vue.use(Router);
 
@@ -57,6 +59,16 @@ export function createRouter() {
       {
         path: '/team-load',
         component: TeamLoad
+      },
+      {
+        path: '/team',
+        name: 'team',
+        component: Team
+      },
+      {
+        path: '/team/add',
+        name: 'team-add',
+        component: TeamAddUsers
       },
       {
         path: '/settings',

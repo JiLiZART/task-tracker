@@ -7,6 +7,9 @@
         <li class="nav-item">
           <router-link class="nav-link" to="/team-load">View Team Workload</router-link>
         </li>
+        <li class="nav-item">
+          <router-link class="nav-link" to="/team">View Team</router-link>
+        </li>
       </ul>
     </div>
     <div class="card-body" v-if="members && members.length">
