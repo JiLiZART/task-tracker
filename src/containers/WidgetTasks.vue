@@ -40,7 +40,7 @@
     <div class="card-body" v-else>
       <div class="card">
         <div class="card-body">
-          <p class="card-text">There are no tasks assigned to you. Ask someone for a task.</p>
+          <p class="card-text">There are no tasks assigned to you.</p>
         </div>
       </div>
     </div>
