@@ -211,7 +211,7 @@
       },
 
       onCancelClick() {
-        if (this.isNew) {
+        if (this.task.isNew) {
           this.$store.commit('removeTask', {task: this.task, project: this.project});
         } else {
           this.inEdit = false;
