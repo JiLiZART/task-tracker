@@ -12,7 +12,7 @@
           :teammates="teammates"
           :canCreate="false"
           :canEdit="false"
-          :filterCompleted="true"
+          :canDisplayEmptyTasks="false"
           :index="index"
           :key="item._id">
         </project>
