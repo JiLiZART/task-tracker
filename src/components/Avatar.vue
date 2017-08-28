@@ -29,19 +29,14 @@
       border-radius: 50%;
     }
 
-    &__image {
-      width: 40px;
-      height: 40px;
-    }
-
     &_size_small {
       width: 22px;
       height: 22px;
     }
 
-    &_size_small &__image {
-      width: 22px;
-      height: 22px;
+    &__image {
+      width: 100%;
+      height: 100%;
     }
   }
 </style>
