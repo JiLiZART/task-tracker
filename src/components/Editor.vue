@@ -158,6 +158,8 @@
     }
 
     &_disabled {
+      background-color: transparent;
+
       &:hover {
         border-color: transparent;
       }
