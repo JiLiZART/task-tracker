@@ -4,7 +4,7 @@
       <div class="list-group-item flex-column align-items-start comments__item">
         <div class="d-flex w-100 justify-content-between">
           <div class="mb-1">
-            <author :item="item.user"></author>
+            <author :item="item.user" class="comments__item-author"></author>
           </div>
           <small>
             <timeago :since="item.created"></timeago>
@@ -146,6 +146,11 @@
     &__item-form {
       border-top: 1px solid #d8d8d8;
       background: #f7f2f0;
+    }
+
+    &__item-form.comments__item-form {
+      border-bottom-left-radius: 6px;
+      border-bottom-right-radius: 6px;
     }
 
     &__item-author,

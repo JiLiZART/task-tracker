@@ -4,8 +4,8 @@ const selectUser = ({teammates, user}) => teammates[user];
 const selectWorkspace = ({workspaces, workspace}) => workspaces[workspace];
 const selectProjects = ({projects}, {workspace = {}}) => (workspace.projects || []).map((id) => projects[id]);
 const selectTeamMates = ({teammates}, {workspace = {}}) => (workspace.teammates || []).map((id) => teammates[id]);
-const selectTasks = ({tasks}, {projects}) => projects.reduce((a, b) => a.concat(b.tasks), []).map((id) => tasks[id]);
-const selectDocs = ({docs}, {projects}) => projects.reduce((a, b) => a.concat(b.docs), []).map((id) => docs[id]);
+const selectProjectsTasks = ({tasks}, {projects}) => projects.reduce((a, b) => a.concat(b.tasks), []).map((id) => tasks[id]);
+const selectProjectsDocs = ({docs}, {projects}) => projects.reduce((a, b) => a.concat(b.docs), []).map((id) => docs[id]);
 
 export default {
   user(state) {
@@ -40,12 +40,22 @@ export default {
     return selectTeamMates(state, getters);
   },
 
-  tasks(state, getters) {
-    return selectTasks(state, getters);
+  tasks(state) {
+    return typesAsArray(state.tasks);
+  },
+
+  projectsTasks(state, getters) {
+    return selectProjectsTasks(state, getters);
+  },
+
+  ungroupedTasks(state, {tasks, projectsTasks}) {
+    return tasks.filter((task) => {
+      return !projectsTasks.find((t) => t._id === task._id)
+    })
   },
 
   docs(state, getters) {
-    return selectDocs(state, getters);
+    return selectProjectsDocs(state, getters);
   },
 
   lastUpdates(state) {

@@ -126,7 +126,9 @@ export default {
 
     Vue.set(state.tasks, entity._id, entity);
 
-    state.projects[project._id].tasks.push(entity._id);
+    if (project) {
+      state.projects[project._id].tasks.push(entity._id);
+    }
   },
 
   updateTask(state, {task}) {
@@ -136,20 +138,19 @@ export default {
   },
 
   removeTask(state, {task, project}) {
-    const tasks = state.projects[project._id].tasks,
-      taskIndex = tasks.indexOf(task._id);
+    if (project) {
+      const tasks = state.projects[project._id].tasks,
+        taskIndex = tasks.indexOf(task._id);
+
+      tasks.splice(taskIndex, 1);
+    }
 
     Vue.delete(state.tasks, task._id);
-
-    tasks.splice(taskIndex, 1);
   },
 
-  // addFollowersToTask(state, {task, users}) {
-  //   const tasks = state.tasks[task._id],
-  //     followers = uniqBy(tasks.followers.concat(users), '_id');
-  //
-  //   Vue.set(tasks, 'followers', followers);
-  // },
+  moveTaskToProject(state, {task, project}) {
+    state.projects[project._id].tasks.push(task._id);
+  },
 
   /**
    * Documents

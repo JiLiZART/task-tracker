@@ -77,7 +77,7 @@
           </form>
         </div>
       </div>
-      <comments type="tasks" :items.sync="comments" :entity="task" v-if="!inEdit"></comments>
+      <comments class="task__comments" type="tasks" :items.sync="comments" :entity="task" v-if="!inEdit"></comments>
     </div>
 
     <div class="task__teaser" v-if="!isExpanded">
@@ -313,12 +313,12 @@
 <style lang="scss">
   .task {
     position: relative;
-    border-radius: 7px;
-    border-color: #f2f2f2;
+    border-radius: 6px;
 
     &_expanded {
-      box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
-      border-radius: 6px;
+      box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2);
+      border-radius: 7px;
+      border: none;
     }
 
     &__expander {
@@ -329,15 +329,14 @@
       right: 0;
       height: 50px;
       color: #818a91;
-      background: #f7f7f9;
       cursor: pointer;
-      border-left: 1px solid #f2f2f2;
-      border-bottom: 1px solid #f2f2f2;
+      /*border-left: 1px solid #f2f2f2;*/
+      /*border-bottom: 1px solid #f2f2f2;*/
       border-radius: 0 6px 6px 0;
 
       &:hover, &:focus {
         background: #f7f7f9;
-        border-color: #f2f2f2;
+        /*border-color: #f2f2f2;*/
       }
     }
 
@@ -418,6 +417,10 @@
     &_no-expand &__action_last,
     &_edit &__action_last {
       margin-right: 0;
+    }
+
+    &__comments {
+      border-radius: 0 0 6px 6px;
     }
 
     &__teaser {
