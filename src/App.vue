@@ -69,13 +69,14 @@
 
   body {
     margin: 0;
-  }
-
-  #app {
     font-family: -apple-system, BlinkMacSystemFont, 'Noto Sans', Roboto, 'Open Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
+    background: #f7f2f0;
+  }
+
+  #app {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -119,6 +120,10 @@
     color: white;
     border: none;
     background: transparent;
+  }
+
+  .card {
+    border-radius: 6px
   }
 
   .form-control {

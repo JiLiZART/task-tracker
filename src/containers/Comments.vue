@@ -14,9 +14,9 @@
       </div>
     </template>
 
-    <div class="list-group-item flex-column align-items-start comments__item">
+    <div class="list-group-item flex-column align-items-start comments__item comments__item-form">
       <div class="d-flex w-100 justify-content-between">
-        <author :item="user"></author>
+        <author :item="user" class="comments__item-author"></author>
       </div>
 
       <template v-if="inEdit">
@@ -32,7 +32,7 @@
                 :text="text"
                 :placeholder="textPlaceholder"
                 :bordered="true"
-                >
+            >
             </editor>
           </div>
 
@@ -135,6 +135,22 @@
 
     &__reply-btn {
       margin-top: 1rem;
+      color: #808080;
+
+      &:hover {
+        color: #808080;
+        cursor: pointer;
+      }
+    }
+
+    &__item-form {
+      border-top: 1px solid #d8d8d8;
+      background: #f7f2f0;
+    }
+
+    &__item-author,
+    &__item-author:hover {
+      color: #333;
     }
   }
 </style>

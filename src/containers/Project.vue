@@ -1,6 +1,6 @@
 <template>
   <div class="card project" :class="{'project_editable': canEdit}">
-    <div class="card-body">
+    <div class="card-body project__header">
       <form
           class="project__form"
           @blur="onCancelClick"
@@ -12,6 +12,8 @@
                    :class="{'form-control_transparent': !inEdit}"
                    v-model="title"
                    v-focus="titleFocused"
+                   @focus="titleFocused = true"
+                   @blur="titleFocused = false"
                    :placeholder="titlePlaceholder"
                    :readonly="!inEdit"
                    required
@@ -53,7 +55,7 @@
           </template>
         </div>
         <div class="project__undone-tasks" v-if="doneTasks.length">
-          <h5 class="card-title">Recently done tasks</h5>
+          <h5 class="card-title project__undone-tasks-title">Recently done tasks</h5>
 
           <template v-for="(item, index) in doneTasks">
             <task
@@ -77,14 +79,14 @@
       </template>
 
       <div class="project__actions" v-if="canCreate">
-        <button class="btn btn-link card-link project__action-button" @click="createTask">
+        <button class="btn btn-primary card-link project__action-button" @click="createTask">
           <i class="fa fa-tasks"></i>
           Create Task
         </button>
       </div>
     </div>
 
-    <div class="card-body project__docs" v-if="haveDocs || canCreate">
+    <div class="card-body project__docs" v-if="false"> <!-- v-if="haveDocs || canCreate" -->
       <template v-if="haveDocs">
         <template v-for="(item, index) in docs">
           <document
@@ -270,6 +272,9 @@
 <style lang="scss">
   .project {
     margin-bottom: 30px;
+    border-radius: 6px;
+    background: #daeff2;
+    box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
 
     &__name-input {
       font-size: 1.5rem;
@@ -282,16 +287,29 @@
       cursor: text;
     }
 
-    &__tasks .task {
-      margin-bottom: .5rem;
+    &__header {
+      background: #e6f8f9;
+      border-radius: 6px 6px 0 0;
+      padding: 7px 20px;
     }
 
-    &__done-tasks {
-      margin-bottom: 1rem;
+    &__tasks .task {
+      margin-bottom: .5rem;
+      border-color: #daeff2
     }
 
     &__docs .doc {
       margin-bottom: .5rem;
+    }
+
+    &__undone-tasks,
+    &__done-tasks {
+      margin-bottom: 1rem;
+    }
+
+    &__undone-tasks-title {
+      font-size: 1rem;
+      color: #666;
     }
 
     &__actions {

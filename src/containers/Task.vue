@@ -1,86 +1,84 @@
 <template>
   <div class="task card" :class="classObject">
-    <transition name="fade" :duration="200">
-      <div class="task__body" v-if="isExpanded">
-        <div class="card-body">
-          <div class="task__actions">
-            <user-picker
-                label="Add Performer"
-                class="task__action"
-                :members="teammates"
-                :selectedMembers="task.performers"
-                @change="onPerformerChange"
-            ></user-picker>
+    <div class="task__body" v-if="isExpanded">
+      <div class="card-body">
+        <div class="task__actions">
+          <user-picker
+              label="Add Performer"
+              class="task__action"
+              :members="teammates"
+              :selectedMembers="task.performers"
+              @change="onPerformerChange"
+          ></user-picker>
 
-            <user-picker
-                label="Add Followers"
-                class="task__action"
-                :multiple="true"
-                :members="teammates"
-                :selectedMembers="task.followers"
-                @change="onFollowersChange"
-            ></user-picker>
+          <user-picker
+              label="Add Followers"
+              class="task__action"
+              :multiple="true"
+              :members="teammates"
+              :selectedMembers="task.followers"
+              @change="onFollowersChange"
+          ></user-picker>
 
-            <div class="task__action task__action_align_right">
-              <button class="btn"
-                      :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
-                      v-if="!inEdit"
-                      @click="toggleDone"
-              >
-                {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
-              </button>
-            </div>
-
-            <div class="task__action task__action_last">
-              <form class="form-inline">
-                <div class="form-group">
-                  <date-picker :value="deadline" placeholder="Deadline" @change="onDeadlineChange"></date-picker>
-                </div>
-              </form>
-            </div>
+          <div class="task__action task__action_align_right">
+            <button class="btn"
+                    :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
+                    v-if="!inEdit"
+                    @click="toggleDone"
+            >
+              {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
+            </button>
           </div>
 
-          <div class="task__content">
-            <div class="task__header">
-              <h4 class="card-title task__title" v-show="!inEdit" @click="onTitleClick">{{title}}</h4>
-              <div class="task__project-title" v-if="project && showProjectTitle">{{project.title}}</div>
-            </div>
-
-            <editor class="task__text-editor"
-                    v-show="!inEdit"
-                    :bordered="false"
-                    :text="text"
-                    :placeholder="textPlaceholder"
-                    :canEdit="false">
-            </editor>
-
-            <form class="task__edit-form" @submit.prevent="onSubmit" v-if="inEdit">
+          <div class="task__action task__action_last">
+            <form class="form-inline">
               <div class="form-group">
-                <label for="task-title" class="sr-only">Title</label>
-                <input class="form-control task__input-title"
-                       v-model="title"
-                       id="task-title"
-                       placeholder="Enter Title..."
-                       required/>
-              </div>
-              <div class="form-group">
-                <editor class="task__text-editor"
-                        :bordered="true"
-                        :text="text"
-                        :placeholder="textPlaceholder"
-                        @change="onEditorChange">
-                </editor>
-              </div>
-              <div class="form-group">
-                <button class="btn btn-primary" :disabled="!title">Save</button>
-                <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel</button>
+                <date-picker :value="deadline" placeholder="Deadline" @change="onDeadlineChange"></date-picker>
               </div>
             </form>
           </div>
         </div>
-        <comments type="tasks" :items.sync="comments" :entity="task" v-if="!inEdit"></comments>
+
+        <div class="task__content">
+          <div class="task__header">
+            <h4 class="card-title task__title" v-show="!inEdit" @click="onTitleClick">{{title}}</h4>
+            <div class="task__project-title" v-if="project && showProjectTitle">{{project.title}}</div>
+          </div>
+
+          <editor class="task__text-editor"
+                  v-show="!inEdit"
+                  :bordered="false"
+                  :text="text"
+                  :placeholder="textPlaceholder"
+                  :canEdit="false">
+          </editor>
+
+          <form class="task__edit-form" @submit.prevent="onSubmit" v-if="inEdit">
+            <div class="form-group">
+              <label for="task-title" class="sr-only">Title</label>
+              <input class="form-control task__input-title"
+                     v-model="title"
+                     id="task-title"
+                     placeholder="Enter Title..."
+                     required/>
+            </div>
+            <div class="form-group">
+              <editor class="task__text-editor"
+                      :bordered="true"
+                      :text="text"
+                      :placeholder="textPlaceholder"
+                      @change="onEditorChange">
+              </editor>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary" :disabled="!title">Save</button>
+              <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel</button>
+            </div>
+          </form>
+        </div>
       </div>
-    </transition>
+      <comments type="tasks" :items.sync="comments" :entity="task" v-if="!inEdit"></comments>
+    </div>
 
     <div class="task__teaser" v-if="!isExpanded">
       <div class="task__teaser-performer">
@@ -315,7 +313,13 @@
 <style lang="scss">
   .task {
     position: relative;
-    transition: height 200ms ease-in-out;
+    border-radius: 7px;
+    border-color: #f2f2f2;
+
+    &_expanded {
+      box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+    }
 
     &__expander {
       padding: 0.5rem;
@@ -323,18 +327,32 @@
       position: absolute;
       top: 0;
       right: 0;
-      height: 39px;
+      height: 50px;
       color: #818a91;
       background: #f7f7f9;
       cursor: pointer;
-      border-left: 1px solid rgba(0, 0, 0, 0.125);
-      border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-      border-radius: 0 0 0 0.25rem;
+      border-left: 1px solid #f2f2f2;
+      border-bottom: 1px solid #f2f2f2;
+      border-radius: 0 6px 6px 0;
+
+      &:hover, &:focus {
+        background: #f7f7f9;
+        border-color: #f2f2f2;
+      }
+    }
+
+    &_expanded &__expander {
+      border-radius: 0 6px 0 6px;
     }
 
     &_done &__expander {
       color: white;
       background: #5cb85c;
+      border-color: #5cb85c;
+
+      &:hover, &:focus {
+        background: #5cb85c;
+      }
     }
 
     &__header {
@@ -351,6 +369,11 @@
       font-weight: 500;
       line-height: 1.1;
       color: #2c3e50;
+    }
+
+    &__title {
+      font-size: 21px;
+      color: #4e4e4e;
     }
 
     &__meta {
@@ -400,7 +423,7 @@
     &__teaser {
       padding: 0.5rem 1rem;
       padding-right: 38px;
-      height: 38px;
+      height: 50px;
       font-size: 1rem;
       display: flex;
       align-items: center;
@@ -410,12 +433,19 @@
       margin-bottom: 0;
       cursor: pointer;
       flex: 1 1 0;
+      font-size: 15px;
+      line-height: 18px;
     }
 
     &__teaser-performer {
       margin-right: .5rem;
       display: inline-flex;
       align-items: center;
+
+      .avatar {
+        width: 30px;
+        height: 30px;
+      }
     }
 
     &__teaser-spacer {
