@@ -54,7 +54,7 @@
         </template>
 
         <template slot="actions">
-          <router-link class="btn btn-outline-primary btn-sm" to="/team">Team</router-link>
+          <router-link class="btn btn-outline-primary btn-sm" to="/team/add">Invite Teammates</router-link>
         </template>
       </group>
 
@@ -129,7 +129,7 @@
       },
 
       myUngroupedTasks() {
-        return this.ungroupedTasks.filter((task) => this.findPerformer(task.performers, this.user._id));
+        return this.ungroupedTasks.filter((task) => this.findPerformer(task.performers, this.user._id) && !task.done);
       },
 
       myDoneTasks() {

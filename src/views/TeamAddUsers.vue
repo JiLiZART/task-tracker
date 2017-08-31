@@ -6,8 +6,8 @@
       </div>
       <div class="card-body">
         <div class="add-users__body">
-          <invite-teammates-form submit-route="/team"></invite-teammates-form>
-          <router-link class="btn btn-lg btn-link btn-block" to="/team">Back to my team</router-link>
+          <invite-teammates-form submit-route="/dashboard"></invite-teammates-form>
+          <router-link class="btn btn-lg btn-link btn-block" to="/dashboard">Back to Dashboard</router-link>
         </div>
       </div>
     </div>
