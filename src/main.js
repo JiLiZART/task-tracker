@@ -5,7 +5,7 @@ import 'core-js/es6/promise';
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import VueTimeago from 'vue-timeago';
-import {DatePicker} from 'element-ui'
+import {DatePicker, Autocomplete} from 'element-ui'
 import VueQuillEditor from 'vue-quill-editor'
 import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
@@ -14,11 +14,9 @@ import {createApp} from './app';
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
 
-const RAVEN_URL = 'https://f8d92de3c927430781089b68eac53c16@sentry.io/200742';
-
 // configure language
 locale.use(lang);
-Vue.component(DatePicker.name, DatePicker);
+
 Vue.use(BootstrapVue);
 Vue.use(VueTimeago, {
   locale: 'en-US',
@@ -29,7 +27,12 @@ Vue.use(VueTimeago, {
 });
 Vue.use(VueQuillEditor);
 
+Vue.component(DatePicker.name, DatePicker);
+Vue.component(Autocomplete.name, Autocomplete);
+
 if (process.env.NODE_ENV === 'production') {
+  const RAVEN_URL = 'https://f8d92de3c927430781089b68eac53c16@sentry.io/200742';
+
   Raven
     .config(RAVEN_URL)
     .addPlugin(RavenVue, Vue)

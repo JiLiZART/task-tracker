@@ -12,16 +12,17 @@
       </div>
     </div>
 
-    <div class="entity-row" v-if="!isExpanded">
-      <div class="entity-row__icon">
+    <entity-row v-if="!isExpanded" @click:title="toggleExpanded">
+      <template slot="icon" >
         <slot name="icon"></slot>
-      </div>
-      <div class="entity-row__title" @click="toggleExpanded">{{title}}</div>
-      <div class="entity-row__spacer"></div>
-      <div class="entity-row__actions">
+      </template>
+      <template slot="title">
+        {{title}}
+      </template>
+      <template slot="actions">
         <slot name="row-meta"></slot>
-      </div>
-    </div>
+      </template>
+    </entity-row>
 
     <button class="btn btn-link group__expander" @click="toggleExpanded">
       <i class="fa fa-angle-double-up" v-if="isExpanded"></i>
@@ -32,11 +33,12 @@
 
 <script>
   import Author from './Author';
+  import EntityRow from './EntityRow';
 
   export default {
     name: 'group',
     props: ['user', 'title'],
-    components: {Author},
+    components: {Author, EntityRow},
 
     data() {
       return {
@@ -121,47 +123,5 @@
     &__content {
       margin-top: 1rem;
     }
-  }
-
-  .entity-row {
-    padding: 0.5rem 1rem;
-    padding-right: 38px;
-    height: 50px;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-
-    &__icon {
-      margin-right: .5rem;
-      display: inline-flex;
-      align-items: center;
-
-      .avatar {
-        width: 30px;
-        height: 30px;
-      }
-    }
-
-    &__icon-placeholder {
-      display: block;
-      width: 30px;
-      height: 30px;
-      background-color: rgb(35, 196, 224);
-      border-radius: 100%;
-    }
-
-    &__title {
-      margin-bottom: 0;
-      cursor: pointer;
-      flex: 1 1 0;
-      font-size: 1rem;
-      line-height: 1.1;
-    }
-
-    &__spacer {
-      margin-left: auto;
-      cursor: pointer;
-    }
-
   }
 </style>

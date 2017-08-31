@@ -12,7 +12,6 @@
 <script>
   export default {
     name: 'date-picker',
-
     props: ['placeholder', 'value'],
 
     data() {

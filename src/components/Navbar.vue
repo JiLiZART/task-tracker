@@ -6,7 +6,7 @@
         </router-link>
       </div>
 
-      <div class="navbar__workspaces">
+      <div class="navbar__workspaces" v-if="false">
         <b-dropdown class="navbar__workspaces-dropdown" variant="transparent">
           <i class="fa fa-desktop" slot="button-content"></i>
           <template v-for="(item, index) in workspaces">
