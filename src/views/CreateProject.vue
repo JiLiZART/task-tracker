@@ -15,9 +15,9 @@
 
         <label for="projectText" class="sr-only">Describe Project</label>
         <textarea
-               v-model="text"
-               id="projectText" class="form-control form-control-lg create-project__input-text"
-               placeholder="What is about? What goal do you want to achieve?"></textarea>
+          v-model="text"
+          id="projectText" class="form-control form-control-lg create-project__input-text"
+          placeholder="What is about? What goal do you want to achieve?"></textarea>
 
         <button class="btn btn-lg btn-success btn-block create-project__submit-button" type="submit">Create</button>
       </form>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import {mixin as focusMixin}  from 'vue-focus';
+  import {mixin as focusMixin} from 'vue-focus';
 
   export default {
     name: 'create-project-view',
@@ -42,8 +42,9 @@
 
     methods: {
       onSubmit() {
-        this.$store.commit('createProject', {title: this.title, text: this.text});
-        this.$router.push({name: 'dashboard'});
+        this.$store.dispatch('createProject', {title: this.title, text: this.text}).then(() => {
+          this.$router.push({name: 'dashboard'});
+        })
       }
     }
   }

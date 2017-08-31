@@ -4,35 +4,11 @@
       <author :item="member"></author>
     </div>
 
-    <div class="card-body" v-if="performAnyTask">
-      <template v-for="(item, index) in projects">
-        <project
-            v-if="haveMemberTasks(item.tasks)"
-            :project="item"
-            :tasks="findMemberTasks(item.tasks)"
-            :filterCompleted="true"
-            :teammates="teammates"
-            :canCreate="false"
-            :canEdit="false"
-            :index="index"
-            :key="item._id">
-        </project>
-      </template>
-    </div>
-    <div class="card-body" v-else>
-      <div class="card card-outline-secondary">
-        <div class="card-body">
-          <h4 class="card-title">There are no tasks assigned</h4>
-          <p class="card-text">You can assign a task to him.</p>
-          <router-link to="/dashboard" class="btn btn-primary">Go to Dashboard</router-link>
-        </div>
-      </div>
-    </div>
+    <!--@TODO implement user tasks -->
   </div>
 </template>
 
 <script>
-  import Project from '@/containers/Project';
   import Author from '@/components/Author';
 
   export default {
@@ -44,7 +20,7 @@
       projects: {type: Array}
     },
 
-    components: {Project, Author},
+    components: {Author},
 
     methods: {
       findMemberTasks(tasks) {

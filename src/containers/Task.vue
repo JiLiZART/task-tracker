@@ -4,20 +4,20 @@
       <div class="card-body">
         <div class="task__actions">
           <user-picker
-              label="Add Performer"
-              class="task__action"
-              :members="teammates"
-              :selectedMembers="task.performers"
-              @change="onPerformerChange"
+            label="Add Performer"
+            class="task__action"
+            :members="teammates"
+            :selectedMembers="task.performers"
+            @change="onPerformerChange"
           ></user-picker>
 
           <user-picker
-              label="Add Followers"
-              class="task__action"
-              :multiple="true"
-              :members="teammates"
-              :selectedMembers="task.followers"
-              @change="onFollowersChange"
+            label="Add Followers"
+            class="task__action"
+            :multiple="true"
+            :members="teammates"
+            :selectedMembers="task.followers"
+            @change="onFollowersChange"
           ></user-picker>
 
           <div class="task__action task__action_align_right">
@@ -31,10 +31,9 @@
           </div>
 
           <div class="task__action task__action_last">
-            <form class="form-inline">
-              <div class="form-group">
-                <date-picker :value="deadline" placeholder="Deadline" @change="onDeadlineChange"></date-picker>
-              </div>
+            <form>
+              <date-picker :value="deadline" class="task__action-deadline" placeholder="Deadline"
+                           @change="onDeadlineChange"></date-picker>
             </form>
           </div>
         </div>
@@ -80,23 +79,39 @@
       <comments class="task__comments" type="tasks" :items.sync="comments" :entity="task" v-if="!inEdit"></comments>
     </div>
 
-    <div class="task__teaser" v-if="!isExpanded">
-      <div class="task__teaser-performer">
+    <entity-row v-if="!isExpanded" @click:title="toggleExpanded">
+      <template slot="icon">
         <template v-for="(item, index) in task.performers">
           <author :item="item" :small="true" :haveName="false"></author>
         </template>
-      </div>
-      <h5 class="card-title task__teaser-title" @click="toggleExpanded">{{ task.title }}</h5>
-      <div class="task__teaser-spacer" @click="toggleExpanded"></div>
-      <div class="task__teaser-project" v-if="project && showProjectTitle">{{project.title}}</div>
-      <div class="task__teaser-deadline" v-if="task.deadline">
-        {{ task.deadline | fromNow }}
-      </div>
-      <div class="task__teaser-comments" v-if="commentsCount">
-        <i class="fa fa-comment"></i>
-        <span class="task__teaser-comments-label">{{ commentsCount }}</span>
-      </div>
-    </div>
+      </template>
+      <template slot="title">
+        {{ task.title }}
+      </template>
+      <template slot="actions">
+        <div class="task__teaser-project" v-if="project && showProjectTitle">{{project.title}}</div>
+        <div class="task__teaser-deadline" v-if="task.deadline">
+          {{ task.deadline | fromNow }}
+        </div>
+        <div class="task__teaser-comments" v-if="commentsCount">
+          <i class="fa fa-comment"></i>
+          <span class="task__teaser-comments-label">{{ commentsCount }}</span>
+        </div>
+
+        <div class="task__teaser-move" v-if="!project">
+          <form @submit.prevent="onCreateProjectSubmit" v-if="inCreateProjectMode">
+            <autocomplete
+              placeholder="Enter name..."
+              :querySearch="queryProjects"
+              @select="onCreateProjectSelect"
+              @change="onCreateProjectChange"
+              @submit="onCreateProjectSubmit"
+            ></autocomplete>
+          </form>
+          <button type="button" class="btn btn-sm btn-link" @click="inCreateProjectMode = true" v-else>{{createProjectTitle}}</button>
+        </div>
+      </template>
+    </entity-row>
 
     <template v-if="!inEdit && canExpand">
       <button class="btn btn-link task__expander" @click="toggleExpanded">
@@ -108,39 +123,34 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   import fromNow from '@/utils/fromNow';
   import Comments from '@/containers/Comments';
+  import EntityRow from '@/components/EntityRow';
   import UserPicker from '@/components/UserPicker';
   import DatePicker from '@/components/DatePicker';
+  import Autocomplete from '@/components/Autocomplete';
   import Author from '@/components/Author';
   import Editor from '@/components/Editor';
 
   export default {
     name: 'task',
     props: {
-      task: {
-        type: Object
-      },
-      project: {
-        type: Object
-      },
-      teammates: {
-        type: Array
-      },
-      canExpand: {
-        type: Boolean,
-        'default': true
-      },
-      canEdit: {
-        type: Boolean,
-        'default': true
-      },
-      showProjectTitle: {
-        type: Boolean,
-        'default': false
-      }
+      task: {type: Object},
+      canExpand: {type: Boolean, 'default': true},
+      canEdit: {type: Boolean, 'default': true},
+      canMoveToProject: {type: Boolean, 'default': true},
+      showProjectTitle: {type: Boolean, 'default': false}
     },
-    components: {Comments, UserPicker, DatePicker, Author, Editor},
+    components: {
+      EntityRow,
+      Comments,
+      UserPicker,
+      DatePicker,
+      Autocomplete,
+      Author,
+      Editor
+    },
 
     data() {
       const task = this.task;
@@ -151,6 +161,10 @@
         performers: task.performers,
         followers: task.followers,
         done: task.done,
+
+        newProjectName: null,
+
+        inCreateProjectMode: false,
 
         inEdit: task.isNew || isTitleEmpty,
         isExpanded: (isTitleEmpty === true) || this.canExpand === false
@@ -178,6 +192,18 @@
         }
       },
 
+      logUsersChange(newUsers, currentUsers, label) {
+        if (newUsers.length) {
+          if (currentUsers.length) {
+            this.logAction(`changed ${label} on`);
+          } else {
+            this.logAction(`assigned ${label} on`);
+          }
+        } else {
+          this.logAction(`removed ${label} on`);
+        }
+      },
+
       toggleExpanded() {
         this.isExpanded = !this.isExpanded;
       },
@@ -187,6 +213,56 @@
 
         this.updateTask({done});
         this.logAction('marked as ' + (done ? 'done' : 'undone'));
+      },
+
+      queryProjects(queryString, cb) {
+        const links = this.projects
+          .filter((project) => this.project ? project._id !== this.project._id : true)
+          .map((project) => ({value: project.title, project}));
+
+        const results = queryString ? links.filter(this.createFilter(queryString)) : links;
+
+        cb(results);
+      },
+
+      createFilter(queryString) {
+        return (prj) => (prj.value.indexOf(queryString.toLowerCase()) === 0);
+      },
+
+      moveTaskToProject({task, project}) {
+        if (this.project) {
+          this.$store.commit('moveTaskFromProject', {task, from: this.project, to: project});
+        } else {
+          this.$store.commit('addTaskToProject', {project, task})
+        }
+
+        this.inCreateProjectMode = false;
+      },
+
+      onCreateProjectSubmit(e) {
+        console.log('project.submit', e);
+        const title = this.newProjectName;
+        const task = this.task;
+
+        if (title) {
+          this.$store
+            .dispatch('createProject', {title})
+            .then((project) => {
+              this.moveTaskToProject({task, project})
+            })
+        }
+      },
+
+      onCreateProjectChange(value) {
+        console.log('project.change', value);
+        this.newProjectName = value;
+      },
+
+      onCreateProjectSelect({project}) {
+        console.log('project.select', project);
+        const task = this.task;
+
+        this.moveTaskToProject({task, project})
       },
 
       onSubmit() {
@@ -228,18 +304,6 @@
         this.logUsersChange(followers, this.task.followers, 'followers');
       },
 
-      logUsersChange(newUsers, currentUsers, label) {
-        if (newUsers.length) {
-          if (currentUsers.length) {
-            this.logAction(`changed ${label} on`);
-          } else {
-            this.logAction(`assigned ${label} on`);
-          }
-        } else {
-          this.logAction(`removed ${label} on`);
-        }
-      },
-
       onDeadlineChange(deadline) {
         if (this.task.deadline !== deadline) {
           this.updateTask({deadline});
@@ -264,14 +328,22 @@
 
       canCancel() {
         //@TODO move cancel logic to parent component
-        return this.project && this.project._id;
+        return true;
+      },
+
+      project() {
+        return this.projects.find((prj) => prj.tasks.indexOf(this.task._id) !== -1)
+      },
+
+      createProjectTitle() {
+        return this.project ? 'Move to bundle' : 'Add to bundle'
       },
 
       title: {
-        get () {
+        get() {
           return this.task.title
         },
-        set (title) {
+        set(title) {
           this.updateTask({title});
         }
       },
@@ -281,10 +353,10 @@
       },
 
       text: {
-        get () {
+        get() {
           return this.task.text
         },
-        set (text) {
+        set(text) {
           this.updateTask({text});
         }
       },
@@ -298,14 +370,18 @@
       },
 
       comments() {
-        return this.task.comments.map((id) => {
-          return this.$store.state.comments[id];
-        })
+        return this.task.comments.map((id) => this.$store.state.comments[id])
       },
 
-      user() {
-        return this.$store.getters.user;
-      }
+      ...mapGetters([
+        'user',
+        'projects',
+        'projectsTasks',
+        'ungroupedTasks',
+        'tasks',
+        'teammates',
+        'lastUpdates'
+      ]),
     }
   }
 </script>
@@ -393,10 +469,6 @@
       }
     }
 
-    &__action-members {
-      padding: .5rem 1rem;
-    }
-
     &__action {
       margin-bottom: 1rem;
       display: inline-block;
@@ -414,6 +486,14 @@
       }
     }
 
+    &__action-members {
+      padding: .5rem 1rem;
+    }
+
+    &__action-deadline {
+      max-width: 120px;
+    }
+
     &_no-expand &__action_last,
     &_edit &__action_last {
       margin-right: 0;
@@ -423,52 +503,23 @@
       border-radius: 0 0 6px 6px;
     }
 
-    &__teaser {
-      padding: 0.5rem 1rem;
-      padding-right: 38px;
-      height: 50px;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-    }
-
-    &__teaser-title {
-      margin-bottom: 0;
-      cursor: pointer;
-      flex: 1 1 0;
-      font-size: 15px;
-      line-height: 18px;
-    }
-
-    &__teaser-performer {
-      margin-right: .5rem;
-      display: inline-flex;
-      align-items: center;
-
-      .avatar {
-        width: 30px;
-        height: 30px;
-      }
-    }
-
-    &__teaser-spacer {
-      margin-left: auto;
-      cursor: pointer;
-    }
-
     &__project-title,
     &__teaser-project {
       color: hsla(0, 0%, 0%, .5)
     }
 
-    &__teaser-deadline {
+    &__teaser-project,
+    &__teaser-deadline,
+    &__teaser-comments {
       margin-right: .5rem;
+    }
+
+    &__teaser-deadline {
       display: inline-flex;
       align-items: center;
     }
 
     &__teaser-comments {
-      margin-right: .5rem;
       display: inline-flex;
       align-items: center;
       color: #5d5d5d;

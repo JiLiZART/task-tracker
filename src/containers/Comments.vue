@@ -75,14 +75,16 @@
 
     methods: {
       onSubmit() {
-        const comment = {
+        const data = {
           user: this.user,
           text: this.text
         };
 
         this.text = null;
 
-        this.createComment({comment, type: this.type, typeId: this.entity._id});
+        this.$store.dispatch('createComment', data).then((comment) => {
+          this.$store.commit('addCommentToEntity', {comment, type: this.type, typeId: this.entity._id})
+        })
       },
 
       onCancelClick() {

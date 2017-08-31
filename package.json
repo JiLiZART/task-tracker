@@ -19,6 +19,7 @@
     "bootstrap": "4.0.0-beta",
     "bootstrap-vue": "^1.0.0-beta.4",
     "core-js": "^2.5.0",
+    "el-autocomplete": "^1.0.1",
     "element-datepicker": "^1.2.0",
     "element-ui": "^1.4.1",
     "font-awesome": "^4.7.0",

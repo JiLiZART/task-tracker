@@ -2,12 +2,15 @@
   <div class="task-list">
     <template v-for="(item, index) in items">
       <task
-          class="task-list__item"
-          :key="item._id"
-          :index="index"
-          :id="item._id"
-          :task.sync="item"
-          :teammates="teammates"
+        class="task-list__item"
+        :key="item._id"
+        :index="index"
+        :id="item._id"
+        :task.sync="item"
+        :teammates="teammates"
+        :canEdit="canEdit"
+        :canMoveToProject="canMoveToProject"
+        :showProjectTitle="showProjectTitle"
       ></task>
     </template>
   </div>
@@ -18,7 +21,13 @@
 
   export default {
     name: 'task-list',
-    props: ['items', 'teammates'],
+    props: {
+      items: {type: Array},
+      teammates: {type: Array},
+      canEdit: {type: Boolean, 'default': true},
+      canMoveToProject: {type: Boolean, 'default': true},
+      showProjectTitle: {type: Boolean, 'default': false}
+    },
     components: {Task}
   }
 </script>

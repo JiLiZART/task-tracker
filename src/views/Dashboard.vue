@@ -16,11 +16,18 @@
 
             <template v-for="(item, index) in projects" v-if="projectMyTasks(item).length">
               <div class="group-header">{{item.title}}</div>
-              <task-list :items="projectMyTasks(item)" :teammates="teammates"></task-list>
+              <task-list
+                :items="projectMyUndoneTasks(item)"
+                :teammates="teammates"
+              ></task-list>
             </template>
 
             <div class="group-header" v-if="myDoneTasks.length">Recently done tasks</div>
-            <task-list :items="myDoneTasks" :teammates="teammates"></task-list>
+            <task-list
+              :items="myDoneTasks"
+              :teammates="teammates"
+              :showProjectTitle="true"
+            ></task-list>
           </template>
           <empty text="There are no tasks assigned to you." v-else></empty>
         </template>
@@ -36,7 +43,11 @@
             </div>
 
             <template v-if="mateUndoneTasks(item).length">
-              <task-list :items="mateUndoneTasks(item)" :teammates="teammates"></task-list>
+              <task-list
+                :items="mateUndoneTasks(item)"
+                :teammates="teammates"
+                :showProjectTitle="true"
+              ></task-list>
             </template>
             <empty text="There are no tasks assigned. You can assign a task to him." v-else></empty>
           </template>
@@ -49,15 +60,12 @@
 
       <!-- Projects -->
       <template v-for="(item, index) in projects">
-        <group class="group-list__item" :title="item.title">
+        <group class="group-list__item" :title="item.title" v-if="projectTasks(item).length">
           <template slot="content">
-            <template v-if="projectTasks(item).length">
-              <task-list :items="projectUndoneTasks(item)" :teammates="teammates"></task-list>
+            <task-list :items="projectUndoneTasks(item)" :teammates="teammates"></task-list>
 
-              <div class="group-header" v-if="projectDoneTasks(item).length">Recently done tasks</div>
-              <task-list :items="projectDoneTasks(item)" :teammates="teammates"></task-list>
-            </template>
-            <empty text="There are no tasks. Try to create one and assign to someone." v-else></empty>
+            <div class="group-header" v-if="projectDoneTasks(item).length">Recently done tasks</div>
+            <task-list :items="projectDoneTasks(item)" :teammates="teammates"></task-list>
           </template>
         </group>
       </template>
@@ -68,12 +76,12 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   import Group from '../components/Group';
   import Author from '../components/Author';
   import Empty from '../components/Empty';
   import GroupList from '../containers/GroupList';
   import TaskList from '../containers/TaskList';
-  import {mapGetters} from 'vuex';
 
   export default {
     name: 'dashboard',
@@ -81,7 +89,7 @@
 
     methods: {
       createTask() {
-        this.$store.commit('createTask', {});
+        this.$store.dispatch('createTask', {});
       },
 
       findPerformer(users, id) {
@@ -89,13 +97,17 @@
       },
 
       mateUndoneTasks(mate) {
-        return this.projectsTasks.filter((task) => {
+        return this.tasks.filter((task) => {
           return this.findPerformer(task.performers, mate._id) && !task.done
         })
       },
 
       projectMyTasks(prj) {
         return this.projectTasks(prj).filter((task) => this.findPerformer(task.performers, this.user._id))
+      },
+
+      projectMyUndoneTasks(prj) {
+        return this.projectMyTasks(prj).filter(t => !t.done);
       },
 
       projectTasks(prj) {

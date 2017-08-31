@@ -34,7 +34,6 @@
 
 <script>
   import {mapGetters} from 'vuex';
-  import TeamLoad from '@/containers/TeamLoad';
   import Avatar from '@/components/Avatar';
 
   export default {

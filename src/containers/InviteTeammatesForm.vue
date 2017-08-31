@@ -24,6 +24,7 @@
 </template>
 
 <script>
+  import {mapGetters} from 'vuex';
   import {mixin as focusMixin} from 'vue-focus';
 
   export default {
@@ -53,7 +54,7 @@
       onSubmit() {
         for (let item of this.mates) {
           if (item.value) {
-            this.$store.commit('inviteTeamMate', item.value);
+            this.$store.dispatch('createTeamMate', {username: item.value});
           }
         }
 
@@ -67,7 +68,18 @@
 
       onRemoveItem(index) {
         this.mates.splice(index, 1);
-      }
+      },
+
+
+      ...mapGetters([
+        'user',
+        'projects',
+        'projectsTasks',
+        'ungroupedTasks',
+        'tasks',
+        'teammates',
+        'lastUpdates'
+      ]),
     }
   }
 </script>

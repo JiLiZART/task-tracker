@@ -26,6 +26,8 @@
   import {mapGetters} from 'vuex';
   import Logo from '@/components/Logo';
 
+  const WORKSPACE_NAME = 'Test Workspace';
+
   export default {
     name: 'login-view',
 
@@ -45,8 +47,14 @@
 
     methods: {
       onSubmit() {
-        this.$store.commit('start', this.email);
-        this.$router.push(this.nextRoute);
+        this.$store.dispatch('createWorkspace', {title: WORKSPACE_NAME}).then(() => {
+          this.$store
+            .dispatch('createTeamMate', {username: this.email})
+            .then((mate) => {
+              this.$store.commit('login', mate);
+              this.$router.push(this.nextRoute);
+            });
+        })
       },
 
       logout() {
@@ -56,7 +64,8 @@
 
     computed: {
       nextRoute() {
-        return this.workspace ? (this.haveProjects ? '/dashboard' : '/create-project') : '/create-workspace';
+        return {name: 'dashboard'}; //'/dashboard';
+        //return this.workspace ? (this.haveProjects ? '/dashboard' : '/create-project') : '/create-workspace';
       },
 
       ...mapGetters([

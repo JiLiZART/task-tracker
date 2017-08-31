@@ -1,68 +1,8 @@
-import uuidv4 from 'uuid/v4';
 // import uniqBy from 'lodash/uniqBy';
 import Vue from 'vue'
 
-const createTeamMate = ({username}) => ({
-  _id: uuidv4(),
-  username,
-  type: 'teammate'
-});
-
-const createWorkspace = ({title}) => ({
-  _id: uuidv4(),
-  title,
-  projects: [],
-  teammates: [],
-  type: 'workspace'
-});
-
-const createProject = ({title, text}) => ({
-  _id: uuidv4(),
-  title,
-  text,
-  docs: [],
-  tasks: [],
-  type: 'project'
-});
-
-const createTask = ({title = '', text = '', created = new Date()}) => ({
-  _id: uuidv4(),
-  title,
-  text,
-  created,
-  comments: [],
-  followers: [],
-  performers: [],
-  done: false,
-  isNew: true,
-  type: 'task'
-});
-
-const createDoc = ({title = '', text = '', created = new Date()}) => ({
-  _id: uuidv4(),
-  title,
-  text,
-  created,
-  comments: [],
-  followers: [],
-  isNew: true,
-  type: 'doc'
-});
-
-const createComment = ({user, text, created = new Date()}) => ({
-  _id: uuidv4(),
-  user,
-  text,
-  created,
-  type: 'comment'
-});
-
 export default {
-  start(state, username) {
-    const entity = createTeamMate({username});
-
-    Vue.set(state.teammates, entity._id, entity);
-
+  login(state, entity) {
     state.user = entity._id;
   },
 
@@ -76,19 +16,17 @@ export default {
     Vue.set(state.teammates, state.user, Object.assign({}, current, params));
   },
 
-  inviteTeamMate(state, username) {
-    const entity = createTeamMate({username});
-
+  createTeamMate(state, entity) {
     Vue.set(state.teammates, entity._id, entity);
 
     state.workspaces[state.workspace].teammates.push(entity._id);
   },
 
-  createWorkspace(state, params) {
-    const entity = createWorkspace(params);
+  addTeamMateToWorkspace(state, {mate, workspace}) {
+    state.workspaces[workspace._id].teammates.push(mate._id);
+  },
 
-    entity.teammates.push(state.user);
-
+  createWorkspace(state, entity) {
     Vue.set(state.workspaces, entity._id, entity);
 
     state.workspace = entity._id;
@@ -102,9 +40,7 @@ export default {
    * Projects
    */
 
-  createProject(state, params) {
-    const entity = createProject(params);
-
+  createProject(state, entity) {
     Vue.set(state.projects, entity._id, entity);
 
     state.workspaces[state.workspace].projects.push(entity._id);
@@ -121,14 +57,21 @@ export default {
    * Tasks
    */
 
-  createTask(state, {task, project}) {
-    const entity = createTask(task || {});
-
+  createTask(state, entity) {
     Vue.set(state.tasks, entity._id, entity);
+  },
 
-    if (project) {
-      state.projects[project._id].tasks.push(entity._id);
-    }
+  addTaskToProject(state, {task, project}) {
+    state.projects[project._id].tasks.push(task._id);
+  },
+
+  moveTaskFromProject(state, {task, from, to}) {
+    const tasks = state.projects[from._id].tasks,
+      taskIndex = tasks.indexOf(task._id);
+
+    tasks.splice(taskIndex, 1);
+
+    state.projects[to._id].tasks.push(task._id);
   },
 
   updateTask(state, {task}) {
@@ -148,20 +91,16 @@ export default {
     Vue.delete(state.tasks, task._id);
   },
 
-  moveTaskToProject(state, {task, project}) {
-    state.projects[project._id].tasks.push(task._id);
-  },
-
   /**
    * Documents
    */
 
-  createDoc(state, {doc, project}) {
-    const entity = createDoc(doc || {});
-
+  createDoc(state, entity) {
     Vue.set(state.docs, entity._id, entity);
+  },
 
-    state.projects[project._id].docs.push(entity._id);
+  addDocToProject(state, {doc, project}) {
+    state.projects[project._id].docs.push(doc._id);
   },
 
   updateDoc(state, {doc}) {
@@ -179,23 +118,16 @@ export default {
     docs.splice(docIndex, 1);
   },
 
-  // addFollowersToDoc(state, {doc, users}) {
-  //   const docs = state.docs[doc._id];
-  //   const followers = users.length ? uniqBy(docs.followers.concat(users), '_id') : [];
-  //
-  //   Vue.set(docs, 'followers', followers);
-  // },
-
   /**
    * Comments
    */
 
-  createComment(state, {comment, typeId, type}) {
-    const entity = createComment(comment);
-
+  createComment(state, entity) {
     Vue.set(state.comments, entity._id, entity);
+  },
 
-    state[type][typeId].comments.push(entity._id);
+  addCommentToEntity(state, {comment, typeId, type}) {
+    state[type][typeId].comments.push(comment._id);
   },
 
   updateComment(state, {comment}) {

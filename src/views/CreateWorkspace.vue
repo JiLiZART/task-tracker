@@ -31,8 +31,9 @@
 
     methods: {
       onSubmit: function () {
-        this.$store.commit('createWorkspace', {title: this.title});
-        this.$router.push('invite-teammates');
+        this.$store.dispatch('createWorkspace', {title: this.title}).then(() => {
+          this.$router.push('invite-teammates');
+        })
       }
     }
   }

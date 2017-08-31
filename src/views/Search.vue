@@ -21,23 +21,6 @@
           </div>
         </div>
 
-        <div class="card search-view__section" v-if="foundDocs.length">
-          <div class="card-body">
-            <h5 class="card-title">Docs</h5>
-            <template v-for="(item, index) in foundDocs">
-              <div class="search-view__item">
-                <document
-                  :key="item._id"
-                  :index="index"
-                  :id="item._id"
-                  :doc.sync="item"
-                  :teammates="teammates"
-                ></document>
-              </div>
-            </template>
-          </div>
-        </div>
-
         <div class="card search-view__section" v-if="foundProjects.length">
           <div class="card-body">
             <h5 class="card-title">Projects</h5>
@@ -74,8 +57,6 @@
   import Fuse from 'fuse.js';
   import Vue from 'vue';
   import Task from '@/containers/Task';
-  import Document from '@/containers/Document';
-  import Project from '@/containers/Project';
   import Avatar from '@/components/Avatar';
 
   function createFuse(items, keys) {
@@ -88,7 +69,7 @@
   export default {
     name: 'search-view',
 
-    components: {Task, Document, Project, Avatar},
+    components: {Task, Avatar},
 
     data() {
       return {

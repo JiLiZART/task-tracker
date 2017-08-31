@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <navbar v-if="isLoggedIn && haveWorkspaces && haveProjects"
+    <navbar v-if="isLoggedIn && haveWorkspaces"
             :workspace="workspace"
             :workspaces="workspaces"
             :user="user"
