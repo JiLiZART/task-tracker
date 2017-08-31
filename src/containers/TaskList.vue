@@ -30,6 +30,7 @@
 
       &.task_expanded {
         margin-bottom: 1rem;
+        margin-top: 1rem;
       }
     }
   }
