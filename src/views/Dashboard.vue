@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="nav-actions">
-      <button class="btn btn-primary card-link project__action-button" @click="createTask">
+      <button class="btn btn-success card-link project__action-button" @click="createTask">
         <i class="fa fa-tasks"></i>
         Create Task
       </button>

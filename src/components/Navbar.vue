@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable type="inverse" variant="primary">
+  <b-navbar toggleable type="inverse" variant="secondary">
       <div class="navbar__workspace-title">
         <router-link class="navbar-brand navbar__workspace-link" to="/dashboard">
           {{ workspace.title }}
