@@ -106,7 +106,9 @@ var webpackConfig = merge(baseWebpackConfig, {
       staticFileGlobs: ['dist/**/*.{js,html,css}'],
       minify: true,
       stripPrefix: 'dist/'
-    })
+    }),
+
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   ]
 })
 

@@ -4,14 +4,14 @@ import {sync} from 'vuex-router-sync'
 import {createStore} from './store'
 import {createRouter} from './router'
 
+// configure language
+require('element-ui/lib/locale')
+  .use(require('element-ui/lib/locale/lang/en'));
+
 import BootstrapVue from 'bootstrap-vue';
 import {DatePicker, Autocomplete, Popover, Tooltip, Input, Button} from 'element-ui';
 
 function registerPlugins(Vue) {
-  // configure language
-  require('element-ui/lib/locale')
-    .use(require('element-ui/lib/locale/lang/en'));
-
   Vue.use(BootstrapVue);
   Vue.use(require('vue-timeago'), {
     locale: 'en-US',
