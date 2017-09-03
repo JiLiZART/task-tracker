@@ -4,6 +4,38 @@ import {sync} from 'vuex-router-sync'
 import {createStore} from './store'
 import {createRouter} from './router'
 
+import BootstrapVue from 'bootstrap-vue';
+import {DatePicker, Autocomplete, Popover, Tooltip, Input, Button} from 'element-ui';
+
+function registerPlugins(Vue) {
+  // configure language
+  require('element-ui/lib/locale')
+    .use(require('element-ui/lib/locale/lang/en'));
+
+  Vue.use(BootstrapVue);
+  Vue.use(require('vue-timeago'), {
+    locale: 'en-US',
+    locales: {'en-US': require('vue-timeago/locales/en-US.json')}
+  });
+  Vue.use(require('vue-quill-editor'));
+
+  Vue.use(DatePicker);
+  Vue.use(Autocomplete);
+  Vue.use(Popover);
+  Vue.use(Tooltip);
+  Vue.use(Input);
+  Vue.use(Button);
+
+  if (process.env.NODE_ENV === 'production') {
+    const RAVEN_URL = 'https://f8d92de3c927430781089b68eac53c16@sentry.io/200742';
+
+    require('raven-js')
+      .config(RAVEN_URL)
+      .addPlugin(require('raven-js/plugins/vue'), Vue)
+      .install();
+  }
+}
+
 // Expose a factory function that creates a fresh set of store, router,
 // app instances on each call (which is called for each SSR request)
 export function createApp() {
@@ -14,6 +46,10 @@ export function createApp() {
   // sync the router with the vuex store.
   // this registers `store.state.route`
   sync(store, router);
+
+  registerPlugins(Vue);
+
+  Vue.config.productionTip = false;
 
   // create the app instance.
   // here we inject the router, store and ssr context to all child components,
