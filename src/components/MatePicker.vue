@@ -10,8 +10,8 @@
       <div class="mate-picker__body">
         <div class="mate-picker__header">
           <div class="mate-picker__actions">
-            <el-button type="primary" size="mini" @click="selectAll">Select All</el-button>
-            <el-button type="primary" size="mini" @click="removeAll">Remove All</el-button>
+            <el-button type="primary" size="mini" @click="selectAll" v-if="multiple">Select All</el-button>
+            <el-button type="primary" size="mini" @click="removeAll" v-if="multiple">Remove All</el-button>
           </div>
         </div>
         <div class="mate-picker__members">
