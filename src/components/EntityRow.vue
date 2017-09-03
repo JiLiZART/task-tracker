@@ -1,9 +1,15 @@
 <template>
   <div class="entity-row">
-    <div class="entity-row__icon"><slot name="icon"></slot></div>
-    <div class="entity-row__title" @click="onTitleClick"><slot name="title"></slot></div>
+    <div class="entity-row__icon">
+      <slot name="icon"></slot>
+    </div>
+    <div class="entity-row__title" @click="onTitleClick">
+      <slot name="title"></slot>
+    </div>
     <div class="entity-row__spacer"></div>
-    <div class="entity-row__actions"><slot name="actions"></slot></div>
+    <div class="entity-row__actions">
+      <slot name="actions"></slot>
+    </div>
   </div>
 </template>
 
@@ -53,6 +59,11 @@
       flex: 1 1 0;
       font-size: 1rem;
       line-height: 1.1;
+
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &__spacer {

@@ -95,7 +95,7 @@
       <template slot="actions">
         <div class="task__teaser-project" v-if="project && showProjectTitle">{{project.title}}</div>
         <div class="task__teaser-deadline" v-if="task.deadline">
-          {{ task.deadline | fromNow }}
+          {{ task.deadline | daysLeft }}
         </div>
         <div class="task__teaser-comments" v-if="commentsCount">
           <i class="fa fa-comment"></i>
@@ -125,7 +125,7 @@
 
 <script>
   import {mapGetters} from 'vuex';
-  import fromNow from '@/utils/fromNow';
+  import daysLeft from '@/utils/daysLeft';
   import Comments from '@/containers/Comments';
   import Expander from '@/components/Expander';
   import EntityRow from '@/components/EntityRow';
@@ -326,7 +326,7 @@
     },
 
     filters: {
-      fromNow
+      daysLeft
     },
 
     computed: {
@@ -532,8 +532,10 @@
     }
 
     &__teaser-deadline {
-      display: inline-flex;
-      align-items: center;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     &__teaser-comments {
