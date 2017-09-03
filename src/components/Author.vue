@@ -1,10 +1,24 @@
 <template>
   <router-link class="author" :class="{'author_size_small': small}" :to="authorLink" v-if="haveLink">
-    <avatar :item="item" :small="small"></avatar>
-    <span class="author__name" v-if="haveName">{{ item.username }}</span>
+    <el-tooltip
+      effect="dark"
+      placement="bottom-start"
+      :content="authorName"
+      :disabled="haveName"
+    >
+      <avatar :item="item" :small="small"></avatar>
+    </el-tooltip>
+    <span class="author__name" v-if="haveName">{{ authorName }}</span>
   </router-link>
   <div class="author" :class="{'author_size_small': small}" v-else>
-    <avatar :item="item" :small="small"></avatar>
+    <el-tooltip
+      effect="dark"
+      placement="bottom-start"
+      :content="authorName"
+      :disabled="haveName"
+    >
+      <avatar :item="item" :small="small"></avatar>
+    </el-tooltip>
     <span class="author__name" v-if="haveName">{{ authorName }}</span>
   </div>
 </template>
@@ -15,21 +29,10 @@
   export default {
     name: 'author',
     props: {
-      item: {
-        type: Object
-      },
-      small: {
-        type: Boolean,
-        default: false
-      },
-      haveName: {
-        type: Boolean,
-        'default': true
-      },
-      haveLink: {
-        type: Boolean,
-        'default': true
-      }
+      item: {type: Object},
+      small: {type: Boolean, 'default': false},
+      haveName: {type: Boolean, 'default': true},
+      haveLink: {type: Boolean, 'default': true}
     },
 
     components: {Avatar},
