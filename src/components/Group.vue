@@ -1,5 +1,5 @@
 <template>
-  <div class="card group" :class="classObject">
+  <div class="card group" :class="classObject" tabindex="0">
     <div class="group__body" v-if="isExpanded">
       <div class="group__header">
         <div class="group__title">{{title}}</div>
@@ -13,7 +13,7 @@
     </div>
 
     <entity-row v-if="!isExpanded" @click:title="toggleExpanded">
-      <template slot="icon" >
+      <template slot="icon">
         <slot name="icon"></slot>
       </template>
       <template slot="title">
@@ -24,21 +24,19 @@
       </template>
     </entity-row>
 
-    <button class="btn btn-link group__expander" @click="toggleExpanded">
-      <i class="fa fa-angle-double-up" v-if="isExpanded"></i>
-      <i class="fa fa-angle-double-down" v-else></i>
-    </button>
+    <expander class="group__expander" @toggle="toggleExpanded" :expanded="isExpanded"></expander>
   </div>
 </template>
 
 <script>
-  import Author from './Author';
-  import EntityRow from './EntityRow';
+  import Author from '@/components/Author';
+  import EntityRow from '@/components/EntityRow';
+  import Expander from '@/components/Expander';
 
   export default {
     name: 'group',
     props: ['user', 'title'],
-    components: {Author, EntityRow},
+    components: {Author, EntityRow, Expander},
 
     data() {
       return {
@@ -68,12 +66,21 @@
     border-radius: 6px;
     background: hsl(188, 48%, 90%);
 
+    &:focus {
+      outline: none;
+    }
+
     &_expanded {
       box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2);
       border-radius: 7px;
-      padding: 1rem;
-      margin: -1rem;
+      padding: 1rem 10px;
+      margin: -1rem -10px;
       border: none;
+
+      @media (min-width: 992px) {
+        padding: 1rem;
+        margin: -1rem;
+      }
     }
 
     &__expander {
@@ -106,14 +113,18 @@
     &__header {
       background: hsl(183, 61%, 94%);
       border-radius: 6px 6px 0 0;
-      padding: 0.5rem 2rem 0.5rem 1rem;
+      padding: 0.5rem 2.5rem 0.5rem 1rem;
       height: 50px;
       display: flex;
       align-items: center;
     }
 
     &_expanded &__header {
-      margin: -1rem -1rem 0;
+      margin: -1rem -10px 0;
+
+      @media (min-width: 992px) {
+        margin: -1rem -1rem 0;
+      }
     }
 
     &__header &__actions {

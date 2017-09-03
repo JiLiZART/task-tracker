@@ -1,24 +1,28 @@
 <template>
-  <div class="task card" :class="classObject">
+  <div class="task card"
+       :class="classObject"
+       tabindex="0"
+       @keydown.enter.native="onEnterHotkey"
+       @keydown.native.tab="onTabHotkey">
     <div class="task__body" v-if="isExpanded">
       <div class="card-body">
         <div class="task__actions">
-          <user-picker
+          <mate-picker
             label="Add Performer"
             class="task__action"
             :members="teammates"
             :selectedMembers="task.performers"
             @change="onPerformerChange"
-          ></user-picker>
+          ></mate-picker>
 
-          <user-picker
+          <mate-picker
             label="Add Followers"
             class="task__action"
             :multiple="true"
             :members="teammates"
             :selectedMembers="task.followers"
             @change="onFollowersChange"
-          ></user-picker>
+          ></mate-picker>
 
           <div class="task__action task__action_align_right">
             <button class="btn"
@@ -114,10 +118,7 @@
     </entity-row>
 
     <template v-if="!inEdit && canExpand">
-      <button class="btn btn-link task__expander" @click="toggleExpanded">
-        <i class="fa fa-angle-double-up" v-if="isExpanded"></i>
-        <i class="fa fa-angle-double-down" v-else></i>
-      </button>
+      <expander class="task__expander" @toggle="toggleExpanded" :expanded="isExpanded"></expander>
     </template>
   </div>
 </template>
@@ -126,12 +127,14 @@
   import {mapGetters} from 'vuex';
   import fromNow from '@/utils/fromNow';
   import Comments from '@/containers/Comments';
+  import Expander from '@/components/Expander';
   import EntityRow from '@/components/EntityRow';
   import UserPicker from '@/components/UserPicker';
   import DatePicker from '@/components/DatePicker';
   import Autocomplete from '@/components/Autocomplete';
   import Author from '@/components/Author';
   import Editor from '@/components/Editor';
+  import MatePicker from '@/components/MatePicker'
 
   export default {
     name: 'task',
@@ -149,7 +152,9 @@
       DatePicker,
       Autocomplete,
       Author,
-      Editor
+      Editor,
+      MatePicker,
+      Expander
     },
 
     data() {
@@ -309,6 +314,14 @@
           this.updateTask({deadline});
           this.logAction('changed deadline on');
         }
+      },
+
+      onEnterHotkey() {
+        this.isExpanded = true;
+      },
+
+      onTabHotkey() {
+        this.isExpanded = false;
       }
     },
 
@@ -390,6 +403,10 @@
   .task {
     position: relative;
     border-radius: 6px;
+
+    &:focus {
+      outline: none;
+    }
 
     &_expanded {
       box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2);
