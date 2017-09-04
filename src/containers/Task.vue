@@ -87,7 +87,7 @@
 
           <!-- Edit actions -->
           <div class="form-group">
-            <button class="btn btn-primary" :disabled="!title">Save</button>
+            <button class="btn btn-primary" :disabled="!title">Save <span class="hotkey">⌃ ↩</span></button>
             <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel</button>
           </div>
         </form>
@@ -190,6 +190,8 @@
         performers: task.performers,
         followers: task.followers,
         done: task.done,
+        title: task.title,
+        text: task.text,
 
         newProjectName: null,
 
@@ -306,7 +308,7 @@
       },
 
       onEditorChange(text) {
-        this.updateTask({text});
+        this.text = text;
       },
 
       onCancelClick() {
@@ -314,6 +316,8 @@
           this.$store.commit('removeTask', {task: this.task, project: this.project});
         } else {
           this.inEdit = false;
+          this.title =  this.task.title;
+          this.text =  this.task.text;
         }
       },
 
@@ -368,6 +372,7 @@
         return {
           'ctrl+enter': this.onCtrlEnterHotkey,
           'enter': this.onEnterHotkey,
+          'esc': this.onEscHotkey,
           'tab': this.onTabHotkey
         }
       },
@@ -385,26 +390,8 @@
         return this.project ? 'Move to bundle' : 'Add to bundle'
       },
 
-      title: {
-        get() {
-          return this.task.title
-        },
-        set(title) {
-          this.updateTask({title});
-        }
-      },
-
       titlePlaceholder() {
         return this.canEdit ? 'Click to edit title' : '';
-      },
-
-      text: {
-        get() {
-          return this.task.text
-        },
-        set(text) {
-          this.updateTask({text});
-        }
       },
 
       textPlaceholder() {
