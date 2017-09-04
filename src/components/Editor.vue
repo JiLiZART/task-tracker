@@ -8,7 +8,7 @@
                 :disabled="disabled"
                 @focus="onFocus"
                 @blur="onBlur"
-                @change="onChange($event)">
+                @change="onChange">
   </quill-editor>
 </template>
 
@@ -19,9 +19,9 @@
     props: {
       placeholder: {type: String},
       text: {type: String},
-      canEdit: {type: Boolean, 'default': true},
       light: {type: Boolean, 'default': true},
-      bordered: {type: Boolean, 'default': false},
+      bordered: {type: Boolean, 'default': false}, //@TODO remove ugly param
+      readonly: {type: Boolean, 'default': false}
     },
 
     data() {
@@ -121,7 +121,7 @@
       },
 
       disabled() {
-        return !this.canEdit;
+        return this.readonly;
       },
 
       editor() {
@@ -137,7 +137,7 @@
 
     display: block;
     width: 100%;
-    padding: 0;
+    padding: 0.5rem 0.75rem;
     font-size: 1rem;
     line-height: 1.25;
     background-color: #fff;
@@ -166,7 +166,7 @@
     }
 
     &_bordered {
-      border-color: rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(0, 0, 0, 0.15);
 
       &:hover {
         border-color: rgba(0, 0, 0, 0.15);
@@ -180,7 +180,7 @@
     }
 
     .ql-container {
-      padding: 0.5rem 0.75rem;
+      padding: 0;
       font-size: 1rem;
       line-height: 1.25;
       font-family: inherit;
