@@ -132,7 +132,9 @@
     }
 
     &__title {
+      display: flex;
       cursor: pointer;
+      width: 100%;
     }
 
     &__content {
