@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import 'core-js/es6/promise';
+import 'core-js/es6/array';
 import {createApp} from './app';
 
 const {app, router, store} = createApp();
