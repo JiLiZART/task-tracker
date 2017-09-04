@@ -7,7 +7,6 @@
         :index="index"
         :id="item._id"
         :task.sync="item"
-        :teammates="teammates"
         :canEdit="canEdit"
         :canMoveToProject="canMoveToProject"
         :showProjectTitle="showProjectTitle"
@@ -23,7 +22,6 @@
     name: 'task-list',
     props: {
       items: {type: Array},
-      teammates: {type: Array},
       canEdit: {type: Boolean, 'default': true},
       canMoveToProject: {type: Boolean, 'default': true},
       showProjectTitle: {type: Boolean, 'default': false}
