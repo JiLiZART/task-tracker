@@ -27,7 +27,6 @@
 
     methods: {
       onEnter(e) {
-        console.log('autocompl.enter', e);
         this.$emit('submit', e)
       },
 
