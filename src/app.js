@@ -18,6 +18,7 @@ function registerPlugins(Vue) {
     locales: {'en-US': require('vue-timeago/locales/en-US.json')}
   });
   Vue.use(require('vue-quill-editor'));
+  Vue.use(require('v-hotkey'));
 
   Vue.use(DatePicker);
   Vue.use(Autocomplete);

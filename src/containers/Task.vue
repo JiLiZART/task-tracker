@@ -1,11 +1,14 @@
 <template>
   <div class="task card"
        :class="classObject"
-       tabindex="0"
-       @keydown.enter.native="onEnterHotkey"
-       @keydown.native.tab="onTabHotkey">
+       v-hotkey="keymap"
+       tabindex="0">
+
+    <!-- Full style -->
     <div class="task__body" v-if="isExpanded">
       <div class="card-body">
+
+        <!-- Actions -->
         <div class="task__actions">
           <mate-picker
             label="Add Performer"
@@ -42,47 +45,59 @@
           </div>
         </div>
 
-        <div class="task__content">
-          <div class="task__header">
-            <h4 class="card-title task__title" v-show="!inEdit" @click="onTitleClick">{{title}}</h4>
-            <div class="task__project-title" v-if="project && showProjectTitle">{{project.title}}</div>
+        <div class="task__header">
+          <h4 class="card-title task__title" v-show="!inEdit" @click="inEdit = true">{{title}}</h4>
+          <div class="task__project-title" v-if="project && showProjectTitle">{{project.title}}</div>
+        </div>
+
+        <editor class="task__content"
+                v-show="!inEdit"
+                @click.native="inEdit = true"
+                :bordered="false"
+                :readonly="true"
+                :text="text"
+                :placeholder="textPlaceholder">
+        </editor>
+
+        <!-- Edit Form -->
+        <form class="task__form"
+              @submit.prevent="onSubmit"
+              v-if="inEdit">
+
+          <!-- Edit title -->
+          <div class="form-group">
+            <label for="task-title" class="sr-only">Title</label>
+            <input class="form-control task__input-title"
+                   v-model="title"
+                   id="task-title"
+                   placeholder="Enter Title..."
+                   @keyup.enter="onEnterHotkey"
+                   required/>
           </div>
 
-          <editor class="task__text-editor"
-                  v-show="!inEdit"
-                  :bordered="false"
-                  :text="text"
-                  :placeholder="textPlaceholder"
-                  :canEdit="false">
-          </editor>
+          <!-- Edit text -->
+          <div class="form-group">
+            <editor class="task__text-editor"
+                    :bordered="true"
+                    :text="text"
+                    :placeholder="textPlaceholder"
+                    @change="onEditorChange">
+            </editor>
+          </div>
 
-          <form class="task__edit-form" @submit.prevent="onSubmit" v-if="inEdit">
-            <div class="form-group">
-              <label for="task-title" class="sr-only">Title</label>
-              <input class="form-control task__input-title"
-                     v-model="title"
-                     id="task-title"
-                     placeholder="Enter Title..."
-                     required/>
-            </div>
-            <div class="form-group">
-              <editor class="task__text-editor"
-                      :bordered="true"
-                      :text="text"
-                      :placeholder="textPlaceholder"
-                      @change="onEditorChange">
-              </editor>
-            </div>
-            <div class="form-group">
-              <button class="btn btn-primary" :disabled="!title">Save</button>
-              <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel</button>
-            </div>
-          </form>
-        </div>
+          <!-- Edit actions -->
+          <div class="form-group">
+            <button class="btn btn-primary" :disabled="!title">Save</button>
+            <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel</button>
+          </div>
+        </form>
       </div>
+
+      <!-- Comments -->
       <comments class="task__comments" type="tasks" :items.sync="comments" :entity="task" v-if="!inEdit"></comments>
     </div>
 
+    <!-- Row style -->
     <entity-row v-if="!isExpanded" @click:title="toggleExpanded">
       <template slot="icon">
         <template v-for="(item, index) in task.performers">
@@ -93,16 +108,17 @@
         {{ task.title }}
       </template>
       <template slot="actions">
-        <div class="task__teaser-project" v-if="project && showProjectTitle">{{project.title}}</div>
-        <div class="task__teaser-deadline" v-if="task.deadline">
+        <div class="task-teaser__project" v-if="project && showProjectTitle">{{project.title}}</div>
+        <div class="task-teaser__deadline" v-if="task.deadline">
           {{ task.deadline | daysLeft }}
         </div>
-        <div class="task__teaser-comments" v-if="commentsCount">
-          <i class="fa fa-comment"></i>
-          <span class="task__teaser-comments-label">{{ commentsCount }}</span>
+
+        <div class="task-teaser__comments" v-if="commentsCount">
+          <i class="fa fa-comment task-teaser__comments-icon"></i>
+          <span class="task-teaser__comments-label">{{ commentsCount }}</span>
         </div>
 
-        <div class="task__teaser-move" v-if="!project">
+        <div class="task-teaser__move" v-if="!project">
           <form @submit.prevent="onCreateProjectSubmit" v-if="inCreateProjectMode">
             <autocomplete
               placeholder="Enter name..."
@@ -110,16 +126,24 @@
               @select="onCreateProjectSelect"
               @change="onCreateProjectChange"
               @submit="onCreateProjectSubmit"
+              @blur="inCreateProjectMode = false"
             ></autocomplete>
           </form>
-          <button type="button" class="btn btn-sm btn-link" @click="inCreateProjectMode = true" v-else>{{createProjectTitle}}</button>
+          <button
+            type="button"
+            class="btn btn-sm btn-link"
+            @click="inCreateProjectMode = true" v-else>{{createProjectTitle}}
+          </button>
         </div>
       </template>
     </entity-row>
 
-    <template v-if="!inEdit && canExpand">
-      <expander class="task__expander" @toggle="toggleExpanded" :expanded="isExpanded"></expander>
-    </template>
+    <!-- Expander -->
+    <expander
+      class="task__expander"
+      @toggle="toggleExpanded"
+      :expanded="isExpanded"
+      v-if="!inEdit && canExpand"></expander>
   </div>
 </template>
 
@@ -244,6 +268,12 @@
         this.inCreateProjectMode = false;
       },
 
+      submitTask() {
+        this.inEdit = false;
+
+        this.updateTask({title: this.title, text: this.text, isNew: false});
+      },
+
       onCreateProjectSubmit(e) {
         console.log('project.submit', e);
         const title = this.newProjectName;
@@ -271,22 +301,12 @@
       },
 
       onSubmit() {
-        this.inEdit = false;
-
-        this.updateTask({title: this.title, text: this.text, isNew: false});
+        this.submitTask();
         this.logAction(this.task.isNew ? 'created' : 'updated');
       },
 
       onEditorChange(text) {
         this.updateTask({text});
-      },
-
-      onTextClick() {
-        this.inEdit = true;
-      },
-
-      onTitleClick() {
-        this.inEdit = true;
       },
 
       onCancelClick() {
@@ -316,8 +336,12 @@
         }
       },
 
+      onCtrlEnterHotkey() {
+        this.submitTask();
+      },
+
       onEnterHotkey() {
-        this.isExpanded = true;
+        this.toggleExpanded();
       },
 
       onTabHotkey() {
@@ -335,8 +359,17 @@
           'task_expanded': this.isExpanded,
           'task_edit': this.inEdit,
           'task_done': this.task.done,
-          'task_no-expand': !this.canExpand
+          'task_no-expand': !this.canExpand,
+          'task_focused': this.focused
         };
+      },
+
+      keymap() {
+        return {
+          'ctrl+enter': this.onCtrlEnterHotkey,
+          'enter': this.onEnterHotkey,
+          'tab': this.onTabHotkey
+        }
       },
 
       canCancel() {
@@ -408,6 +441,10 @@
       outline: none;
     }
 
+    &_focused {
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, .14);
+    }
+
     &_expanded {
       box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2);
       border-radius: 7px;
@@ -415,14 +452,10 @@
     }
 
     &__expander {
-      padding: 0.5rem;
-      font-size: 1rem;
       position: absolute;
       top: 0;
       right: 0;
       height: 50px;
-      color: #818a91;
-      cursor: pointer;
       /*border-left: 1px solid #f2f2f2;*/
       /*border-bottom: 1px solid #f2f2f2;*/
       border-radius: 0 6px 6px 0;
@@ -456,11 +489,8 @@
       margin-left: auto
     }
 
-    &__title-input {
-      font-size: 1.5rem;
-      font-weight: 500;
-      line-height: 1.1;
-      color: #2c3e50;
+    &__project-title {
+      color: hsla(0, 0%, 0%, .5)
     }
 
     &__title {
@@ -468,12 +498,8 @@
       color: #4e4e4e;
     }
 
-    &__meta {
-      display: flex;
-    }
-
-    &__meta-action_align_right {
-      margin-left: auto;
+    &__content.editor {
+      padding: 0;
     }
 
     &__actions {
@@ -503,10 +529,6 @@
       }
     }
 
-    &__action-members {
-      padding: .5rem 1rem;
-    }
-
     &__action-deadline {
       max-width: 120px;
     }
@@ -519,32 +541,33 @@
     &__comments {
       border-radius: 0 0 6px 6px;
     }
+  }
 
-    &__project-title,
-    &__teaser-project {
-      color: hsla(0, 0%, 0%, .5)
-    }
-
-    &__teaser-project,
-    &__teaser-deadline,
-    &__teaser-comments {
+  .task-teaser {
+    &__project,
+    &__deadline,
+    &__comments {
       margin-right: .5rem;
     }
 
-    &__teaser-deadline {
+    &__project {
+      color: hsla(0, 0%, 0%, .5)
+    }
+
+    &__deadline {
       min-width: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    &__teaser-comments {
+    &__comments {
       display: inline-flex;
       align-items: center;
       color: #5d5d5d;
     }
 
-    &__teaser-comments-label {
+    &__comments-label {
       margin-left: 4px;
     }
   }
