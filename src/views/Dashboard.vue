@@ -7,27 +7,20 @@
       </button>
     </div>
     <group-list class="group-list">
-
+      <task-list :items="newTasks"></task-list>
       <!-- My Tasks -->
       <group class="group-list__item" :title="`My Tasks (${myTasks.length})`">
         <template slot="content">
           <template v-if="myTasks.length">
-            <task-list :items="myUngroupedTasks" :teammates="teammates"></task-list>
+            <task-list :items="myUngroupedTasks"></task-list>
 
-            <template v-for="(item, index) in projects" v-if="projectMyTasks(item).length">
+            <template v-for="(item, index) in projects" v-if="myTasksByProject(item).length">
               <div class="group-header">{{item.title}}</div>
-              <task-list
-                :items="projectMyUndoneTasks(item)"
-                :teammates="teammates"
-              ></task-list>
+              <task-list :items="myUndoneTasksByProject(item)"></task-list>
             </template>
 
             <div class="group-header" v-if="myDoneTasks.length">Recently done tasks</div>
-            <task-list
-              :items="myDoneTasks"
-              :teammates="teammates"
-              :showProjectTitle="true"
-            ></task-list>
+            <task-list :items="myDoneTasks" :showProjectTitle="true"></task-list>
           </template>
           <empty text="There are no tasks assigned to you." v-else></empty>
         </template>
@@ -42,12 +35,8 @@
               tasks
             </div>
 
-            <template v-if="mateUndoneTasks(item).length">
-              <task-list
-                :items="mateUndoneTasks(item)"
-                :teammates="teammates"
-                :showProjectTitle="true"
-              ></task-list>
+            <template v-if="undoneTasksByMate(item).length">
+              <task-list :items="undoneTasksByMate(item)" :showProjectTitle="true"></task-list>
             </template>
             <empty text="There are no tasks assigned. You can assign a task to him." v-else></empty>
           </template>
@@ -60,18 +49,18 @@
 
       <!-- Projects -->
       <template v-for="(item, index) in projects">
-        <group class="group-list__item" :title="item.title" v-if="projectTasks(item).length">
+        <group class="group-list__item" :title="item.title" v-if="tasksByProject(item).length">
           <template slot="content">
-            <task-list :items="projectUndoneTasks(item)" :teammates="teammates"></task-list>
+            <task-list :items="undoneTasksByProject(item)"></task-list>
 
-            <div class="group-header" v-if="projectDoneTasks(item).length">Recently done tasks</div>
-            <task-list :items="projectDoneTasks(item)" :teammates="teammates"></task-list>
+            <div class="group-header" v-if="doneTasksByProject(item).length">Recently done tasks</div>
+            <task-list :items="doneTasksByProject(item)"></task-list>
           </template>
         </group>
       </template>
     </group-list>
 
-    <task-list :items="ungroupedTasks" :teammates="teammates"></task-list>
+    <task-list :items="ungroupedNotNewTasks"></task-list>
   </div>
 </template>
 
@@ -82,6 +71,11 @@
   import Empty from '../components/Empty';
   import GroupList from '../containers/GroupList';
   import TaskList from '../containers/TaskList';
+
+  const isTaskUndone = (t) => !t.done;
+  const isTaskDone = (t) => t.done;
+  const isTaskNew = (t) => t.isNew;
+  const isTaskNotNew = (t) => !t.isNew;
 
   export default {
     name: 'dashboard',
@@ -96,46 +90,77 @@
         return users.find((u) => u._id === id);
       },
 
-      mateUndoneTasks(mate) {
-        return this.tasks.filter((task) => {
-          return this.findPerformer(task.performers, mate._id) && !task.done
-        })
+      isUserTask(task) {
+        return this.findPerformer(task.performers, this.user._id);
       },
 
-      projectMyTasks(prj) {
-        return this.projectTasks(prj).filter((task) => this.findPerformer(task.performers, this.user._id))
+      isMateTask(mate) {
+        return (task) => this.findPerformer(task.performers, mate._id)
       },
 
-      projectMyUndoneTasks(prj) {
-        return this.projectMyTasks(prj).filter(t => !t.done);
+      tasksByProject(prj) {
+        return this.projectsTasks
+          .filter(isTaskNotNew)
+          .filter((task) => prj.tasks.indexOf(task._id) !== -1)
       },
 
-      projectTasks(prj) {
-        return this.projectsTasks.filter((task) => prj.tasks.indexOf(task._id) !== -1)
+      undoneTasksByProject(prj) {
+        return this.tasksByProject(prj)
+          .filter(isTaskUndone);
       },
 
-      projectUndoneTasks(prj) {
-        return this.projectTasks(prj).filter(t => !t.done);
+      doneTasksByProject(prj) {
+        return this.tasksByProject(prj)
+          .filter(isTaskDone);
       },
 
-      projectDoneTasks(prj) {
-        return this.projectTasks(prj).filter(t => t.done);
+      myTasksByProject(prj) {
+        return this.tasksByProject(prj)
+          .filter(this.isUserTask)
+      },
+
+      myUndoneTasksByProject(prj) {
+        return this.myTasksByProject(prj)
+          .filter(isTaskUndone);
+      },
+
+      undoneTasksByMate(mate) {
+        return this.tasks
+          .filter(this.isMateTask(mate))
+          .filter(isTaskUndone)
+          .filter(isTaskNotNew)
       },
     },
 
     computed: {
+      newTasks() {
+        return this.tasks
+          .filter(isTaskNew);
+      },
+
+      ungroupedNotNewTasks() {
+        return this.ungroupedTasks
+          .filter(isTaskNotNew);
+      },
+
       myTasks() {
-        return this.tasks.filter((task) => this.findPerformer(task.performers, this.user._id));
+        return this.tasks
+          .filter(this.isUserTask)
+          .filter(isTaskNotNew)
       },
 
       myUngroupedTasks() {
-        return this.ungroupedTasks.filter((task) => this.findPerformer(task.performers, this.user._id) && !task.done);
+        return this.ungroupedTasks
+          .filter(this.isUserTask)
+          .filter(isTaskUndone)
+          .filter(isTaskNotNew)
       },
 
       myDoneTasks() {
-        return this.tasks.filter((task) => {
-          return this.findPerformer(task.performers, this.user._id) && task.done
-        });
+        return this.tasks
+          .filter(this.isUserTask)
+          .filter(isTaskDone)
+          .filter(isTaskNotNew)
       },
 
       ...mapGetters([
