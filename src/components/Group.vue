@@ -131,6 +131,10 @@
       margin-left: auto;
     }
 
+    &__title {
+      cursor: pointer;
+    }
+
     &__content {
       margin-top: 1rem;
     }
