@@ -2,7 +2,7 @@
   <div class="card group" :class="classObject" tabindex="0">
     <div class="group__body" v-if="isExpanded">
       <div class="group__header">
-        <div class="group__title">{{title}}</div>
+        <div class="group__title" @click="toggleExpanded">{{title}}</div>
         <div class="group__actions">
           <slot name="actions"></slot>
         </div>
