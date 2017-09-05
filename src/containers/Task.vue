@@ -10,38 +10,43 @@
 
         <!-- Actions -->
         <div class="task__actions">
-          <mate-picker
-            label="Add Performer"
-            class="task__action"
-            :members="teammates"
-            :selectedMembers="task.performers"
-            @change="onPerformerChange"
-          ></mate-picker>
 
-          <mate-picker
-            label="Add Followers"
-            class="task__action"
-            :multiple="true"
-            :members="teammates"
-            :selectedMembers="task.followers"
-            @change="onFollowersChange"
-          ></mate-picker>
+          <div class="task__actions-left">
+            <mate-picker
+              label="Add Performer"
+              class="task__action"
+              :members="teammates"
+              :selectedMembers="task.performers"
+              @change="onPerformerChange"
+            ></mate-picker>
 
-          <div class="task__action task__action_align_right">
-            <button class="btn"
-                    :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
-                    v-if="!inEdit"
-                    @click="toggleDone"
-            >
-              {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
-            </button>
+            <mate-picker
+              label="Add Followers"
+              class="task__action"
+              :multiple="true"
+              :members="teammates"
+              :selectedMembers="task.followers"
+              @change="onFollowersChange"
+            ></mate-picker>
           </div>
 
-          <div class="task__action task__action_last">
-            <form>
-              <date-picker :value="deadline" class="task__action-deadline" placeholder="Deadline"
-                           @change="onDeadlineChange"></date-picker>
-            </form>
+          <div class="task__actions-right">
+            <div class="task__action task__action_align_right">
+              <button class="btn"
+                      :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
+                      v-if="!inEdit"
+                      @click="toggleDone"
+              >
+                {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
+              </button>
+            </div>
+
+            <div class="task__action task__action_last">
+              <form>
+                <date-picker :value="deadline" class="task__action-deadline" placeholder="Deadline"
+                             @change="onDeadlineChange"></date-picker>
+              </form>
+            </div>
           </div>
         </div>
 
@@ -87,8 +92,12 @@
 
           <!-- Edit actions -->
           <div class="form-group">
-            <button class="btn btn-primary" :disabled="!title">Save <span class="hotkey">⌃ ↩</span></button>
-            <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel</button>
+            <button class="btn btn-primary" :disabled="!title">Save
+              <hotkey name="command+enter"></hotkey>
+            </button>
+            <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel
+              <hotkey name="esc"></hotkey>
+            </button>
           </div>
         </form>
       </div>
@@ -149,6 +158,7 @@
 
 <script>
   import {mapGetters} from 'vuex';
+  import isMac from '@/utils/isMac';
   import daysLeft from '@/utils/daysLeft';
   import Comments from '@/containers/Comments';
   import Expander from '@/components/Expander';
@@ -159,6 +169,7 @@
   import Author from '@/components/Author';
   import Editor from '@/components/Editor';
   import MatePicker from '@/components/MatePicker'
+  import Hotkey from '@/components/Hotkey'
 
   export default {
     name: 'task',
@@ -178,7 +189,8 @@
       Author,
       Editor,
       MatePicker,
-      Expander
+      Expander,
+      Hotkey
     },
 
     data() {
@@ -316,8 +328,8 @@
           this.$store.commit('removeTask', {task: this.task, project: this.project});
         } else {
           this.inEdit = false;
-          this.title =  this.task.title;
-          this.text =  this.task.text;
+          this.title = this.task.title;
+          this.text = this.task.text;
         }
       },
 
@@ -338,14 +350,6 @@
           this.updateTask({deadline});
           this.logAction('changed deadline on');
         }
-      },
-
-      onCtrlEnterHotkey() {
-        this.submitTask();
-      },
-
-      onEnterHotkey() {
-        this.toggleExpanded();
       },
 
       onTabHotkey() {
@@ -370,9 +374,9 @@
 
       keymap() {
         return {
-          'ctrl+enter': this.onCtrlEnterHotkey,
-          'enter': this.onEnterHotkey,
-          'esc': this.onEscHotkey,
+          [isMac() ? 'meta+enter' : 'ctrl+enter']: this.onSubmit,
+          'enter': this.toggleExpanded,
+          'esc': this.onCancelClick,
           'tab': this.onTabHotkey
         }
       },
@@ -492,6 +496,12 @@
     &__actions {
       margin-bottom: 1rem;
       display: flex;
+      flex-direction: row;
+    }
+
+    &__actions-left,
+    &__actions-right {
+      display: flex;
       flex-direction: column;
 
       @media (min-width: 992px) {
@@ -499,30 +509,28 @@
       }
     }
 
+    &__actions-right {
+      margin-left: auto;
+      margin-right: 1rem;
+      text-align: right;
+    }
+
     &__action {
       margin-bottom: 1rem;
       display: inline-block;
       font-size: 13px;
-      cursor: pointer;
 
       @media (min-width: 992px) {
         margin-right: 1rem;
       }
     }
 
-    &__action_align_right {
-      @media (min-width: 992px) {
-        margin-left: auto;
-      }
+    &__action_last {
+      margin-right: 0;
     }
 
     &__action-deadline {
       max-width: 120px;
-    }
-
-    &_no-expand &__action_last,
-    &_edit &__action_last {
-      margin-right: 0;
     }
 
     &__comments {

@@ -150,12 +150,6 @@
     background: transparent;
   }
 
-  .hotkey {
-    font-size: 80%;
-    padding: 0 .33em;
-    text-decoration: none;
-  }
-
   .card {
     border-radius: 6px
   }

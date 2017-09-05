@@ -1,7 +1,7 @@
 <template>
   <div class="list-group list-group-flush comments">
     <template v-for="(item, index) in items">
-      <div class="list-group-item flex-column align-items-start comments__item">
+      <div class="list-group-item flex-column align-items-start comments__item" tabindex="0">
         <div class="d-flex w-100 justify-content-between">
           <div class="mb-1">
             <author :item="item.user" class="comments__item-author"></author>
@@ -21,24 +21,29 @@
 
       <template v-if="inEdit">
         <form
-            class="comments__form"
-            @submit.prevent="onSubmit"
+          class="comments__form"
+          @submit.prevent="onSubmit"
+          v-hotkey="keymap"
         >
           <div class="form-group">
             <editor
-                class="comments__editor"
-                @change="onTextChange"
-                ref="textEditor"
-                :text="text"
-                :placeholder="textPlaceholder"
-                :bordered="true"
+              class="comments__editor"
+              @change="onTextChange"
+              ref="textEditor"
+              :text="text"
+              :placeholder="textPlaceholder"
+              :bordered="true"
             >
             </editor>
           </div>
 
           <div class="form-group">
-            <button class="btn btn-primary" :disabled="!text">Reply to</button>
-            <button class="btn btn-secondary" type="button" @click="onCancelClick">Cancel</button>
+            <button class="btn btn-primary" :disabled="!text">Reply to
+              <hotkey name="command+enter"></hotkey>
+            </button>
+            <button class="btn btn-secondary" type="button" @click="onCancelClick">Cancel
+              <hotkey name="esc"></hotkey>
+            </button>
           </div>
         </form>
       </template>
@@ -52,9 +57,12 @@
 <script>
   import {mapMutations} from 'vuex';
   import Vue from 'vue';
+  import isMac from '@/utils/isMac';
+
   import fromNow from '@/utils/fromNow';
   import Author from '@/components/Author';
   import Editor from '@/components/Editor';
+  import Hotkey from '@/components/Hotkey'
 
   export default {
     name: 'comments',
@@ -64,7 +72,7 @@
       entity: {type: Object}
     },
 
-    components: {Author, Editor},
+    components: {Author, Editor, Hotkey},
 
     data() {
       return {
@@ -109,6 +117,13 @@
     },
 
     computed: {
+      keymap() {
+        return {
+          [isMac() ? 'meta+enter' : 'ctrl+enter']: this.onSubmit,
+          'esc': this.onCancelClick,
+        }
+      },
+
       textPlaceholder() {
         return 'Comment here...';
       },
