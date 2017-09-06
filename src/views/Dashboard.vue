@@ -1,11 +1,12 @@
 <template>
-  <div class="container">
+  <div class="container dashboard-view">
     <div class="nav-actions" v-hotkey="actionsKeymap">
       <button class="btn btn-success card-link project__action-button"
-      @click="createTask"
-      :disabled="canCreateTask">
+              @click="createTask"
+              :disabled="!canCreateTask">
         <i class="fa fa-tasks"></i>
-        Create Task <hotkey name="shift+T"></hotkey>
+        Create Task
+        <hotkey name="shift+T"></hotkey>
       </button>
     </div>
     <group-list class="group-list">
@@ -74,6 +75,7 @@
   import GroupList from '@/containers/GroupList';
   import TaskList from '@/containers/TaskList';
   import Hotkey from '@/components/Hotkey'
+  import isBodyActiveElement from '@/utils/isBodyActiveElement'
 
   const isTaskUndone = (t) => !t.done;
   const isTaskDone = (t) => t.done;
@@ -144,9 +146,10 @@
       },
 
       onShiftTHotkey(e) {
-        e.preventDefault();
-
-        this.createTask();
+        if (isBodyActiveElement()) {
+          e.preventDefault();
+          this.createTask();
+        }
       }
     },
 
@@ -158,7 +161,7 @@
       },
 
       canCreateTask() {
-        return this.newTasks.length > 0;
+        return this.newTasks.length <= 0;
       },
 
       newTasks() {
@@ -205,6 +208,10 @@
 </script>
 
 <style lang="scss">
+
+  .dashboard-view {
+    padding-bottom: 10rem;
+  }
 
   .nav-actions {
     margin-bottom: 1rem;
