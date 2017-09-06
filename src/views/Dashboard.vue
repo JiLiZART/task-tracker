@@ -1,9 +1,11 @@
 <template>
   <div class="container">
-    <div class="nav-actions">
-      <button class="btn btn-success card-link project__action-button" @click="createTask">
+    <div class="nav-actions" v-hotkey="actionsKeymap">
+      <button class="btn btn-success card-link project__action-button"
+      @click="createTask"
+      :disabled="canCreateTask">
         <i class="fa fa-tasks"></i>
-        Create Task
+        Create Task <hotkey name="shift+T"></hotkey>
       </button>
     </div>
     <group-list class="group-list">
@@ -66,11 +68,12 @@
 
 <script>
   import {mapGetters} from 'vuex';
-  import Group from '../components/Group';
-  import Author from '../components/Author';
-  import Empty from '../components/Empty';
-  import GroupList from '../containers/GroupList';
-  import TaskList from '../containers/TaskList';
+  import Group from '@/components/Group';
+  import Author from '@/components/Author';
+  import Empty from '@/components/Empty';
+  import GroupList from '@/containers/GroupList';
+  import TaskList from '@/containers/TaskList';
+  import Hotkey from '@/components/Hotkey'
 
   const isTaskUndone = (t) => !t.done;
   const isTaskDone = (t) => t.done;
@@ -79,11 +82,20 @@
 
   export default {
     name: 'dashboard',
-    components: {Empty, Group, TaskList, GroupList, Author},
+    components: {
+      Hotkey,
+      Empty,
+      Group,
+      TaskList,
+      GroupList,
+      Author
+    },
 
     methods: {
       createTask() {
-        this.$store.dispatch('createTask', {});
+        if (this.canCreateTask) {
+          this.$store.dispatch('createTask', {});
+        }
       },
 
       findPerformer(users, id) {
@@ -130,9 +142,25 @@
           .filter(isTaskUndone)
           .filter(isTaskNotNew)
       },
+
+      onShiftTHotkey(e) {
+        e.preventDefault();
+
+        this.createTask();
+      }
     },
 
     computed: {
+      actionsKeymap() {
+        return {
+          'shift+T': this.onShiftTHotkey
+        }
+      },
+
+      canCreateTask() {
+        return this.newTasks.length > 0;
+      },
+
       newTasks() {
         return this.tasks
           .filter(isTaskNew);

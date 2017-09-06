@@ -1,5 +1,5 @@
 <template>
-  <div class="card group" :class="classObject" tabindex="0">
+  <div class="card group" :class="classObject" tabindex="0" v-hotkey="keymap">
     <div class="group__body" v-if="isExpanded">
       <div class="group__header">
         <div class="group__title" @click="toggleExpanded">{{title}}</div>
@@ -32,6 +32,7 @@
   import Author from '@/components/Author';
   import EntityRow from '@/components/EntityRow';
   import Expander from '@/components/Expander';
+  import getCurrentActiveElement from '@/utils/getCurrentActiveElement'
 
   export default {
     name: 'group',
@@ -47,6 +48,26 @@
     methods: {
       toggleExpanded() {
         this.isExpanded = !this.isExpanded;
+      },
+
+      expand() {
+        this.isExpanded = true;
+      },
+
+      collapse() {
+        this.isExpanded = false;
+      },
+
+      onEscHotkey() {
+        if (this.$el === getCurrentActiveElement()) {
+          this.collapse();
+        }
+      },
+
+      onEnterHotkey() {
+        if (this.$el === getCurrentActiveElement()) {
+          this.toggleExpanded()
+        }
       }
     },
 
@@ -55,7 +76,14 @@
         return {
           'group_expanded': this.isExpanded
         }
-      }
+      },
+
+      keymap() {
+        return {
+          'enter': this.onEnterHotkey,
+          'esc': this.onEscHotkey
+        }
+      },
     }
   }
 </script>
@@ -68,6 +96,7 @@
 
     &:focus {
       outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, .14);
     }
 
     &_expanded {
@@ -83,9 +112,11 @@
       }
     }
 
+    &_expanded:focus {
+      box-shadow: 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12), 0 5px 5px -3px rgba(0, 0, 0, .2)
+    }
+
     &__expander {
-      padding: 0.5rem;
-      font-size: 1rem;
       position: absolute;
       top: 0;
       right: 0;

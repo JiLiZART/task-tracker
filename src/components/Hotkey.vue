@@ -33,7 +33,7 @@
         return this.name
           .split('+')
           .map((symbol) => !isMac() && toWinKeymap[symbol] ? toWinKeymap[symbol] : symbol)
-          .map((symbol) => keymap[symbol])
+          .map((symbol) => keymap[symbol] ? keymap[symbol] : symbol)
           .join(' ')
       }
     }

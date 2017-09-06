@@ -42,7 +42,7 @@
             </div>
 
             <div class="task__action task__action_last">
-              <form>
+              <form @submit.prevent="onSubmit">
                 <date-picker :value="deadline" class="task__action-deadline" placeholder="Deadline"
                              @change="onDeadlineChange"></date-picker>
               </form>
@@ -75,6 +75,7 @@
             <input class="form-control task__input-title"
                    v-model="title"
                    id="task-title"
+                   ref="inputTitle"
                    placeholder="Enter Title..."
                    @keyup.enter="onEnterHotkey"
                    required/>
@@ -212,6 +213,14 @@
 
         inEdit: task.isNew || isTitleEmpty,
         isExpanded: (isTitleEmpty === true) || this.canExpand === false
+      }
+    },
+
+    mounted() {
+      if (this.inEdit) {
+        this.$nextTick(() => {
+          this.$refs.inputTitle.focus();
+        })
       }
     },
 
@@ -382,17 +391,19 @@
         }
       },
 
-      onTabHotkey() {
-        this.collapse();
-      },
-
       onEscHotkey() {
-        if (this.inEdit) {
-          this.onCancelClick();
-        } else {
-          if (getCurrentActiveElement() === this.$el) {
+        if (this.$el === getCurrentActiveElement()) {
+          if (this.inEdit) {
+            this.onCancelClick();
+          } else {
             this.collapse();
           }
+        }
+      },
+
+      onEnterHotkey() {
+        if (this.$el === getCurrentActiveElement()) {
+          this.toggleExpanded()
         }
       }
     },
@@ -415,9 +426,8 @@
       keymap() {
         return {
           [isMac() ? 'meta+enter' : 'ctrl+enter']: this.onSubmit,
-          'enter': this.toggleExpanded,
-          'esc': this.onEscHotkey,
-          'tab': this.onTabHotkey
+          'enter': this.onEnterHotkey,
+          'esc': this.onEscHotkey
         }
       },
 
@@ -473,9 +483,6 @@
 
     &:focus {
       outline: none;
-    }
-
-    &_focused {
       box-shadow: 0 0 0 3px rgba(0, 0, 0, .14);
     }
 
@@ -483,6 +490,10 @@
       box-shadow: 0 4px 5px 0 rgba(0, 0, 0, .14), 0 1px 10px 0 rgba(0, 0, 0, .12), 0 2px 4px -1px rgba(0, 0, 0, .2);
       border-radius: 7px;
       border: none;
+    }
+
+    &_expanded:focus {
+      box-shadow: 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12), 0 5px 5px -3px rgba(0, 0, 0, .2)
     }
 
     &__expander {

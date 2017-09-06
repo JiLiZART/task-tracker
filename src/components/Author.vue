@@ -1,5 +1,5 @@
 <template>
-  <router-link class="author" :class="{'author_size_small': small}" :to="authorLink" v-if="haveLink">
+  <router-link class="author" tabindex="0" :class="{'author_size_small': small}" :to="authorLink" v-if="haveLink">
     <el-tooltip
       effect="dark"
       placement="bottom-start"
@@ -62,6 +62,12 @@
   .author {
     display: inline-flex;
     align-items: center;
+    border-radius: 50%;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 0, 0, .14);
+    }
 
     &__name {
       display: inline-block;

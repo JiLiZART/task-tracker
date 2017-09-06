@@ -1,3 +1,6 @@
 export default function getCurrentActiveElement() {
-  return document && document.activeElement;
+  try {
+    return document.activeElement
+  } catch (e) {
+  }
 }
