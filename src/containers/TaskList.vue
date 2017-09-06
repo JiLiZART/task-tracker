@@ -7,7 +7,8 @@
         :index="index"
         :id="item._id"
         :task.sync="item"
-        :canEdit="canEdit"
+        :expandable="expandable"
+        :editable="editable"
         :canMoveToProject="canMoveToProject"
         :showProjectTitle="showProjectTitle"
       ></task>
@@ -22,7 +23,8 @@
     name: 'task-list',
     props: {
       items: {type: Array},
-      canEdit: {type: Boolean, 'default': true},
+      expandable: {type: Boolean, 'default': true},
+      editable: {type: Boolean, 'default': true},
       canMoveToProject: {type: Boolean, 'default': true},
       showProjectTitle: {type: Boolean, 'default': false}
     },

@@ -130,7 +130,7 @@
         <div class="task-teaser__move" v-if="!project">
           <form @submit.prevent="onCreateProjectSubmit" v-if="inCreateProjectMode">
             <autocomplete
-              placeholder="Enter name..."
+              placeholder="Enter bundle name..."
               :querySearch="queryProjects"
               @select="onCreateProjectSelect"
               @change="onCreateProjectChange"
@@ -152,12 +152,13 @@
       class="task__expander"
       @toggle="toggleExpanded"
       :expanded="isExpanded"
-      v-if="!inEdit && canExpand"></expander>
+      v-if="canExpand"></expander>
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex';
+  import getCurrentActiveElement from '@/utils/getCurrentActiveElement'
   import isMac from '@/utils/isMac';
   import daysLeft from '@/utils/daysLeft';
   import Comments from '@/containers/Comments';
@@ -175,8 +176,8 @@
     name: 'task',
     props: {
       task: {type: Object},
-      canExpand: {type: Boolean, 'default': true},
-      canEdit: {type: Boolean, 'default': true},
+      expandable: {type: Boolean, 'default': true},
+      editable: {type: Boolean, 'default': true},
       canMoveToProject: {type: Boolean, 'default': true},
       showProjectTitle: {type: Boolean, 'default': false}
     },
@@ -248,7 +249,21 @@
       },
 
       toggleExpanded() {
-        this.isExpanded = !this.isExpanded;
+        if (this.canExpand) {
+          this.isExpanded = !this.isExpanded;
+        }
+      },
+
+      expand() {
+        if (this.canExpand) {
+          this.isExpanded = true;
+        }
+      },
+
+      collapse() {
+        if (this.canExpand) {
+          this.isExpanded = false;
+        }
       },
 
       toggleDone() {
@@ -263,47 +278,60 @@
           .filter((project) => this.project ? project._id !== this.project._id : true)
           .map((project) => ({value: project.title, project}));
 
-        const results = queryString ? links.filter(this.createFilter(queryString)) : links;
+        const createFilter = (queryString) => (prj) => (prj.value.indexOf(queryString.toLowerCase()) === 0);
+        const results = queryString ? links.filter(createFilter(queryString)) : links;
 
         cb(results);
       },
 
-      createFilter(queryString) {
-        return (prj) => (prj.value.indexOf(queryString.toLowerCase()) === 0);
-      },
-
       moveTaskToProject({task, project}) {
+        let type, payload;
+
         if (this.project) {
-          this.$store.commit('moveTaskFromProject', {task, from: this.project, to: project});
+          type = 'moveTaskFromProject';
+          payload = {task, from: this.project, to: project};
         } else {
-          this.$store.commit('addTaskToProject', {project, task})
+          type = 'addTaskToProject';
+          payload = {project, task};
         }
 
+        this.$store.commit(type, payload);
         this.inCreateProjectMode = false;
       },
 
-      submitTask() {
-        this.inEdit = false;
+      findProject(query) {
+        return this.projects.filter(({title}) => title === query)
+      },
 
-        this.updateTask({title: this.title, text: this.text, isNew: false});
+      submitTask() {
+        if (this.title) {
+          this.inEdit = false;
+
+          this.updateTask({title: this.title, text: this.text, isNew: false});
+        }
       },
 
       onCreateProjectSubmit(e) {
-        console.log('project.submit', e);
         const title = this.newProjectName;
         const task = this.task;
+        let project;
 
         if (title) {
-          this.$store
-            .dispatch('createProject', {title})
-            .then((project) => {
-              this.moveTaskToProject({task, project})
-            })
+          project = this.findProject(title);
+
+          if (project) {
+            this.moveTaskToProject({task, project})
+          } else {
+            this.$store
+              .dispatch('createProject', {title})
+              .then((project) => {
+                this.moveTaskToProject({task, project})
+              })
+          }
         }
       },
 
       onCreateProjectChange(value) {
-        console.log('project.change', value);
         this.newProjectName = value;
       },
 
@@ -324,12 +352,14 @@
       },
 
       onCancelClick() {
-        if (this.task.isNew) {
-          this.$store.commit('removeTask', {task: this.task, project: this.project});
-        } else {
-          this.inEdit = false;
-          this.title = this.task.title;
-          this.text = this.task.text;
+        if (this.canCancel) {
+          if (this.task.isNew) {
+            this.$store.commit('removeTask', {task: this.task, project: this.project});
+          } else {
+            this.inEdit = false;
+            this.title = this.task.title;
+            this.text = this.task.text;
+          }
         }
       },
 
@@ -353,7 +383,17 @@
       },
 
       onTabHotkey() {
-        this.isExpanded = false;
+        this.collapse();
+      },
+
+      onEscHotkey() {
+        if (this.inEdit) {
+          this.onCancelClick();
+        } else {
+          if (getCurrentActiveElement() === this.$el) {
+            this.collapse();
+          }
+        }
       }
     },
 
@@ -376,14 +416,17 @@
         return {
           [isMac() ? 'meta+enter' : 'ctrl+enter']: this.onSubmit,
           'enter': this.toggleExpanded,
-          'esc': this.onCancelClick,
+          'esc': this.onEscHotkey,
           'tab': this.onTabHotkey
         }
       },
 
       canCancel() {
-        //@TODO move cancel logic to parent component
-        return true;
+        return this.inEdit;
+      },
+
+      canExpand() {
+        return !this.inEdit && this.expandable;
       },
 
       project() {
@@ -395,11 +438,11 @@
       },
 
       titlePlaceholder() {
-        return this.canEdit ? 'Click to edit title' : '';
+        return this.editable ? 'Click to edit title' : '';
       },
 
       textPlaceholder() {
-        return this.canEdit ? 'Click to edit description' : '';
+        return this.editable ? 'Click to edit description' : '';
       },
 
       commentsCount() {
