@@ -1,62 +1,24 @@
 <template>
-  <div class="container">
-    <div class="card search-view">
-      <div class="card-body">
-        <h4 class="card-title">Search results for "{{query}}"</h4>
-
-        <div class="card search-view__section" v-if="foundTasks.length">
-          <div class="card-body">
-            <h5 class="card-title">Tasks</h5>
-            <template v-for="(item, index) in foundTasks">
-              <div class="search-view__item">
-                <task
-                  :key="item._id"
-                  :index="index"
-                  :id="item._id"
-                  :task.sync="item"
-                  :teammates="teammates"
-                ></task>
-              </div>
-            </template>
-          </div>
-        </div>
-
-        <div class="card search-view__section" v-if="foundProjects.length">
-          <div class="card-body">
-            <h5 class="card-title">Projects</h5>
-            <template v-for="(item, index) in foundProjects">
-              <router-link class="btn btn-light" :to="{ name: 'project', params: { id: item._id }}">
-                {{ item.title }}
-                <span class="badge badge-light"><i class="fa fa-tasks"></i>{{ tasksCount(item) }}</span>
-                <span class="badge badge-light"><i class="fa fa-file-text"></i>{{ docsCount(item) }}</span>
-              </router-link>
-            </template>
-          </div>
-        </div>
-
-        <div class="card search-view__section" v-if="foundMates && foundMates.length">
-          <div class="card-body">
-            <h5 class="card-title">Teammates</h5>
-            <template v-for="(item, index) in foundMates">
-              <router-link :to="{ name: 'member', params: { id: item._id }}">
-                <avatar :item="item"></avatar>
-              </router-link>
-            </template>
-          </div>
-        </div>
-
-        <div v-if="foundItems.length === 0">
-          <div class="card-text">Nothing found</div>
-        </div>
-      </div>
+  <div class="container search-view">
+    <div class="card-body">
+      <h3 class="card-title">Search results for "{{query}}"</h3>
     </div>
+    <group-list class="group-list">
+      <!-- Projects -->
+      <template v-for="(item, index) in foundProjects">
+        <project-group class="group-list__item" :item="item"></project-group>
+      </template>
+    </group-list>
+    <task-list :items="foundTasks"></task-list>
   </div>
 </template>
 
 <script>
   import Fuse from 'fuse.js';
   import Vue from 'vue';
-  import Task from '@/containers/Task';
+  import TaskList from '@/containers/TaskList';
+  import GroupList from '@/containers/GroupList';
+  import ProjectGroup from '@/containers/ProjectGroup';
   import Avatar from '@/components/Avatar';
 
   function createFuse(items, keys) {
@@ -69,7 +31,7 @@
   export default {
     name: 'search-view',
 
-    components: {Task, Avatar},
+    components: {TaskList, GroupList, ProjectGroup},
 
     data() {
       return {

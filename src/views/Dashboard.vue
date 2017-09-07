@@ -51,14 +51,7 @@
 
       <!-- Projects -->
       <template v-for="(item, index) in projects">
-        <group class="group-list__item" :title="item.title" v-if="tasksByProject(item).length">
-          <template slot="content">
-            <task-list :items="undoneTasksByProject(item)"></task-list>
-
-            <div class="group-header" v-if="doneTasksByProject(item).length">Recently done tasks</div>
-            <task-list :items="doneTasksByProject(item)"></task-list>
-          </template>
-        </group>
+        <project-group class="group-list__item" :item="item"></project-group>
       </template>
     </group-list>
 
@@ -75,6 +68,7 @@
   import TaskList from '@/containers/TaskList';
   import Hotkey from '@/components/Hotkey'
   import isBodyActiveElement from '@/utils/isBodyActiveElement'
+  import ProjectGroup from '@/containers/ProjectGroup';
 
   const isTaskUndone = (t) => !t.done;
   const isTaskDone = (t) => t.done;
@@ -89,7 +83,8 @@
       Group,
       TaskList,
       GroupList,
-      Author
+      Author,
+      ProjectGroup
     },
 
     methods: {
@@ -115,16 +110,6 @@
         return this.projectsTasks
           .filter(isTaskNotNew)
           .filter((task) => prj.tasks.indexOf(task._id) !== -1)
-      },
-
-      undoneTasksByProject(prj) {
-        return this.tasksByProject(prj)
-          .filter(isTaskUndone);
-      },
-
-      doneTasksByProject(prj) {
-        return this.tasksByProject(prj)
-          .filter(isTaskDone);
       },
 
       myTasksByProject(prj) {
