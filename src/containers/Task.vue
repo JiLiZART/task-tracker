@@ -309,7 +309,7 @@
       },
 
       findProject(query) {
-        return this.projects.filter(({title}) => title === query)
+        return this.projects.find(({title}) => title === query)
       },
 
       submitTask() {
@@ -426,7 +426,7 @@
       keymap() {
         return {
           [isMac() ? 'meta+enter' : 'ctrl+enter']: this.onSubmit,
-          'enter': this.onEnterHotkey,
+          //'enter': this.onEnterHotkey,
           'esc': this.onEscHotkey
         }
       },

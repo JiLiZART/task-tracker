@@ -6,7 +6,6 @@
               :disabled="!canCreateTask">
         <i class="fa fa-tasks"></i>
         Create Task
-        <hotkey name="shift+T"></hotkey>
       </button>
     </div>
     <group-list class="group-list">
