@@ -345,7 +345,6 @@
       },
 
       onCreateProjectSelect({project}) {
-        console.log('project.select', project);
         const task = this.task;
 
         this.moveTaskToProject({task, project})
