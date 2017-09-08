@@ -131,7 +131,7 @@
         <div class="task-teaser__move" v-if="!project">
           <form @submit.prevent="onCreateProjectSubmit" v-if="inCreateProjectMode">
             <autocomplete
-              placeholder="Enter bundle name..."
+              placeholder="Enter label name..."
               :querySearch="queryProjects"
               @select="onCreateProjectSelect"
               @change="onCreateProjectChange"
@@ -443,7 +443,7 @@
       },
 
       createProjectTitle() {
-        return this.project ? 'Move to bundle' : 'Add to bundle'
+        return this.project ? 'Move label' : 'Add label'
       },
 
       titlePlaceholder() {
