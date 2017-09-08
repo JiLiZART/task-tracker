@@ -5,11 +5,15 @@ import {createStore} from './store'
 import {createRouter} from './router'
 
 // configure language
-require('element-ui/lib/locale')
-  .use(require('element-ui/lib/locale/lang/en'));
+import locale from 'element-ui/lib/locale';
+import langEn from 'element-ui/lib/locale/lang/en';
 
 import BootstrapVue from 'bootstrap-vue';
 import {DatePicker, Autocomplete, Popover, Tooltip, Input, Button} from 'element-ui';
+
+locale.use(langEn);
+
+// console.log(locale.t('el.datepicker.week'));
 
 function registerPlugins(Vue) {
   Vue.use(BootstrapVue);

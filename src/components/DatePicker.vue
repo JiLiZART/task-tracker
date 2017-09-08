@@ -1,7 +1,7 @@
 <template>
   <el-date-picker
     v-model="editableValue"
-    type="date"
+    type="datetime"
     class="date-picker"
     :placeholder="placeholder"
     @input="onChange"
