@@ -55,7 +55,10 @@
       </template>
     </group-list>
 
-    <task-list :items="ungroupedNotNewTasks"></task-list>
+    <!-- Unlabeled tasks -->
+    <empty-group>
+      <task-list :items="ungroupedNotNewTasks"></task-list>
+    </empty-group>
   </div>
 </template>
 
@@ -69,6 +72,7 @@
   import Hotkey from '@/components/Hotkey'
   import isBodyActiveElement from '@/utils/isBodyActiveElement'
   import ProjectGroup from '@/containers/ProjectGroup';
+  import EmptyGroup from '@/containers/EmptyGroup';
 
   import 'vue-awesome/icons/tasks'
   import Icon from 'vue-awesome/components/Icon'
@@ -88,6 +92,7 @@
       GroupList,
       Author,
       ProjectGroup,
+      EmptyGroup,
       Icon
     },
 

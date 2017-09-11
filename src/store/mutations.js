@@ -74,6 +74,13 @@ export default {
     state.projects[to._id].tasks.push(task._id);
   },
 
+  removeTaskFromProject(state, {task, project}) {
+    const tasks = state.projects[project._id].tasks,
+      taskIndex = tasks.indexOf(task._id);
+
+    tasks.splice(taskIndex, 1);
+  },
+
   updateTask(state, {task}) {
     const current = state.tasks[task._id];
 
