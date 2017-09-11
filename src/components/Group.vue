@@ -1,5 +1,10 @@
 <template>
-  <div class="card group" :class="classObject" tabindex="0" v-hotkey="keymap">
+  <drop class="card group" :class="classObject" tabindex="0"
+        v-hotkey="keymap"
+        @drop="onDrop"
+        @dragover="dragover = true"
+        @dragleave="dragover = false"
+  >
     <div class="group__body" v-if="isExpanded">
       <div class="group__header">
         <div class="group__title" @click="toggleExpanded">{{title}}</div>
@@ -25,7 +30,7 @@
     </entity-row>
 
     <expander class="group__expander" @toggle="toggleExpanded" :expanded="isExpanded"></expander>
-  </div>
+  </drop>
 </template>
 
 <script>
@@ -36,37 +41,57 @@
 
   export default {
     name: 'group',
-    props: ['user', 'title'],
+    props: {
+      user: {type: Object},
+      title: {type: String},
+      droppable: {type: Boolean, 'default': false},
+      expandable: {type: Boolean, 'default': true}
+    },
     components: {Author, EntityRow, Expander},
 
     data() {
       return {
-        isExpanded: false
+        expanded: false,
+        dragover: false
       }
     },
 
     methods: {
       toggleExpanded() {
-        this.isExpanded = !this.isExpanded;
+        if (this.expandable) {
+          this.expanded = !this.expanded;
+        }
       },
 
       expand() {
-        this.isExpanded = true;
+        if (this.expandable) {
+          this.expanded = true;
+        }
       },
 
       collapse() {
-        this.isExpanded = false;
+        if (this.expandable) {
+          this.expanded = false;
+        }
       },
 
       onEscHotkey() {
-        if (this.$el === getCurrentActiveElement()) {
+        if (this.isElementActive) {
           this.collapse();
         }
       },
 
       onEnterHotkey() {
-        if (this.$el === getCurrentActiveElement()) {
+        if (this.isElementActive) {
           this.toggleExpanded()
+        }
+      },
+
+      onDrop(data, event) {
+        if (this.droppable) {
+          this.dragover = false;
+
+          this.$emit('drop', data, event)
         }
       }
     },
@@ -74,7 +99,8 @@
     computed: {
       classObject() {
         return {
-          'group_expanded': this.isExpanded
+          'group_expanded': this.isExpanded,
+          'group_dragged': this.isDragover
         }
       },
 
@@ -84,6 +110,26 @@
           'esc': this.onEscHotkey
         }
       },
+
+      isExpanded() {
+        if (this.expandable) {
+          return this.expanded
+        }
+
+        return true;
+      },
+
+      isDragover() {
+        if (this.droppable) {
+          return this.dragover;
+        }
+
+        return false;
+      },
+
+      isElementActive() {
+        return this.$el === getCurrentActiveElement();
+      }
     }
   }
 </script>
@@ -139,6 +185,12 @@
       &:hover {
         background: hsl(183, 58%, 94%);
       }
+    }
+
+    &_dragged,
+    &_dragged &__expander,
+    &_dragged &__expander:hover {
+      background: hsl(188, 80%, 90%)
     }
 
     &__header {

@@ -1,5 +1,5 @@
 <template>
-  <group :title="item.title" v-if="tasksByProject(item).length">
+  <group :title="item.title" v-if="tasksByProject(item).length" @drop="onDrop" :droppable="true">
     <template slot="content">
       <task-list :items="undoneTasksByProject(item)"></task-list>
 
@@ -16,7 +16,6 @@
 
   const isTaskUndone = (t) => !t.done;
   const isTaskDone = (t) => t.done;
-  const isTaskNew = (t) => t.isNew;
   const isTaskNotNew = (t) => !t.isNew;
 
   export default {
@@ -40,6 +39,25 @@
           .filter(isTaskDone);
       },
 
+      onDrop({task, project}) {
+        this.moveTaskToProject({task, project})
+      },
+
+      moveTaskToProject({task, project}) {
+        let type, payload;
+
+        if (project) {
+          if (project._id === this.item._id) return;
+
+          type = 'moveTaskFromProject';
+          payload = {task, from: project, to: this.item};
+        } else {
+          type = 'addTaskToProject';
+          payload = {project: this.item, task};
+        }
+
+        this.$store.commit(type, payload);
+      },
     },
 
     computed: {

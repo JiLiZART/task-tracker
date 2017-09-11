@@ -23,6 +23,7 @@ function registerPlugins(Vue) {
   });
   Vue.use(require('vue-quill-editor'));
   Vue.use(require('v-hotkey'));
+  Vue.use(require('vue-drag-drop'));
 
   Vue.use(DatePicker);
   Vue.use(Autocomplete);

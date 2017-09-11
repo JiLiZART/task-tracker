@@ -7089,7 +7089,7 @@ uniq@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/uniq/-/uniq-1.0.1.tgz#b31c5ae8254844a3a8281541ce2b04b865a734ff"
 
-uniqid@^4.0.0:
+uniqid@^4.0.0, uniqid@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/uniqid/-/uniqid-4.1.1.tgz#89220ddf6b751ae52b5f72484863528596bb84c1"
   dependencies:
@@ -7256,6 +7256,12 @@ void-elements@^2.0.0:
 vue-awesome@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/vue-awesome/-/vue-awesome-2.3.3.tgz#e83f976fe5c7f86d207c24ca33731bdc6e9906a9"
+
+vue-drag-drop@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/vue-drag-drop/-/vue-drag-drop-0.1.2.tgz#a0ee0ce2fe334803c6988bae4b8210bb5e2815fd"
+  dependencies:
+    uniqid "^4.1.1"
 
 vue-focus@^2.1.0:
   version "2.1.0"

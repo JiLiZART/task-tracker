@@ -1,7 +1,8 @@
 <template>
-  <div class="task card"
+  <drag class="task card"
        :class="classObject"
        v-hotkey="keymap"
+       :transfer-data="{task, project}"
        tabindex="0">
 
     <!-- Full style -->
@@ -154,7 +155,7 @@
       @toggle="toggleExpanded"
       :expanded="isExpanded"
       v-if="canExpand"></expander>
-  </div>
+  </drag>
 </template>
 
 <script>
@@ -181,6 +182,7 @@
     props: {
       task: {type: Object},
       expandable: {type: Boolean, 'default': true},
+      draggable: {type: Boolean, 'default': true},
       editable: {type: Boolean, 'default': true},
       canMoveToProject: {type: Boolean, 'default': true},
       showProjectTitle: {type: Boolean, 'default': false}
