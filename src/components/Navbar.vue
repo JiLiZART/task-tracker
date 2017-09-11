@@ -8,7 +8,7 @@
 
     <div class="navbar__workspaces" v-if="false">
       <b-dropdown class="navbar__workspaces-dropdown" variant="transparent">
-        <i class="fa fa-desktop" slot="button-content"></i>
+        <icon name="desktop" slot="button-content"></icon>
         <template v-for="(item, index) in workspaces">
           <b-dropdown-item
             :disabled="isWorkspaceActive(item)" :key="item._id"
@@ -41,12 +41,13 @@
 <script>
   import Author from '@/components/Author';
 
+  import 'vue-awesome/icons/desktop'
+  import Icon from 'vue-awesome/components/Icon'
+
   export default {
     name: 'navbar',
-
     props: ['workspace', 'workspaces', 'user'],
-
-    components: {Author},
+    components: {Author, Icon},
 
     methods: {
       onSearch(e) {

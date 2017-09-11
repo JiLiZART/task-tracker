@@ -124,7 +124,7 @@
         </div>
 
         <div class="task-teaser__comments" v-if="commentsCount">
-          <i class="fa fa-comment task-teaser__comments-icon"></i>
+          <icon name="comment" class="task-teaser__comments-icon"></icon>
           <span class="task-teaser__comments-label">{{ commentsCount }}</span>
         </div>
 
@@ -173,6 +173,9 @@
   import MatePicker from '@/components/MatePicker'
   import Hotkey from '@/components/Hotkey'
 
+  import 'vue-awesome/icons/comment'
+  import Icon from 'vue-awesome/components/Icon'
+
   export default {
     name: 'task',
     props: {
@@ -192,7 +195,8 @@
       Editor,
       MatePicker,
       Expander,
-      Hotkey
+      Hotkey,
+      Icon
     },
 
     data() {

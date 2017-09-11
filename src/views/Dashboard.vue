@@ -1,10 +1,10 @@
 <template>
   <div class="container dashboard-view">
     <div class="nav-actions" v-hotkey="actionsKeymap">
-      <button class="btn btn-success card-link project__action-button"
+      <button class="btn btn-success card-link dashboard-view__action-button"
               @click="createTask"
               :disabled="!canCreateTask">
-        <i class="fa fa-tasks"></i>
+        <icon name="tasks" class="card-link dashboard-view__action-icon"></icon>
         Create Task
       </button>
     </div>
@@ -70,6 +70,9 @@
   import isBodyActiveElement from '@/utils/isBodyActiveElement'
   import ProjectGroup from '@/containers/ProjectGroup';
 
+  import 'vue-awesome/icons/tasks'
+  import Icon from 'vue-awesome/components/Icon'
+
   const isTaskUndone = (t) => !t.done;
   const isTaskDone = (t) => t.done;
   const isTaskNew = (t) => t.isNew;
@@ -84,7 +87,8 @@
       TaskList,
       GroupList,
       Author,
-      ProjectGroup
+      ProjectGroup,
+      Icon
     },
 
     methods: {
@@ -195,6 +199,15 @@
 
   .dashboard-view {
     padding-bottom: 10rem;
+
+    &__action-button {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    &__action-icon {
+      margin-right: .5rem;
+    }
   }
 
   .nav-actions {

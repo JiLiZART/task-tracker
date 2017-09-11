@@ -64,7 +64,6 @@
 
 <style lang="scss">
   @import "~bootstrap/scss/bootstrap.scss";
-  @import "~font-awesome/css/font-awesome.css";
   @import '~bootstrap-vue/dist/bootstrap-vue.css';
 
   body {

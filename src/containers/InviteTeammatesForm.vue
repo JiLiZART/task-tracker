@@ -12,7 +12,7 @@
                :required="required[index]">
         <span class="input-group-btn" v-if="isCanRemoveItem(index)">
           <button class="btn btn-outline-danger btn-lg" type="button" @click="onRemoveItem(index)">
-            <i class="fa fa-times" aria-hidden="true"></i>
+            <icon name="times"></icon>
           </button>
         </span>
       </div>
@@ -27,9 +27,13 @@
   import {mapGetters} from 'vuex';
   import {mixin as focusMixin} from 'vue-focus';
 
+  import 'vue-awesome/icons/times'
+  import Icon from 'vue-awesome/components/Icon'
+
   export default {
     name: 'invite-teammates-form',
     mixins: [focusMixin],
+    components: {Icon},
 
     props: {
       submitRoute: {type: String}
