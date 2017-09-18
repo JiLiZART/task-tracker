@@ -19,16 +19,16 @@
     },
 
     methods: {
+      removeTaskFromProject({project, task}) {
+        this.$store.commit('removeTaskFromProject', {project, task});
+      },
+
       onDrop({task, project}) {
         this.dragover = false;
 
         if (project) {
           this.removeTaskFromProject({task, project})
         }
-      },
-
-      removeTaskFromProject({project, task}) {
-        this.$store.commit('removeTaskFromProject', {project, task});
       }
     },
 

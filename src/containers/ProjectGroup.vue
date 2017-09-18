@@ -39,10 +39,6 @@
           .filter(isTaskDone);
       },
 
-      onDrop({task, project}) {
-        this.moveTaskToProject({task, project})
-      },
-
       moveTaskToProject({task, project}) {
         let type, payload;
 
@@ -57,6 +53,10 @@
         }
 
         this.$store.commit(type, payload);
+      },
+
+      onDrop({task, project}) {
+        this.moveTaskToProject({task, project})
       },
     },
 

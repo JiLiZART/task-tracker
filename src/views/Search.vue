@@ -17,7 +17,7 @@
   import Fuse from 'fuse.js';
   import Vue from 'vue';
   import TaskList from '@/containers/TaskList';
-  import GroupList from '@/containers/GroupList';
+  import GroupList from '@/components/GroupList';
   import ProjectGroup from '@/containers/ProjectGroup';
   import Avatar from '@/components/Avatar';
 

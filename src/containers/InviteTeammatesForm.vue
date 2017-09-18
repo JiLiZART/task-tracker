@@ -64,6 +64,7 @@
 
         this.$router.push(this.submitRoute);
       },
+
       onAdd() {
         const idx = this.mates.length + 1;
 
@@ -73,8 +74,9 @@
       onRemoveItem(index) {
         this.mates.splice(index, 1);
       },
+    },
 
-
+    computed: {
       ...mapGetters([
         'user',
         'projects',

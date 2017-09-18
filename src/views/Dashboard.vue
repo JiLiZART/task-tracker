@@ -67,7 +67,7 @@
   import Group from '@/components/Group';
   import Author from '@/components/Author';
   import Empty from '@/components/Empty';
-  import GroupList from '@/containers/GroupList';
+  import GroupList from '@/components/GroupList';
   import TaskList from '@/containers/TaskList';
   import Hotkey from '@/components/Hotkey'
   import isBodyActiveElement from '@/utils/isBodyActiveElement'
