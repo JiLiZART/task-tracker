@@ -166,7 +166,6 @@
   import Comments from '@/containers/Comments';
   import Expander from '@/components/Expander';
   import EntityRow from '@/components/EntityRow';
-  import UserPicker from '@/components/UserPicker';
   import DatePicker from '@/components/DatePicker';
   import Autocomplete from '@/components/Autocomplete';
   import Author from '@/components/Author';
@@ -190,7 +189,6 @@
     components: {
       EntityRow,
       Comments,
-      UserPicker,
       DatePicker,
       Autocomplete,
       Author,
@@ -326,6 +324,10 @@
         }
       },
 
+      isElementActive() {
+        return this.$el === getCurrentActiveElement();
+      },
+
       onCreateProjectSubmit(e) {
         const title = this.newProjectName;
         const task = this.task;
@@ -397,7 +399,7 @@
       },
 
       onEscHotkey() {
-        if (this.$el === getCurrentActiveElement()) {
+        if (this.isElementActive()) {
           if (this.inEdit) {
             this.onCancelClick();
           } else {
@@ -407,7 +409,7 @@
       },
 
       onEnterHotkey() {
-        if (this.$el === getCurrentActiveElement()) {
+        if (this.isElementActive()) {
           this.toggleExpanded()
         }
       }
