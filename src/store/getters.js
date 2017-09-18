@@ -7,6 +7,8 @@ const selectTeamMates = ({teammates}, {workspace = {}}) => (workspace.teammates 
 const selectProjectsTasks = ({tasks}, {projects}) => projects.reduce((a, b) => a.concat(b.tasks), []).map((id) => tasks[id]);
 const selectProjectsDocs = ({docs}, {projects}) => projects.reduce((a, b) => a.concat(b.docs), []).map((id) => docs[id]);
 
+const byCreated = (a, b) => (a.created < b.created);
+
 export default {
   user(state) {
     return selectUser(state);
@@ -29,7 +31,7 @@ export default {
   },
 
   projects(state, getters) {
-    return selectProjects(state, getters);
+    return selectProjects(state, getters).sort(byCreated);
   },
 
   haveProjects(state, getters) {

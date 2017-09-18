@@ -46,11 +46,20 @@ export default {
     state.workspaces[state.workspace].projects.push(entity._id);
   },
 
-  updateProject(state, {_id, title, text}) {
+  updateProject(state, {_id, title, text, isNew}) {
     const current = state.projects[_id];
-    const entity = {title, text};
+    const entity = {title, text, isNew};
 
     Vue.set(state.projects, _id, Object.assign({}, current, entity));
+  },
+
+  removeProject(state, entity) {
+    const projects = state.workspaces[state.workspace].projects,
+      projectIndex = projects.indexOf(entity._id);
+
+    projects.splice(projectIndex, 1);
+
+    Vue.delete(state.projects, entity._id);
   },
 
   /**

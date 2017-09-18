@@ -12,10 +12,12 @@ const createWorkspace = ({title}) => ({
   teammates: [],
   type: 'workspace'
 });
-const createProject = ({title, text}) => ({
+const createProject = ({title = '', text = '', created = new Date()}) => ({
   _id: uuidv4(),
   title,
   text,
+  created,
+  isNew: true,
   docs: [],
   tasks: [],
   type: 'project'
