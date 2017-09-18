@@ -10,10 +10,9 @@
         <form class="group__title-form" @submit.prevent="onTitleSubmit" @click="onTitleFormClick">
           <input type="text"
                  class="group__title-input"
-                 v-model="newTitle"
-                 id="group-title"
-                 ref="inputTitle"
                  placeholder="Enter title here..."
+                 v-model="newTitle"
+                 ref="inputTitle"
                  @blur="onTitleBlur"
                  @focus="onTitleFocus"
                  :readonly="!editable"
