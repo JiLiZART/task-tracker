@@ -1,22 +1,33 @@
 <template>
   <div class="container dashboard-view">
-    <div class="nav-actions" v-hotkey="actionsKeymap">
-      <button class="btn btn-success card-link dashboard-view__action-button"
+    <div class="dashboard-view__actions" v-hotkey="actionsKeymap">
+      <button class="btn btn-success dashboard-view__action-button"
               @click="createTask"
               :disabled="!canCreateTask">
-        <icon name="tasks" class="card-link dashboard-view__action-icon"></icon>
-        Create Task
+        <icon name="tasks" class="dashboard-view__action-icon"></icon>
+        <span class="dashboard-view__action-label">New Task</span>
+      </button>
+      <button class="btn btn-primary dashboard-view__action-button"
+              @click="createProject"
+              :disabled="!canCreateProject">
+        <icon name="object-group" class="dashboard-view__action-icon"></icon>
+        <span class="dashboard-view__action-label">New Bundle</span>
       </button>
     </div>
     <group-list class="group-list">
       <task-list :items="newTasks"></task-list>
+
+      <template v-for="item in newProjects">
+        <project-group class="group-list__item" :item="item"></project-group>
+      </template>
+
       <!-- My Tasks -->
       <group class="group-list__item" :title="`My Tasks (${myTasks.length})`">
         <template slot="content">
           <template v-if="myTasks.length">
             <task-list :items="myUngroupedTasks"></task-list>
 
-            <template v-for="(item, index) in projects" v-if="myTasksByProject(item).length">
+            <template v-for="item in projects" v-if="myTasksByProject(item).length">
               <div class="group-header">{{item.title}}</div>
               <task-list :items="myUndoneTasksByProject(item)"></task-list>
             </template>
@@ -49,8 +60,8 @@
         </template>
       </group>
 
-      <!-- Projects -->
-      <template v-for="(item, index) in projects">
+      <!-- NotNew Projects -->
+      <template v-for="item in notNewProjects">
         <project-group class="group-list__item" :item="item"></project-group>
       </template>
     </group-list>
@@ -75,12 +86,13 @@
   import EmptyGroup from '@/containers/EmptyGroup';
 
   import 'vue-awesome/icons/tasks'
+  import 'vue-awesome/icons/object-group'
   import Icon from 'vue-awesome/components/Icon'
 
   const isTaskUndone = (t) => !t.done;
   const isTaskDone = (t) => t.done;
-  const isTaskNew = (t) => t.isNew;
-  const isTaskNotNew = (t) => !t.isNew;
+  const isNew = (t) => t.isNew;
+  const isNotNew = (t) => !t.isNew;
 
   export default {
     name: 'dashboard',
@@ -103,6 +115,12 @@
         }
       },
 
+      createProject() {
+        if (this.canCreateProject) {
+          this.$store.dispatch('createProject', {});
+        }
+      },
+
       findPerformer(users, id) {
         return users.find((u) => u._id === id);
       },
@@ -117,7 +135,7 @@
 
       tasksByProject(prj) {
         return this.projectsTasks
-          .filter(isTaskNotNew)
+          .filter(isNotNew)
           .filter((task) => prj.tasks.indexOf(task._id) !== -1)
       },
 
@@ -135,7 +153,7 @@
         return this.tasks
           .filter(this.isMateTask(mate))
           .filter(isTaskUndone)
-          .filter(isTaskNotNew)
+          .filter(isNotNew)
       },
 
       onShiftTHotkey(e) {
@@ -157,34 +175,48 @@
         return this.newTasks.length <= 0;
       },
 
+      canCreateProject() {
+        return this.newProjects.length <= 0;
+      },
+
+      newProjects() {
+        return this.projects
+          .filter(isNew);
+      },
+
+      notNewProjects() {
+        return this.projects
+          .filter(isNotNew);
+      },
+
       newTasks() {
         return this.tasks
-          .filter(isTaskNew);
+          .filter(isNew);
       },
 
       ungroupedNotNewTasks() {
         return this.ungroupedTasks
-          .filter(isTaskNotNew);
+          .filter(isNotNew);
       },
 
       myTasks() {
         return this.tasks
           .filter(this.isUserTask)
-          .filter(isTaskNotNew)
+          .filter(isNotNew)
       },
 
       myUngroupedTasks() {
         return this.ungroupedTasks
           .filter(this.isUserTask)
           .filter(isTaskUndone)
-          .filter(isTaskNotNew)
+          .filter(isNotNew)
       },
 
       myDoneTasks() {
         return this.tasks
           .filter(this.isUserTask)
           .filter(isTaskDone)
-          .filter(isTaskNotNew)
+          .filter(isNotNew)
       },
 
       ...mapGetters([
@@ -204,20 +236,34 @@
 
   .dashboard-view {
     padding-bottom: 10rem;
+    position: relative;
+
+    &__actions {
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+
+      @media (min-width: 992px) {
+        position: absolute;
+        right: calc(100% + 1rem);
+      }
+    }
 
     &__action-button {
-      display: inline-flex;
+      display: flex;
+      flex-direction: column;
       align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin-bottom: .5rem;
     }
 
-    &__action-icon {
-      margin-right: .5rem;
+    &__action-label {
+      display: block;
+      font-size: .9rem;
     }
   }
 
-  .nav-actions {
-    margin-bottom: 1rem;
-  }
 </style>
 
 
