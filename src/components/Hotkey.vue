@@ -1,5 +1,5 @@
 <template>
-  <span class="hotkey">{{ hotkey }}</span>
+  <span class="hotkey" v-if="!isMobileDevice">{{ hotkey }}</span>
 </template>
 
 <script>
@@ -28,13 +28,17 @@
 
     computed: {
       hotkey() {
-        if (isMobileDevice()) return '';
+        if (this.isMobileDevice) return '';
 
         return this.name
           .split('+')
           .map((symbol) => !isMac() && toWinKeymap[symbol] ? toWinKeymap[symbol] : symbol)
           .map((symbol) => keymap[symbol] ? keymap[symbol] : symbol)
           .join(' ')
+      },
+
+      isMobileDevice() {
+        return isMobileDevice();
       }
     }
   }
