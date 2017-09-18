@@ -7,7 +7,20 @@
   >
     <div class="group__body" v-if="isExpanded">
       <div class="group__header">
-        <div class="group__title" @click="toggleExpanded">{{title}}</div>
+        <form class="group__title-form" @submit.prevent="onTitleSubmit" @click="onTitleFormClick">
+          <input type="text"
+                 class="group__title-input"
+                 v-model="newTitle"
+                 id="group-title"
+                 ref="inputTitle"
+                 placeholder="Enter title here..."
+                 @blur="onTitleBlur"
+                 @focus="onTitleFocus"
+                 :readonly="!editable"
+                 required
+          />
+        </form>
+        <div class="group__spacer" @click="toggleExpanded">&nbsp;</div>
         <div class="group__actions">
           <slot name="actions"></slot>
         </div>
@@ -29,7 +42,7 @@
       </template>
     </entity-row>
 
-    <expander class="group__expander" @toggle="toggleExpanded" :expanded="isExpanded"></expander>
+    <expander class="group__expander" @toggle="toggleExpanded" :expanded="isExpanded" v-if="expandable"></expander>
   </drop>
 </template>
 
@@ -45,14 +58,25 @@
       user: {type: Object},
       title: {type: String},
       droppable: {type: Boolean, 'default': false},
-      expandable: {type: Boolean, 'default': true}
+      expandable: {type: Boolean, 'default': true},
+      editable: {type: Boolean, 'default': false}
     },
     components: {Author, EntityRow, Expander},
 
     data() {
       return {
         expanded: false,
-        dragover: false
+        dragover: false,
+        inTitleEdit: !this.title,
+        newTitle: this.title
+      }
+    },
+
+    mounted() {
+      if (this.inTitleEdit) {
+        this.$nextTick(() => {
+          this.$refs.inputTitle.focus();
+        })
       }
     },
 
@@ -93,6 +117,26 @@
 
           this.$emit('drop', data, event)
         }
+      },
+
+      onTitleSubmit() {
+        if (this.newTitle) {
+          this.$emit('edit:title', this.newTitle)
+        }
+      },
+
+      onTitleFormClick() {
+        if (!this.editable) {
+          this.toggleExpanded();
+        }
+      },
+
+      onTitleBlur() {
+        this.$emit('title-input:blur', this.newTitle)
+      },
+
+      onTitleFocus() {
+        this.$emit('title-input:focus', this.newTitle)
       }
     },
 
@@ -220,8 +264,39 @@
       width: 100%;
     }
 
+    &__title-form {
+      margin-bottom: 0;
+      cursor: pointer;
+      display: inline-flex;
+      flex: 1 1 0;
+      font-size: 1rem;
+      line-height: 1.1;
+
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__title-input {
+      background: none;
+      border: 0;
+      line-height: 2rem;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &__spacer {
+      margin-left: auto;
+      cursor: pointer;
+      flex-grow: 5;
+    }
+
     &__content {
       margin-top: 1rem;
+      min-height: 52px;
     }
   }
 </style>
