@@ -13,8 +13,6 @@ import {DatePicker, Autocomplete, Popover, Tooltip, Input, Button} from 'element
 
 locale.use(langEn);
 
-// console.log(locale.t('el.datepicker.week'));
-
 function registerPlugins(Vue) {
   Vue.use(BootstrapVue);
   Vue.use(require('vue-timeago'), {

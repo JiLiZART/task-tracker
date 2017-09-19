@@ -24,9 +24,6 @@
     components: {Navbar},
 
     created() {
-      console.log('r', this.$router);
-      console.log('s', this.$store);
-
       if (!this.isLoggedIn) {
         this.$router.replace('/');
       }
