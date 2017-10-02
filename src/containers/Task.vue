@@ -112,7 +112,7 @@
     <entity-row v-if="!isExpanded" @click:title="toggleExpanded">
       <template slot="icon">
         <template v-for="(item, index) in task.performers">
-          <author :item="item" :small="true" :haveName="false"></author>
+          <author :item="item" :small="true" :haveName="false" :key="item._id"></author>
         </template>
       </template>
       <template slot="title">
@@ -483,7 +483,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .task {
     position: relative;
     border-radius: 6px;

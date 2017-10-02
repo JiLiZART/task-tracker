@@ -13,7 +13,7 @@
   export default {
     name: 'DatePicker',
     props: {
-      value: {type: String, required: true},
+      value: {type: String},
       placeholder: {type: String}
     },
 
@@ -31,7 +31,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .date-picker {
     .el-input__inner {
       height: 38px;

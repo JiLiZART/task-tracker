@@ -6,7 +6,7 @@
       </div>
       <div class="card-body" v-if="teammates && teammates.length">
         <template v-for="(item, index) in teammates">
-          <div class="card team-view__member">
+          <div class="card team-view__member" :key="item._id">
             <div class="card-body">
               <router-link class="team-view__member-header" :to="{name: 'member', params: {id: item._id}}">
                 <avatar :item="item" class="team-view__member-avatar"></avatar>

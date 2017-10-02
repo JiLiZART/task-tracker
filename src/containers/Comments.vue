@@ -1,7 +1,7 @@
 <template>
   <div class="list-group list-group-flush comments">
     <template v-for="(item, index) in items">
-      <div class="list-group-item flex-column align-items-start comments__item" tabindex="0">
+      <div class="list-group-item flex-column align-items-start comments__item" tabindex="0" :key="item._id">
         <div class="d-flex w-100 justify-content-between">
           <div class="mb-1">
             <author :item="item.user" class="comments__item-author"></author>
@@ -145,7 +145,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .comments {
     &__form {
       margin-top: 1rem;

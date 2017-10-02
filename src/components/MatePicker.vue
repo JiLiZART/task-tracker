@@ -16,7 +16,7 @@
         </div>
         <div class="mate-picker__members">
           <template v-for="(item, index) in editableMembers">
-            <div class="mate-picker__member" :class="mateClassObject(item)" @click="onMateSelect(item)">
+            <div class="mate-picker__member" :class="mateClassObject(item)" @click="onMateSelect(item)" :key="item._id">
               <avatar :item="item" :small="true" class="mate-picker__member-avatar"></avatar>
               <span class="mate-picker__member-name">{{ item.username }}</span>
             </div>
@@ -33,6 +33,7 @@
             effect="dark"
             placement="bottom-start"
             :content="item.username"
+            :key="item._id"
           >
             <avatar :item="item" class="mate-picker__selected-avatar" :small="true"></avatar>
           </el-tooltip>
@@ -55,7 +56,7 @@
     props: {
       label: {type: String},
       multiple: {type: Boolean},
-      members: {type: Array, required},
+      members: {type: Array, required: true},
       selectedMembers: {type: Array}
     },
     components: {Avatar},

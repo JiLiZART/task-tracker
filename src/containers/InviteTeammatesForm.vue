@@ -1,20 +1,22 @@
 <template>
   <form class="invite-teammates-form" @submit.prevent="onSubmit">
     <template v-for="(item, index) in mates">
-      <label :for="item.name" class="sr-only">{{item.label}}</label>
-      <div class="input-group invite-teammates-form__input">
-        <input type="email" :id="item.name" class="form-control form-control-lg"
-               v-model="item.value"
-               v-focus="focused[index]"
-               @focus="focused[index] = true"
-               @blur="focused[index] = false"
-               :placeholder="item.label + ' Mail'"
-               :required="required[index]">
-        <span class="input-group-btn" v-if="isCanRemoveItem(index)">
+      <div class="invite-teammates-form__group" :key="item._id">
+        <label :for="item.name" class="sr-only">{{item.label}}</label>
+        <div class="input-group invite-teammates-form__input">
+          <input type="email" :id="item.name" class="form-control form-control-lg"
+                 v-model="item.value"
+                 v-focus="focused[index]"
+                 @focus="focused[index] = true"
+                 @blur="focused[index] = false"
+                 :placeholder="item.label + ' Mail'"
+                 :required="required[index]">
+          <span class="input-group-btn" v-if="isCanRemoveItem(index)">
           <button class="btn btn-outline-danger btn-lg" type="button" @click="onRemoveItem(index)">
             <icon name="times"></icon>
           </button>
         </span>
+        </div>
       </div>
     </template>
 
@@ -90,7 +92,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .invite-teammates-form {
     &__input {
       margin-bottom: 10px;

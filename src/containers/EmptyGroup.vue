@@ -42,7 +42,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .empty-group {
     padding-bottom: 52px;
     min-height: 52px;

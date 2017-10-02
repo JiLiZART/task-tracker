@@ -25,7 +25,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .entity-row {
     padding: 0.5rem 1rem;
     padding-right: 38px;

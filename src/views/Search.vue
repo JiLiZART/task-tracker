@@ -6,7 +6,7 @@
     <group-list class="group-list">
       <!-- Projects -->
       <template v-for="(item, index) in foundProjects">
-        <project-group class="group-list__item" :item="item"></project-group>
+        <project-group class="group-list__item" :item="item" :key="item._id"></project-group>
       </template>
     </group-list>
     <task-list :items="foundTasks"></task-list>

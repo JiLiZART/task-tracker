@@ -56,9 +56,3 @@
     }
   }
 </script>
-
-<style lang="scss">
-  .autocomplete {
-
-  }
-</style>

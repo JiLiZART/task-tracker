@@ -18,7 +18,7 @@
       <task-list :items="newTasks"></task-list>
 
       <template v-for="item in newProjects">
-        <project-group class="group-list__item" :item="item"></project-group>
+        <project-group class="group-list__item" :item="item" :key="item._id"></project-group>
       </template>
 
       <!-- My Tasks -->
@@ -28,8 +28,10 @@
             <task-list :items="myUngroupedTasks"></task-list>
 
             <template v-for="item in projects" v-if="myTasksByProject(item).length">
-              <div class="group-header">{{item.title}}</div>
-              <task-list :items="myUndoneTasksByProject(item)"></task-list>
+              <div class="project-group" :key="item._id">
+                <div class="group-header">{{item.title}}</div>
+                <task-list :items="myUndoneTasksByProject(item)"></task-list>
+              </div>
             </template>
 
             <div class="group-header" v-if="myDoneTasks.length">Recently done tasks</div>
@@ -42,16 +44,18 @@
       <!-- My Team -->
       <group class="group-list__item" title="My Team">
         <template slot="content">
-          <template v-for="(item, index) in teammates">
-            <div class="group-header">
-              <author :small="true" :item="item"></author>
-              tasks
-            </div>
+          <template v-for="item in teammates">
+            <div class="teammate-group" :key="item._id">
+              <div class="group-header">
+                <author :small="true" :item="item"></author>
+                tasks
+              </div>
 
-            <template v-if="undoneTasksByMate(item).length">
-              <task-list :items="undoneTasksByMate(item)" :showProjectTitle="true"></task-list>
-            </template>
-            <empty text="There are no tasks assigned. You can assign a task to him." v-else></empty>
+              <template v-if="undoneTasksByMate(item).length">
+                <task-list :items="undoneTasksByMate(item)" :showProjectTitle="true"></task-list>
+              </template>
+              <empty text="There are no tasks assigned. You can assign a task to him." v-else></empty>
+            </div>
           </template>
         </template>
 
@@ -62,7 +66,7 @@
 
       <!-- NotNew Projects -->
       <template v-for="item in notNewProjects">
-        <project-group class="group-list__item" :item="item"></project-group>
+        <project-group class="group-list__item" :item="item" :key="item._id"></project-group>
       </template>
     </group-list>
 

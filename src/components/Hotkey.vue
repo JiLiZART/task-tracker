@@ -46,7 +46,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .hotkey {
     font-size: 80%;
     padding: .25rem .33rem;
