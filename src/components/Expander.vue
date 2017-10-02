@@ -7,9 +7,11 @@
 
 <script>
   export default {
-    name: 'expander',
+    name: 'Expander',
 
-    props: ['expanded'],
+    props: {
+      expanded: {type: Boolean, 'default': false}
+    },
 
     methods: {
       toggleExpanded() {

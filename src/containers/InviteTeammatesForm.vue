@@ -31,7 +31,7 @@
   import Icon from 'vue-awesome/components/Icon'
 
   export default {
-    name: 'invite-teammates-form',
+    name: 'InviteTeammatesForm',
     mixins: [focusMixin],
     components: {Icon},
 

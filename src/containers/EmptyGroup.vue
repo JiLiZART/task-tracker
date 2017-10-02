@@ -10,7 +10,7 @@
 
 <script>
   export default {
-    name: 'empty-group',
+    name: 'EmptyGroup',
 
     data() {
       return {

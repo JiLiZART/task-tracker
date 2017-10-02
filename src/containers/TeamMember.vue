@@ -12,7 +12,7 @@
   import Author from '@/components/Author';
 
   export default {
-    name: 'team-member',
+    name: 'TeamMember',
     props: {
       member: {type: Object},
       tasks: {type: Object},

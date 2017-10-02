@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'group-list'
+    name: 'GroupList'
   }
 </script>
 

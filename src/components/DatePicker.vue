@@ -11,8 +11,11 @@
 
 <script>
   export default {
-    name: 'date-picker',
-    props: ['placeholder', 'value'],
+    name: 'DatePicker',
+    props: {
+      value: {type: String, required: true},
+      placeholder: {type: String}
+    },
 
     data() {
       return {

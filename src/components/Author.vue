@@ -27,7 +27,7 @@
   import Avatar from '@/components/Avatar';
 
   export default {
-    name: 'author',
+    name: 'Author',
     props: {
       item: {type: Object},
       small: {type: Boolean, 'default': false},

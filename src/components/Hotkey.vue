@@ -23,8 +23,10 @@
   };
 
   export default {
-    name: 'hotkey',
-    props: ['name'],
+    name: 'Hotkey',
+    props: {
+      name: {type: String}
+    },
 
     computed: {
       hotkey() {

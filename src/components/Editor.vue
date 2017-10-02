@@ -14,7 +14,7 @@
 
 <script>
   export default {
-    name: 'editor',
+    name: 'Editor',
 
     props: {
       placeholder: {type: String},

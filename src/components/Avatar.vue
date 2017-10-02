@@ -8,8 +8,11 @@
   import Gravatar from 'vue-gravatar';
 
   export default {
-    name: 'avatar',
-    props: ['small', 'item'],
+    name: 'Avatar',
+    props: {
+      small: {type: Boolean, 'default': false},
+      item: {type: Object, required: true}
+    },
     components: {Gravatar}
   }
 </script>

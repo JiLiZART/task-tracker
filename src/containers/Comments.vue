@@ -65,7 +65,7 @@
   import Hotkey from '@/components/Hotkey'
 
   export default {
-    name: 'comments',
+    name: 'Comments',
     props: {
       items: {type: Array},
       type: {type: String},

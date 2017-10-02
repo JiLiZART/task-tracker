@@ -27,8 +27,10 @@
   const isNotNew = (t) => !t.isNew;
 
   export default {
-    name: 'project-group',
-    props: ['item'],
+    name: 'ProjectGroup',
+    props: {
+      item: {type: Object}
+    },
     components: {Group, TaskList},
     methods: {
       tasksByProject(prj) {

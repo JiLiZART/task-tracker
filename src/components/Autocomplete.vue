@@ -16,8 +16,12 @@
 
 <script>
   export default {
-    name: 'autocomplete',
-    props: ['placeholder', 'value', 'querySearch'],
+    name: 'Autocomplete',
+    props: {
+      value: {type: String},
+      placeholder: {type: String},
+      querySearch: {type: Function}
+    },
 
     data() {
       return {

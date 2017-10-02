@@ -177,7 +177,7 @@
   import Icon from 'vue-awesome/components/Icon'
 
   export default {
-    name: 'task',
+    name: 'Task',
     props: {
       task: {type: Object},
       expandable: {type: Boolean, 'default': true},

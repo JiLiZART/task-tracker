@@ -20,7 +20,7 @@
   import Task from './Task';
 
   export default {
-    name: 'task-list',
+    name: 'TaskList',
     props: {
       items: {type: Array},
       expandable: {type: Boolean, 'default': true},

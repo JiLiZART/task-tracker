@@ -52,7 +52,7 @@
   import getCurrentActiveElement from '@/utils/getCurrentActiveElement'
 
   export default {
-    name: 'group',
+    name: 'Group',
     props: {
       user: {type: Object},
       title: {type: String},

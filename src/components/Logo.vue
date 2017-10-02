@@ -6,8 +6,10 @@
 
 <script>
   export default {
-    name: 'logo',
-    props: ['title']
+    name: 'Logo',
+    props: {
+      title: {type: String}
+    }
   }
 </script>
 

@@ -45,7 +45,7 @@
   import Icon from 'vue-awesome/components/Icon'
 
   export default {
-    name: 'navbar',
+    name: 'Navbar',
     props: ['workspace', 'workspaces', 'user'],
     components: {Author, Icon},
 

@@ -15,7 +15,7 @@
 
 <script>
   export default {
-    name: 'entity-row',
+    name: 'EntityRow',
 
     methods: {
       onTitleClick(e) {

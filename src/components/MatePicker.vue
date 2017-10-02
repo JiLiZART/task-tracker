@@ -51,8 +51,13 @@
   import Avatar from './Avatar'
 
   export default {
-    name: 'mate-picker',
-    props: ['label', 'members', 'selectedMembers', 'multiple'],
+    name: 'MatePicker',
+    props: {
+      label: {type: String},
+      multiple: {type: Boolean},
+      members: {type: Array, required},
+      selectedMembers: {type: Array}
+    },
     components: {Avatar},
 
     data() {
