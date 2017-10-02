@@ -51,7 +51,6 @@ export function createStore() {
       comments: {},
       teammates: {},
 
-      entities: {}, // place for docs, tasks, comments, teammates, workspaces, projects
       log: []
     },
     plugins: [localStoragePlugin],

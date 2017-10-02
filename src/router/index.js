@@ -1,13 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/views/Login'
+
+import CreateWorkspace from '@/views/CreateWorkspace'
 import Dashboard from '@/views/Dashboard'
-import Settings from '@/views/Settings'
-import Search from '@/views/Search'
+import Login from '@/views/Login'
 import Member from '@/views/Member'
+import Search from '@/views/Search'
+import Settings from '@/views/Settings'
 import Team from '@/views/Team'
 import TeamAddUsers from '@/views/TeamAddUsers'
-import CreateWorkspace from '@/views/CreateWorkspace'
 
 Vue.use(Router);
 
@@ -16,6 +17,7 @@ export function createRouter() {
     routes: [
       {
         path: '/create-workspace',
+        name: 'create-workspace',
         component: CreateWorkspace
       },
       {
@@ -23,20 +25,11 @@ export function createRouter() {
         name: 'dashboard',
         component: Dashboard
       },
-      // {
-      //   path: '/invite-teammates',
-      //   component: InviteTeammates
-      // },
       {
         path: '/member/:id',
         name: 'member',
         component: Member
       },
-      // {
-      //   path: '/task/:id',
-      //   name: 'task',
-      //   component: Task
-      // },
       {
         path: '/team',
         name: 'team',
@@ -49,6 +42,7 @@ export function createRouter() {
       },
       {
         path: '/settings',
+        name: 'settings',
         component: Settings
       },
       {
@@ -58,6 +52,7 @@ export function createRouter() {
       },
       {
         path: '/',
+        name: 'login',
         component: Login
       },
     ]

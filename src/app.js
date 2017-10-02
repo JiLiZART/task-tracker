@@ -1,8 +1,8 @@
 import Vue from 'vue'
-import App from './App.vue'
 import {sync} from 'vuex-router-sync'
 import {createStore} from './store'
 import {createRouter} from './router'
+import App from './App.vue'
 
 // configure language
 import locale from 'element-ui/lib/locale';
