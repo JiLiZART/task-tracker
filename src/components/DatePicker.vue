@@ -31,7 +31,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .date-picker {
     .el-input__inner {
       height: 38px;

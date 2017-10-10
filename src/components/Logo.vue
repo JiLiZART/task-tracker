@@ -13,7 +13,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .logo {
     display: block;
     max-width: 68px;

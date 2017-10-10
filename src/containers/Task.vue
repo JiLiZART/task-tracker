@@ -483,7 +483,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .task {
     position: relative;
     border-radius: 6px;

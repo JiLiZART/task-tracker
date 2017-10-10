@@ -145,7 +145,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .comments {
     &__form {
       margin-top: 1rem;

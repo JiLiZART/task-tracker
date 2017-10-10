@@ -92,7 +92,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .invite-teammates-form {
     &__input {
       margin-bottom: 10px;

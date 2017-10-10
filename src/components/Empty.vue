@@ -15,7 +15,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .empty {
     background: transparent;
   }

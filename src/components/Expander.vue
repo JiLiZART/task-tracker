@@ -21,7 +21,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .expander {
     padding: 0.5rem;
     font-size: 1rem;

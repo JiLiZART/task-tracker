@@ -32,7 +32,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
   .task-list {
     &__item {
       margin-bottom: .25rem;

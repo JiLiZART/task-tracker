@@ -57,7 +57,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 
   .author {
     display: inline-flex;
