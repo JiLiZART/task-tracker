@@ -488,6 +488,10 @@
     position: relative;
     border-radius: 6px;
 
+    &.task {
+      background-color: white;
+    }
+
     &:focus {
       outline: none;
       box-shadow: 0 0 0 3px rgba(0, 0, 0, .14);

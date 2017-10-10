@@ -9,10 +9,14 @@
     :expandable="expandable"
   >
     <template slot="content">
-      <task-list :items="undoneTasksByProject(item)"></task-list>
+      <template v-if="tasksByProject(item).length">
+        <task-list :items="undoneTasksByProject(item)"></task-list>
 
-      <div class="group-header" v-if="doneTasksByProject(item).length">Recently done tasks</div>
-      <task-list :items="doneTasksByProject(item)"></task-list>
+        <div class="group-header" v-if="doneTasksByProject(item).length">Recently done tasks</div>
+        <task-list :items="doneTasksByProject(item)"></task-list>
+      </template>
+      <empty text="Drop Task Here" v-else></empty>
+
     </template>
   </group>
 </template>
@@ -21,6 +25,7 @@
   import {mapGetters} from 'vuex';
   import TaskList from '@/containers/TaskList';
   import Group from '@/components/Group';
+  import Empty from '@/components/Empty';
 
   const isUndone = (t) => !t.done;
   const isDone = (t) => t.done;
@@ -31,7 +36,7 @@
     props: {
       item: {type: Object}
     },
-    components: {Group, TaskList},
+    components: {Group, Empty, TaskList},
     methods: {
       tasksByProject(prj) {
         return this.projectsTasks

@@ -181,7 +181,10 @@
   .group {
     position: relative;
     border-radius: 6px;
-    background: hsl(188, 48%, 90%);
+
+    &.group {
+      background: hsl(188, 48%, 90%);
+    }
 
     &:focus {
       outline: none;
@@ -239,7 +242,7 @@
     &__header {
       background: hsl(183, 61%, 94%);
       border-radius: 6px 6px 0 0;
-      padding: 0.5rem 2.5rem 0.5rem 1rem;
+      padding: 0.5rem 2.6rem 0.5rem 1rem;
       height: 50px;
       display: flex;
       align-items: center;
