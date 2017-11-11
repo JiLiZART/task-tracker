@@ -1,5 +1,7 @@
 <template>
-  <drop class="card group" :class="classObject" tabindex="0"
+  <drop class="card group"
+        :class="classObject"
+        tabindex="0"
         v-hotkey="keymap"
         @drop="onDrop"
         @dragover="dragover = true"
@@ -155,19 +157,11 @@
       },
 
       isExpanded() {
-        if (this.expandable) {
-          return this.expanded
-        }
-
-        return true;
+        return this.expandable ? this.expanded : true;
       },
 
       isDragover() {
-        if (this.droppable) {
-          return this.dragover;
-        }
-
-        return false;
+        return this.droppable ? this.dragover : false;
       },
 
       isElementActive() {
@@ -202,10 +196,10 @@
         padding: 1rem;
         margin: -1rem;
       }
-    }
 
-    &_expanded:focus {
-      box-shadow: 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12), 0 5px 5px -3px rgba(0, 0, 0, .2)
+      &:focus {
+        box-shadow: 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12), 0 5px 5px -3px rgba(0, 0, 0, .2)
+      }
     }
 
     &__expander {
@@ -299,6 +293,11 @@
     &__content {
       margin-top: 1rem;
       min-height: 52px;
+      padding-bottom: 52px;
+    }
+
+    &_dragged &__content {
+      background: rgba(0, 0, 0, .06);
     }
   }
 </style>

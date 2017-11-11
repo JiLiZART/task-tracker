@@ -1,7 +1,7 @@
 <template>
   <div class="login" id="login-page">
     <div class="login__container">
-      <logo class="login__logo"></logo>
+      <logo class="login__logo" :big="true"></logo>
       <div class="login__inner cover">
         <h2 class="cover-heading">Your team's task tracker and project management tool.</h2>
         <p class="lead">Runby makes it easy to organize your tasks, projects and conversations in a shared space.</p>
@@ -26,7 +26,7 @@
   import {mapGetters} from 'vuex';
   import Logo from '@/components/Logo';
 
-  const WORKSPACE_NAME = 'Test Workspace';
+  const WORKSPACE_NAME = 'My Workspace';
 
   export default {
     name: 'login-view',
@@ -99,10 +99,8 @@
       text-align: center;
     }
 
-    &__logo.login__logo {
+    &__logo {
       margin: 1rem auto;
-      max-width: 120px;
-      max-height: 120px;
     }
 
     &__form {

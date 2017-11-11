@@ -1,5 +1,5 @@
 <template>
-    <span class="logo">
+    <span class="logo" :class="{'logo_big': big}">
         <img src="../assets/logo.svg" :alt="title" class="logo__image">
     </span>
 </template>
@@ -8,7 +8,8 @@
   export default {
     name: 'Logo',
     props: {
-      title: {type: String}
+      title: {type: String},
+      big: {type: Boolean}
     }
   }
 </script>
@@ -21,6 +22,11 @@
 
     &__image {
       min-width: 100%;
+    }
+
+    &_big {
+      max-width: 120px;
+      max-height: 120px;
     }
   }
 </style>
