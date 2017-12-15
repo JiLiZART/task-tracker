@@ -13,7 +13,7 @@
           <h4 class="card-title task__title" v-show="!inEdit" @click="inEdit = true">{{title}}</h4>
           <div class="task__project-title" v-if="project && showProjectTitle">{{project.title}}</div>
 
-          <button class="btn"
+          <button class="btn task__btn-done"
                   :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
                   v-if="!inEdit"
                   @click="toggleDone"
@@ -534,6 +534,12 @@
       &:hover, &:focus {
         background: #5cb85c;
       }
+    }
+
+    &__btn-done {
+      margin-left: auto;
+      margin-right: 2rem;
+      margin-top: -1rem;
     }
 
     &__header {

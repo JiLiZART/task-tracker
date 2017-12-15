@@ -172,12 +172,14 @@
 </script>
 
 <style lang="scss">
+
   .group {
     position: relative;
     border-radius: 6px;
+    --group-color: hsl(188, 48%, 90%);
 
     &.group {
-      background: hsl(188, 48%, 90%);
+      background: var(--group-color);
     }
 
     &:focus {
@@ -208,7 +210,7 @@
       right: 0;
       height: 50px;
       color: #818a91;
-      background: hsl(188, 48%, 90%);
+      background: var(--group-color);
       cursor: pointer;
       border-radius: 0 6px 6px 0;
 
