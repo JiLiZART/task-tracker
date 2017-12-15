@@ -8,7 +8,7 @@
       trigger="click">
 
       <div class="mate-picker__body">
-        <div class="mate-picker__header">
+        <div class="mate-picker__header" v-if="multiple">
           <div class="mate-picker__actions">
             <el-button type="primary" size="mini" @click="selectAll" v-if="multiple">Select All</el-button>
             <el-button type="primary" size="mini" @click="removeAll" v-if="multiple">Remove All</el-button>
@@ -116,9 +116,9 @@
 
 <style lang="scss">
   .mate-picker {
-
     &__header {
-      margin-bottom: .5rem;
+      margin-bottom: .25rem;
+      padding: .25rem;
     }
 
     &__actions {
@@ -165,5 +165,9 @@
     &__selected-item {
       margin-right: .25rem;
     }
+  }
+
+  .el-popover > .mate-picker__body {
+    margin: -10px;
   }
 </style>

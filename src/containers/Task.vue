@@ -9,51 +9,17 @@
     <div class="task__body" v-if="isExpanded">
       <div class="card-body">
 
-        <!-- Actions -->
-        <div class="task__actions">
-
-          <div class="task__actions-left">
-            <mate-picker
-              label="Add Performer"
-              class="task__action"
-              :members="teammates"
-              :selectedMembers="task.performers"
-              @change="onPerformerChange"
-            ></mate-picker>
-
-            <mate-picker
-              label="Add Followers"
-              class="task__action"
-              :multiple="true"
-              :members="teammates"
-              :selectedMembers="task.followers"
-              @change="onFollowersChange"
-            ></mate-picker>
-          </div>
-
-          <div class="task__actions-right">
-            <div class="task__action task__action_align_right">
-              <button class="btn"
-                      :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
-                      v-if="!inEdit"
-                      @click="toggleDone"
-              >
-                {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
-              </button>
-            </div>
-
-            <div class="task__action task__action_last">
-              <form @submit.prevent="onSubmit">
-                <date-picker :value="deadline" class="task__action-deadline" placeholder="Deadline"
-                             @change="onDeadlineChange"></date-picker>
-              </form>
-            </div>
-          </div>
-        </div>
-
         <div class="task__header">
           <h4 class="card-title task__title" v-show="!inEdit" @click="inEdit = true">{{title}}</h4>
           <div class="task__project-title" v-if="project && showProjectTitle">{{project.title}}</div>
+
+          <button class="btn"
+                  :class="{'btn-secondary': !task.done, 'btn-success': task.done}"
+                  v-if="!inEdit"
+                  @click="toggleDone"
+          >
+            {{ task.done ? 'Mark Undone' : 'Mark as Done' }}
+          </button>
         </div>
 
         <editor class="task__content"
@@ -92,16 +58,50 @@
             </editor>
           </div>
 
-          <!-- Edit actions -->
-          <div class="form-group">
-            <button class="btn btn-primary" :disabled="!title">Save
-              <hotkey name="command+enter"></hotkey>
-            </button>
-            <button class="btn btn-secondary" @click="onCancelClick" v-if="canCancel">Cancel
-              <hotkey name="esc"></hotkey>
-            </button>
+          <!-- Actions -->
+          <div class="task__actions">
+            <div class="task__actions-left">
+
+              <button class="btn btn-primary task__action" :disabled="!title">Save
+                <hotkey name="command+enter"></hotkey>
+              </button>
+              <button class="btn btn-secondary task__action" @click="onCancelClick" v-if="canCancel">Cancel
+                <hotkey name="esc"></hotkey>
+              </button>
+
+              <mate-picker
+                label="Add Performer"
+                class="task__action"
+                :members="teammates"
+                :selectedMembers="task.performers"
+                @change="onPerformerChange"
+              ></mate-picker>
+
+              <mate-picker
+                label="Add Followers"
+                class="task__action"
+                :multiple="true"
+                :members="teammates"
+                :selectedMembers="task.followers"
+                @change="onFollowersChange"
+              ></mate-picker>
+            </div>
+
+            <div class="task__actions-right">
+              <div class="task__action task__action_align_right">
+
+              </div>
+
+              <div class="task__action task__action_last">
+                <form @submit.prevent="onSubmit">
+                  <date-picker :value="deadline" class="task__action-deadline" placeholder="Deadline"
+                               @change="onDeadlineChange"></date-picker>
+                </form>
+              </div>
+            </div>
           </div>
         </form>
+
       </div>
 
       <!-- Comments -->
@@ -559,7 +559,6 @@
     }
 
     &__actions {
-      margin-bottom: 1rem;
       display: flex;
       flex-direction: row;
     }
@@ -587,6 +586,7 @@
 
       @media (min-width: 992px) {
         margin-right: 1rem;
+        margin-bottom: 0;
       }
     }
 

@@ -15,7 +15,7 @@
       </button>
     </div>
     <group-list class="group-list">
-      <task-list :items="newTasks"></task-list>
+      <task-list :items="newTasks" class="dashboard-view__new-tasks"></task-list>
 
       <template v-for="item in newProjects">
         <project-group class="group-list__item" :item="item" :key="item._id"></project-group>
@@ -248,22 +248,27 @@
       flex-direction: column;
 
       @media (min-width: 992px) {
-        position: absolute;
-        right: calc(100% + 1rem);
+        flex-direction: row;
       }
     }
 
     &__action-button {
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      margin-bottom: .5rem;
+      margin-right: .5rem;
+
+      &:disabled {
+        opacity: .35;
+      }
+    }
+
+    &__action-icon {
+      margin-right: .5rem;
     }
 
     &__action-label {
-      display: block;
       font-size: .9rem;
     }
   }
