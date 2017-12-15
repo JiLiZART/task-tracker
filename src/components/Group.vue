@@ -17,8 +17,9 @@
                  ref="inputTitle"
                  @blur="onTitleBlur"
                  @focus="onTitleFocus"
+                 :tabindex="editable ? 0 : -1"
                  :readonly="!editable"
-                 required
+                 :required="editable"
           />
         </form>
         <div class="group__spacer" @click="toggleExpanded">&nbsp;</div>
@@ -66,10 +67,7 @@
 
     data() {
       return {
-        expanded: false,
-        dragover: false,
-        inTitleEdit: !this.title,
-        newTitle: this.title
+        expanded: false, dragover: false, inTitleEdit: !this.title, newTitle: this.title
       }
     },
 
@@ -100,15 +98,31 @@
         }
       },
 
+      isElementActive() {
+        return this.$el === getCurrentActiveElement();
+      },
+
       onEscHotkey() {
-        if (this.isElementActive) {
+        if (this.isElementActive()) {
           this.collapse();
         }
       },
 
       onEnterHotkey() {
-        if (this.isElementActive) {
+        if (this.isElementActive()) {
           this.toggleExpanded()
+        }
+      },
+
+      onLeftHotkey() {
+        if (this.isElementActive()) {
+          this.collapse();
+        }
+      },
+
+      onRightHotkey() {
+        if (this.isElementActive()) {
+          this.expand();
         }
       },
 
@@ -152,7 +166,9 @@
       keymap() {
         return {
           'enter': this.onEnterHotkey,
-          'esc': this.onEscHotkey
+          'esc': this.onEscHotkey,
+          'left': this.onLeftHotkey,
+          'right': this.onRightHotkey,
         }
       },
 
@@ -162,10 +178,6 @@
 
       isDragover() {
         return this.droppable ? this.dragover : false;
-      },
-
-      isElementActive() {
-        return this.$el === getCurrentActiveElement();
       }
     }
   }

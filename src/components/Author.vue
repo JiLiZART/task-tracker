@@ -58,15 +58,14 @@
 </script>
 
 <style lang="scss" >
-
   .author {
     display: inline-flex;
     align-items: center;
-    border-radius: 50%;
 
     &:focus {
       outline: none;
       box-shadow: 0 0 0 3px rgba(0, 0, 0, .14);
+      border-radius: 0.25rem;
     }
 
     &__name {

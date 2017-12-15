@@ -1,5 +1,24 @@
 <template>
-  <quill-editor class="editor"
+<span>
+  <template v-if="readonly">
+    <div class="editor" :class="editorClasses" ref="textEditor" v-html="text"></div>
+  </template>
+  <template v-else>
+    <textarea ref="textEditor"
+              class="form-control editor"
+              :class="editorClasses"
+              cols="30"
+              rows="10"
+              :placeholder="placeholder"
+              :readonly="readonly"
+              v-html="text"
+              @focus="onFocus"
+              @blur="onBlur"
+              @input="onChange">
+    </textarea>
+  </template>
+</span>
+  <!-- <quill-editor class="editor"
                 ref="textEditor"
                 :class="editorClasses"
                 :content="text"
@@ -9,7 +28,10 @@
                 @focus="onFocus"
                 @blur="onBlur"
                 @change="onChange">
-  </quill-editor>
+  </quill-editor> -->
+
+
+  <!-- /# -->
 </template>
 
 <script>
@@ -21,17 +43,16 @@
       text: {type: String},
       light: {type: Boolean, 'default': true},
       bordered: {type: Boolean, 'default': false}, //@TODO remove ugly param
-      readonly: {type: Boolean, 'default': false}
+      readonly: {type: Boolean, 'default': false},
+      disabled: {type: Boolean, 'default': false}
     },
 
     data() {
-      const fullToolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+      const fullToolbarOptions = [['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote', 'code-block'],
 
         [{'header': [3, 4, 5, 6, false]}],               // custom button values
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+        [{'list': 'ordered'}, {'list': 'bullet'}], [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
         [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
         //[{'direction': 'rtl'}],                         // text direction
 
@@ -47,20 +68,15 @@
         ['clean']                                         // remove formatting button
       ];
 
-      const lightToolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        ['link', 'image'],
-        ['clean']
-      ];
+      const lightToolbarOptions = [['bold', 'italic', 'underline', 'strike'], [{'list': 'ordered'}, {'list': 'bullet'}], ['link', 'image'], ['clean']];
+
+      console.log("text", this.text);
 
       return {
         isFocused: false,
 
         editorOption: {
-          theme: this.light ? 'bubble' : 'snow',
-          placeholder: this.placeholder,
-          modules: {
+          theme: this.light ? 'bubble' : 'snow', placeholder: this.placeholder, modules: {
             toolbar: this.light ? lightToolbarOptions : fullToolbarOptions
           }
         }
@@ -75,11 +91,11 @@
 
     methods: {
       disable() {
-        this.editor.disable();
+        this.editor.disabled = true;
       },
 
       enable() {
-        this.editor.enable();
+        this.editor.disabled = false;
       },
 
       focus() {
@@ -106,8 +122,8 @@
         this.$emit('blur');
       },
 
-      onChange({editor, html, text}) {
-        this.$emit('change', html);
+      onChange(e) {
+        this.$emit('change', e.target.value);
       }
     },
 
@@ -116,16 +132,13 @@
         return {
           'editor_focused': this.isFocused,
           'editor_disabled': this.disabled,
+          'editor_readonly': this.readonly,
           'editor_bordered': this.bordered
         };
       },
 
-      disabled() {
-        return this.readonly;
-      },
-
       editor() {
-        return this.$refs.textEditor.quill
+        return this.$refs.textEditor; //this.$refs.textEditor.quill
       }
     }
   }
@@ -157,8 +170,10 @@
       border-color: rgba(0, 0, 0, 0.15);
     }
 
-    &_disabled {
+    &_readonly,
+    &_readonly[readonly] {
       background-color: transparent;
+      border-color: transparent;
 
       &:hover {
         border-color: transparent;
@@ -190,5 +205,11 @@
     .ql-toolbar.ql-snow {
       border: none;
     }
+
+    .ql-editor.ql-blank:before {
+      left: 0;
+      right: 0;
+    }
   }
+
 </style>

@@ -101,7 +101,6 @@
             </div>
           </div>
         </form>
-
       </div>
 
       <!-- Comments -->
@@ -412,7 +411,20 @@
         if (this.isElementActive()) {
           this.toggleExpanded()
         }
-      }
+      },
+
+      onLeftHotkey() {
+        if (this.isElementActive()) {
+          this.collapse();
+        }
+      },
+
+      onRightHotkey() {
+        if (this.isElementActive()) {
+          this.expand();
+        }
+      },
+
     },
 
     filters: {
@@ -434,7 +446,9 @@
         return {
           [isMac() ? 'meta+enter' : 'ctrl+enter']: this.onSubmit,
           //'enter': this.onEnterHotkey,
-          'esc': this.onEscHotkey
+          'esc': this.onEscHotkey,
+          'left': this.onLeftHotkey,
+          'right': this.onRightHotkey,
         }
       },
 
@@ -581,7 +595,6 @@
 
     &__actions-right {
       margin-left: auto;
-      margin-right: 1rem;
       text-align: right;
     }
 
