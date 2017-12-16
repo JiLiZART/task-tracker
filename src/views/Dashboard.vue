@@ -258,7 +258,8 @@
       justify-content: center;
       text-align: center;
       margin-right: .5rem;
-
+      cursor: pointer;
+      
       &:disabled {
         opacity: .35;
       }

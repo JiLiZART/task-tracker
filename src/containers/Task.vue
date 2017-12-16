@@ -602,6 +602,7 @@
       margin-bottom: 1rem;
       display: inline-block;
       font-size: 13px;
+      cursor: pointer;
 
       @media (min-width: 992px) {
         margin-right: 1rem;
