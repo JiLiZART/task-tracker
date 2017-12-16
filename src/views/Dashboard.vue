@@ -259,9 +259,13 @@
       text-align: center;
       margin-right: .5rem;
       cursor: pointer;
-      
+
       &:disabled {
         opacity: .35;
+      }
+
+      @media (max-width: 992px) {
+        margin-right: 0;
       }
     }
 
