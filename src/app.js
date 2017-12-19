@@ -2,6 +2,7 @@ import Vue from 'vue'
 import {sync} from 'vuex-router-sync'
 import {createStore} from './store'
 import {createRouter} from './router'
+import Vuec from 'vue-container';
 import App from './App.vue'
 
 // configure language
@@ -29,6 +30,12 @@ function registerPlugins(Vue) {
   Vue.use(Tooltip);
   Vue.use(Input);
   Vue.use(Button);
+
+  Vue.use(Vuec, {
+    register: {
+      auth: require('./services/AuthService').auth
+    }
+  });
 
   if (process.env.NODE_ENV === 'production') {
     const RAVEN_URL = 'https://f8d92de3c927430781089b68eac53c16@sentry.io/200742';

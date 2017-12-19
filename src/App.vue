@@ -15,6 +15,7 @@
 </template>
 
 <script>
+  import Vue from 'vue';
   import {mapGetters} from 'vuex';
   import Navbar from './components/Navbar';
   import {clearStorage} from '@/store/index';
@@ -24,6 +25,13 @@
     components: {Navbar},
 
     created() {
+      /**
+       *
+       */
+      const $auth = Vue.$ioc;
+
+      console.log('$auth', $auth);
+
       if (!this.isLoggedIn) {
         this.$router.replace('/');
       }
