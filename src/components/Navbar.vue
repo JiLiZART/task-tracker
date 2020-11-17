@@ -25,14 +25,12 @@
     </div>
 
     <form class="form-inline navbar__form">
-      <label>
-        <input
-          class="form-control mr-sm-2 navbar__input"
-          :value="searchValue"
-          @input="onSearch"
-          placeholder="Search"
-        />
-      </label>
+      <input
+        class="form-control mr-sm-2 navbar__input"
+        :value="searchValue"
+        @input="onSearch"
+        placeholder="Search"
+      />
     </form>
 
     <b-dropdown class="navbar__user" variant="transparent" :right="true">
