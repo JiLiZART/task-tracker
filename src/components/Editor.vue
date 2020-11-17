@@ -41,6 +41,8 @@
 </template>
 
 <script>
+/* eslint-disable @typescript-eslint/camelcase */
+
 export default {
   name: "Editor",
 

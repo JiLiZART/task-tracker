@@ -1,14 +1,20 @@
 <template>
   <div class="container dashboard-view">
     <div class="dashboard-view__actions" v-hotkey="actionsKeymap">
-      <button
-        class="btn btn-success dashboard-view__action-button"
+      <v-btn
+        class="dashboard-view__action-button"
+        color="primary"
+        depressed
+        elevation="2"
+        large
         @click="createTask"
         :disabled="!canCreateTask"
       >
-        <icon name="tasks" class="dashboard-view__action-icon"></icon>
+        <v-icon left dark class="dashboard-view__action-icon">
+          mdi-notebook-plus-outline
+        </v-icon>
         <span class="dashboard-view__action-label">New Task</span>
-      </button>
+      </v-btn>
       <button
         class="btn btn-primary dashboard-view__action-button"
         @click="createProject"
@@ -38,10 +44,7 @@
           <template v-if="myTasks.length">
             <task-list :items="myUngroupedTasks"></task-list>
 
-            <template
-              v-for="item in projects"
-              v-if="myTasksByProject(item).length"
-            >
+            <template v-for="item in myProjects">
               <div class="project-group" :key="item._id">
                 <div class="group-header">{{ item.title }}</div>
                 <task-list :items="myUndoneTasksByProject(item)"></task-list>
@@ -115,7 +118,6 @@ import Author from "@/components/Author";
 import Empty from "@/components/Empty";
 import GroupList from "@/components/GroupList";
 import TaskList from "@/containers/TaskList";
-import Hotkey from "@/components/Hotkey";
 import isBodyActiveElement from "@/utils/isBodyActiveElement";
 import ProjectGroup from "@/containers/ProjectGroup";
 import EmptyGroup from "@/containers/EmptyGroup";
@@ -132,7 +134,6 @@ const isNotNew = t => !t.isNew;
 export default {
   name: "dashboard",
   components: {
-    Hotkey,
     Empty,
     Group,
     TaskList,
@@ -226,6 +227,10 @@ export default {
 
     ungroupedNotNewTasks() {
       return this.ungroupedTasks.filter(isNotNew);
+    },
+
+    myProjects() {
+      return this.projects.filter(item => this.myTasksByProject(item).length);
     },
 
     myTasks() {

@@ -12,95 +12,94 @@
       <template v-if="tasksByProject(item).length">
         <task-list :items="undoneTasksByProject(item)"></task-list>
 
-        <div class="group-header" v-if="doneTasksByProject(item).length">Recently done tasks</div>
+        <div class="group-header" v-if="doneTasksByProject(item).length">
+          Recently done tasks
+        </div>
         <task-list :items="doneTasksByProject(item)"></task-list>
       </template>
       <empty text="Drop Task Here" v-else></empty>
-
     </template>
   </group>
 </template>
 
 <script>
-  import {mapGetters} from 'vuex';
-  import TaskList from '@/containers/TaskList';
-  import Group from '@/components/Group';
-  import Empty from '@/components/Empty';
+import { mapGetters } from "vuex";
+import TaskList from "@/containers/TaskList";
+import Group from "@/components/Group";
+import Empty from "@/components/Empty";
 
-  const isUndone = (t) => !t.done;
-  const isDone = (t) => t.done;
-  const isNotNew = (t) => !t.isNew;
+const isUndone = t => !t.done;
+const isDone = t => t.done;
+const isNotNew = t => !t.isNew;
 
-  export default {
-    name: 'ProjectGroup',
-    props: {
-      item: {type: Object}
+export default {
+  name: "ProjectGroup",
+  props: {
+    item: { type: Object }
+  },
+  components: { Group, Empty, TaskList },
+  methods: {
+    tasksByProject(prj) {
+      return this.projectsTasks
+        .filter(isNotNew)
+        .filter(task => prj.tasks.indexOf(task._id) !== -1);
     },
-    components: {Group, Empty, TaskList},
-    methods: {
-      tasksByProject(prj) {
-        return this.projectsTasks
-          .filter(isNotNew)
-          .filter((task) => prj.tasks.indexOf(task._id) !== -1)
-      },
 
-      undoneTasksByProject(prj) {
-        return this.tasksByProject(prj)
-          .filter(isUndone);
-      },
+    undoneTasksByProject(prj) {
+      return this.tasksByProject(prj).filter(isUndone);
+    },
 
-      doneTasksByProject(prj) {
-        return this.tasksByProject(prj)
-          .filter(isDone);
-      },
+    doneTasksByProject(prj) {
+      return this.tasksByProject(prj).filter(isDone);
+    },
 
-      moveTaskToProject({task, project}) {
-        let type, payload;
+    moveTaskToProject({ task, project }) {
+      let type, payload;
 
-        if (project) {
-          if (project._id === this.item._id) return;
+      if (project) {
+        if (project._id === this.item._id) return;
 
-          type = 'moveTaskFromProject';
-          payload = {task, from: project, to: this.item};
-        } else {
-          type = 'addTaskToProject';
-          payload = {project: this.item, task};
-        }
-
-        this.$store.commit(type, payload);
-      },
-
-      onDrop({task, project}) {
-        this.moveTaskToProject({task, project})
-      },
-
-      onTitleEdit(title) {
-        const data = {title, isNew: false};
-
-        this.$store.commit('updateProject', {...this.item, ...data});
-      },
-
-      onTitleBlur(title) {
-        if (this.item.isNew && !title) {
-          this.$store.commit('removeProject', this.item);
-        }
+        type = "moveTaskFromProject";
+        payload = { task, from: project, to: this.item };
+      } else {
+        type = "addTaskToProject";
+        payload = { project: this.item, task };
       }
+
+      this.$store.commit(type, payload);
     },
 
-    computed: {
-      expandable() {
-        return !!this.item.title
-      },
+    onDrop({ task, project }) {
+      this.moveTaskToProject({ task, project });
+    },
 
-      ...mapGetters([
-        'user',
-        'projects',
-        'projectsTasks',
-        'ungroupedTasks',
-        'tasks',
-        'teammates',
-        'lastUpdates'
-      ]),
+    onTitleEdit(title) {
+      const data = { title, isNew: false };
+
+      this.$store.commit("updateProject", { ...this.item, ...data });
+    },
+
+    onTitleBlur(title) {
+      if (this.item.isNew && !title) {
+        this.$store.commit("removeProject", this.item);
+      }
     }
+  },
+
+  computed: {
+    expandable() {
+      return !!this.item.title;
+    },
+
+    ...mapGetters([
+      "user",
+      "projects",
+      "projectsTasks",
+      "ungroupedTasks",
+      "tasks",
+      "teammates",
+      "lastUpdates"
+    ])
   }
+};
 </script>

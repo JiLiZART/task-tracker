@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <navbar
       v-if="isLoggedIn && haveWorkspaces"
       :workspace="workspace"
@@ -12,14 +12,14 @@
     <transition name="slide-x-transition" mode="out-in">
       <router-view class="view"></router-view>
     </transition>
-  </div>
+  </v-app>
 </template>
 
 <script>
 import Vue from "vue";
 import { mapGetters } from "vuex";
-import Navbar from "./components/Navbar";
 import { clearStorage } from "@/store/index";
+import Navbar from "@/components/Navbar";
 
 export default {
   name: "app",

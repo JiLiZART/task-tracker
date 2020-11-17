@@ -1,14 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Vue from 'vue'
 import Vuex from 'vuex'
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
-// @ts-ignore
 import store from 'store';
 
 Vue.use(Vuex);
 
 const STATE_KEY = 'storage';
+
+function setItem(key: any, value: any) {
+  return store.set(key, value)
+}
+
+function getItem(key: any) {
+  return store.get(key);
+}
+
+function removeItem(key: any) {
+  return store.remove(key)
+}
 
 const localStoragePlugin = (store: any) => {
   const state = getItem(STATE_KEY);
@@ -22,18 +34,6 @@ const localStoragePlugin = (store: any) => {
     setItem(STATE_KEY, state);
   })
 };
-
-function setItem(key: any, value: any) {
-  return store.set(key, value)
-}
-
-function getItem(key: any) {
-  return store.get(key);
-}
-
-function removeItem(key: any) {
-  return store.remove(key)
-}
 
 export function clearStorage() {
   return removeItem(STATE_KEY);

@@ -62,7 +62,8 @@
 </template>
 
 <script>
-import Author from "@/components/Author";
+/* eslint-disable @typescript-eslint/camelcase */
+
 import EntityRow from "@/components/EntityRow";
 import Expander from "@/components/Expander";
 import getCurrentActiveElement from "@/utils/getCurrentActiveElement";

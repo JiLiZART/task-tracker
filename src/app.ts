@@ -13,6 +13,7 @@ import BootstrapVue from 'bootstrap-vue';
 import {DatePicker, Autocomplete, Popover, Tooltip, Input, Button} from 'element-ui';
 
 import Vuetify from 'vuetify'
+import 'material-design-icons-iconfont/dist/material-design-icons.css' // Ensure you are using css-loader
 import 'vuetify/dist/vuetify.min.css'
 
 locale.use(langEn);
@@ -69,7 +70,11 @@ export function createApp() {
         app: new Vue({
             router,
             store,
-            vuetify: createVuetify(),
+            vuetify: createVuetify({
+                icons: {
+                    iconfont: 'md',
+                },
+            }),
             render: h => h(App)
         })
         , router, store

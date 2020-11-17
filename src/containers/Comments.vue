@@ -1,7 +1,11 @@
 <template>
   <div class="list-group list-group-flush comments">
-    <template v-for="(item, index) in items">
-      <div class="list-group-item flex-column align-items-start comments__item" tabindex="0" :key="item._id">
+    <template v-for="item in items">
+      <div
+        class="list-group-item flex-column align-items-start comments__item"
+        tabindex="0"
+        :key="item._id"
+      >
         <div class="d-flex w-100 justify-content-between">
           <div class="mb-1">
             <author :item="item.user" class="comments__item-author"></author>
@@ -14,7 +18,9 @@
       </div>
     </template>
 
-    <div class="list-group-item flex-column align-items-start comments__item comments__item-form">
+    <div
+      class="list-group-item flex-column align-items-start comments__item comments__item-form"
+    >
       <div class="d-flex w-100 justify-content-between">
         <author :item="user" class="comments__item-author"></author>
       </div>
@@ -38,143 +44,153 @@
           </div>
 
           <div class="form-group">
-            <button class="btn btn-primary" :disabled="!text">Reply to
+            <button class="btn btn-primary" :disabled="!text">
+              Reply to
               <hotkey name="command+enter"></hotkey>
             </button>
-            <button class="btn btn-secondary" type="button" @click="onCancelClick">Cancel
+            <button
+              class="btn btn-secondary"
+              type="button"
+              @click="onCancelClick"
+            >
+              Cancel
               <hotkey name="esc"></hotkey>
             </button>
           </div>
         </form>
       </template>
       <template v-if="!inEdit">
-        <button class="btn btn-link comments__reply-btn" @click="showForm">Reply to</button>
+        <button class="btn btn-link comments__reply-btn" @click="showForm">
+          Reply to
+        </button>
       </template>
     </div>
   </div>
 </template>
 
 <script>
-  import {mapMutations} from 'vuex';
-  import Vue from 'vue';
-  import isMac from '@/utils/isMac';
+import { mapMutations } from "vuex";
+import Vue from "vue";
+import isMac from "@/utils/isMac";
 
-  import fromNow from '@/utils/fromNow';
-  import Author from '@/components/Author';
-  import Editor from '@/components/Editor';
-  import Hotkey from '@/components/Hotkey'
+import fromNow from "@/utils/fromNow";
+import Author from "@/components/Author";
+import Editor from "@/components/Editor";
+import Hotkey from "@/components/Hotkey";
 
-  export default {
-    name: 'Comments',
-    props: {
-      items: {type: Array},
-      type: {type: String},
-      entity: {type: Object}
+export default {
+  name: "Comments",
+  props: {
+    items: { type: Array },
+    type: { type: String },
+    entity: { type: Object }
+  },
+
+  components: { Author, Editor, Hotkey },
+
+  data() {
+    return {
+      text: null,
+      inEdit: false
+    };
+  },
+
+  methods: {
+    onSubmit() {
+      if (this.text) {
+        const data = {
+          user: this.user,
+          text: this.text
+        };
+
+        this.text = null;
+
+        this.$store.dispatch("createComment", data).then(comment => {
+          this.$store.commit("addCommentToEntity", {
+            comment,
+            type: this.type,
+            typeId: this.entity._id
+          });
+        });
+      }
     },
 
-    components: {Author, Editor, Hotkey},
+    onCancelClick() {
+      this.inEdit = false;
+    },
 
-    data() {
+    onTextChange(text) {
+      this.text = text;
+    },
+
+    showForm() {
+      this.inEdit = true;
+
+      Vue.nextTick(() => {
+        this.textEditor.focus();
+      });
+    },
+
+    ...mapMutations(["createComment"])
+  },
+
+  computed: {
+    keymap() {
       return {
-        text: null,
-        inEdit: false
+        [isMac() ? "meta+enter" : "ctrl+enter"]: this.onSubmit,
+        esc: this.onCancelClick
       };
     },
 
-    methods: {
-      onSubmit() {
-        if (this.text) {
-          const data = {
-            user: this.user,
-            text: this.text
-          };
-
-          this.text = null;
-
-          this.$store.dispatch('createComment', data).then((comment) => {
-            this.$store.commit('addCommentToEntity', {comment, type: this.type, typeId: this.entity._id})
-          })
-        }
-      },
-
-      onCancelClick() {
-        this.inEdit = false;
-      },
-
-      onTextChange(text) {
-        this.text = text;
-      },
-
-      showForm() {
-        this.inEdit = true;
-
-        Vue.nextTick(() => {
-          this.textEditor.focus();
-        });
-      },
-
-      ...mapMutations([
-        'createComment'
-      ]),
+    textPlaceholder() {
+      return "Comment here...";
     },
 
-    computed: {
-      keymap() {
-        return {
-          [isMac() ? 'meta+enter' : 'ctrl+enter']: this.onSubmit,
-          'esc': this.onCancelClick,
-        }
-      },
-
-      textPlaceholder() {
-        return 'Comment here...';
-      },
-
-      textEditor() {
-        return this.$refs.textEditor;
-      },
-
-      user() {
-        return this.$store.getters.user;
-      }
+    textEditor() {
+      return this.$refs.textEditor;
     },
 
-    filters: {
-      fromNow
+    user() {
+      return this.$store.getters.user;
     }
+  },
+
+  filters: {
+    fromNow
   }
+};
 </script>
 
-<style lang="scss" >
-  .comments {
-    &__form {
-      margin-top: 1rem;
-      width: 100%;
-    }
+<style lang="scss">
+.comments {
+  &__form {
+    margin-top: 1rem;
+    width: 100%;
+  }
 
-    &__reply-btn {
-      margin-top: 1rem;
+  &__reply-btn {
+    margin-top: 1rem;
+    color: #808080;
+
+    &:hover {
       color: #808080;
-
-      &:hover {
-        color: #808080;
-        cursor: pointer;
-      }
-    }
-
-    &__item-form {
-      border-top: 1px solid #d8d8d8;
-      background: #f7f2f0;
-    }
-
-    &__item-form.comments__item-form {
-      border-bottom-left-radius: 6px;
-      border-bottom-right-radius: 6px;
-    }
-
-    &__item-author,
-    &__item-author:hover {
-      color: #333;
+      cursor: pointer;
     }
   }
+
+  &__item-form {
+    border-top: 1px solid #d8d8d8;
+    background: #f7f2f0;
+  }
+
+  &__item-form.comments__item-form {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  &__item-author,
+  &__item-author:hover {
+    color: #333;
+  }
+}
 </style>

@@ -17,7 +17,7 @@
             <input
               class="form-control"
               :value="firstName"
-              @input.lazy="updateFirstName"
+              @input="updateFirstName"
               id="first-name"
             />
           </div>
@@ -30,7 +30,7 @@
             <input
               class="form-control"
               :value="lastName"
-              @input.lazy="updateLastName"
+              @input="updateLastName"
               id="last-name"
             />
           </div>
@@ -45,7 +45,6 @@
               type="email"
               :value="email"
               @input="updateEmail"
-              value="How do I shoot web"
               id="email"
             />
           </div>

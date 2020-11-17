@@ -5,7 +5,7 @@
         <h4 class="card-title">My Team</h4>
       </div>
       <div class="card-body" v-if="teammates && teammates.length">
-        <template v-for="(item, index) in teammates">
+        <template v-for="item in teammates">
           <div class="card team-view__member" :key="item._id">
             <div class="card-body">
               <router-link

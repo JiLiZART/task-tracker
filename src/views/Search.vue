@@ -5,7 +5,7 @@
     </div>
     <group-list class="group-list">
       <!-- Projects -->
-      <template v-for="(item, index) in foundProjects">
+      <template v-for="item in foundProjects">
         <project-group
           class="group-list__item"
           :item="item"
@@ -19,11 +19,9 @@
 
 <script>
 import Fuse from "fuse.js";
-import Vue from "vue";
 import TaskList from "@/containers/TaskList";
 import GroupList from "@/components/GroupList";
 import ProjectGroup from "@/containers/ProjectGroup";
-import Avatar from "@/components/Avatar";
 
 function createFuse(items, keys) {
   const options = { keys, shouldSort: true },

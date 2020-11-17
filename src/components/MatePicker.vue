@@ -27,7 +27,7 @@
           </div>
         </div>
         <div class="mate-picker__members">
-          <template v-for="(item, index) in editableMembers">
+          <template v-for="item in editableMembers">
             <div
               class="mate-picker__member"
               :class="mateClassObject(item)"
@@ -47,7 +47,7 @@
     </el-popover>
     <el-button class="mate-picker__button" :plain="true" v-popover:popovermates>
       <template v-if="selectedMembers.length">
-        <template v-for="(item, index) in editableSelectedMembers">
+        <template v-for="item in editableSelectedMembers">
           <el-tooltip
             class="mate-picker__selected-item"
             effect="dark"
