@@ -6,8 +6,12 @@
       </div>
       <div class="card-body">
         <div class="add-users__body">
-          <invite-teammates-form submit-route="/dashboard"></invite-teammates-form>
-          <router-link class="btn btn-lg btn-link btn-block" to="/dashboard">Back to Dashboard</router-link>
+          <invite-teammates-form
+            submit-route="/dashboard"
+          ></invite-teammates-form>
+          <router-link class="btn btn-lg btn-link btn-block" to="/dashboard"
+            >Back to Dashboard</router-link
+          >
         </div>
       </div>
     </div>
@@ -15,21 +19,20 @@
 </template>
 
 <script>
-  import InviteTeammatesForm from '@/containers/InviteTeammatesForm'
+import InviteTeammatesForm from "@/containers/InviteTeammatesForm";
 
-  export default {
-    name: 'team-add-users-view',
-    components: {InviteTeammatesForm},
-  }
+export default {
+  name: "team-add-users-view",
+  components: { InviteTeammatesForm }
+};
 </script>
 
 <style lang="scss">
-  .add-users {
-
-    &__body {
-      max-width: 330px;
-      width: 100%;
-      margin: 0 auto;
-    }
+.add-users {
+  &__body {
+    max-width: 330px;
+    width: 100%;
+    margin: 0 auto;
   }
+}
 </style>

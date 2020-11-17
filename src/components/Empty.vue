@@ -7,16 +7,16 @@
 </template>
 
 <script>
-  export default {
-    name: 'Empty',
-    props: {
-      text: {type: String}
-    }
+export default {
+  name: "Empty",
+  props: {
+    text: { type: String }
   }
+};
 </script>
 
-<style lang="scss" >
-  .empty {
-    background: transparent;
-  }
+<style lang="scss">
+.empty {
+  background: transparent;
+}
 </style>

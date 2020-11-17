@@ -1,20 +1,20 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import Vue from 'vue'
+import Vuec from 'vue-container';
 import {sync} from 'vuex-router-sync'
 import {createStore} from './store'
 import {createRouter} from './router'
-import Vuec from 'vue-container';
 import App from './App.vue'
 
 // configure language
 import locale from 'element-ui/lib/locale';
 import langEn from 'element-ui/lib/locale/lang/en';
-
 import BootstrapVue from 'bootstrap-vue';
 import {DatePicker, Autocomplete, Popover, Tooltip, Input, Button} from 'element-ui';
 
 locale.use(langEn);
 
-function registerPlugins(Vue) {
+function registerPlugins(Vue: any) {
   Vue.use(BootstrapVue);
   Vue.use(require('vue-timeago'), {
     locale: 'en-US',
@@ -33,18 +33,9 @@ function registerPlugins(Vue) {
 
   Vue.use(Vuec, {
     register: {
-      auth: require('./services/AuthService').auth
+      // auth: require('./services/AuthService').auth
     }
   });
-
-  if (process.env.NODE_ENV === 'production') {
-    const RAVEN_URL = 'https://f8d92de3c927430781089b68eac53c16@sentry.io/200742';
-
-    require('raven-js')
-      .config(RAVEN_URL)
-      .addPlugin(require('raven-js/plugins/vue'), Vue)
-      .install();
-  }
 }
 
 // Expose a factory function that creates a fresh set of store, router,

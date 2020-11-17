@@ -15,44 +15,44 @@
 </template>
 
 <script>
-  export default {
-    name: 'Autocomplete',
-    props: {
-      value: {type: String},
-      placeholder: {type: String},
-      querySearch: {type: Function}
+export default {
+  name: "Autocomplete",
+  props: {
+    value: { type: String },
+    placeholder: { type: String },
+    querySearch: { type: Function }
+  },
+
+  data() {
+    return {
+      editableValue: this.value
+    };
+  },
+
+  methods: {
+    onEnter(e) {
+      this.$emit("submit", e);
     },
 
-    data() {
-      return {
-        editableValue: this.value
-      }
+    onFocus(e) {
+      this.$emit("focus", e);
     },
 
-    methods: {
-      onEnter(e) {
-        this.$emit('submit', e)
-      },
+    onBlur(e) {
+      this.$emit("blur", e);
+    },
 
-      onFocus(e) {
-        this.$emit('focus', e)
-      },
+    onChange(e) {
+      this.$emit("change", e);
+    },
 
-      onBlur(e) {
-        this.$emit('blur', e)
-      },
+    onClick(e) {
+      this.$emit("click", e);
+    },
 
-      onChange(e) {
-        this.$emit('change', e)
-      },
-
-      onClick(e) {
-        this.$emit('click', e)
-      },
-
-      onSelect(e) {
-        this.$emit('select', e)
-      }
+    onSelect(e) {
+      this.$emit("select", e);
     }
   }
+};
 </script>

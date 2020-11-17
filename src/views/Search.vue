@@ -1,12 +1,16 @@
 <template>
   <div class="container search-view">
     <div class="card-body">
-      <h3 class="card-title">Search results for "{{query}}"</h3>
+      <h3 class="card-title">Search results for "{{ query }}"</h3>
     </div>
     <group-list class="group-list">
       <!-- Projects -->
       <template v-for="(item, index) in foundProjects">
-        <project-group class="group-list__item" :item="item" :key="item._id"></project-group>
+        <project-group
+          class="group-list__item"
+          :item="item"
+          :key="item._id"
+        ></project-group>
       </template>
     </group-list>
     <task-list :items="foundTasks"></task-list>
@@ -14,122 +18,125 @@
 </template>
 
 <script>
-  import Fuse from 'fuse.js';
-  import Vue from 'vue';
-  import TaskList from '@/containers/TaskList';
-  import GroupList from '@/components/GroupList';
-  import ProjectGroup from '@/containers/ProjectGroup';
-  import Avatar from '@/components/Avatar';
+import Fuse from "fuse.js";
+import Vue from "vue";
+import TaskList from "@/containers/TaskList";
+import GroupList from "@/components/GroupList";
+import ProjectGroup from "@/containers/ProjectGroup";
+import Avatar from "@/components/Avatar";
 
-  function createFuse(items, keys) {
-    const options = {keys, shouldSort: true},
-      transformedItems = JSON.parse(JSON.stringify(items));
+function createFuse(items, keys) {
+  const options = { keys, shouldSort: true },
+    transformedItems = JSON.parse(JSON.stringify(items));
 
-    return new Fuse(transformedItems, options);
-  }
+  return new Fuse(transformedItems, options);
+}
 
-  export default {
-    name: 'search-view',
+export default {
+  name: "search-view",
 
-    components: {TaskList, GroupList, ProjectGroup},
+  components: { TaskList, GroupList, ProjectGroup },
 
-    data() {
-      return {
-        foundItems: []
-      }
-    },
+  data() {
+    return {
+      foundItems: []
+    };
+  },
 
-    watch: {
-      'query': 'performSearch'
-    },
+  watch: {
+    query: "performSearch"
+  },
 
-    mounted() {
-      this.performSearch();
-    },
+  mounted() {
+    this.performSearch();
+  },
 
-    methods: {
-      performSearch() {
-        if (!this.fuse) {
-          this.fuse = createFuse(
-            []
-              .concat(this.projects)
-              .concat(this.tasks)
-              .concat(this.docs)
-              .concat(this.teammates),
-            [{
-              name: 'title',
+  methods: {
+    performSearch() {
+      if (!this.fuse) {
+        this.fuse = createFuse(
+          []
+            .concat(this.projects)
+            .concat(this.tasks)
+            .concat(this.docs)
+            .concat(this.teammates),
+          [
+            {
+              name: "title",
               weight: 0.3
-            }, {
-              name: 'username',
+            },
+            {
+              name: "username",
               weight: 0.3
-            }, {
-              name: 'text',
+            },
+            {
+              name: "text",
               weight: 0.7
-            }]
-          )
-        }
-
-        this.foundItems = this.fuse.search(this.query);
-      },
-
-      tasksCount: function (prj) {
-        return (prj.tasks && prj.tasks.length) || 0
-      },
-
-      docsCount: function (prj) {
-        return (prj.docs && prj.docs.length) || 0
+            }
+          ]
+        );
       }
+
+      this.foundItems = this.fuse.search(this.query);
     },
 
-    computed: {
-      query() {
-        return this.$route.params.query
-      },
+    tasksCount: function(prj) {
+      return (prj.tasks && prj.tasks.length) || 0;
+    },
 
-      projects() {
-        return this.$store.getters.projects;
-      },
+    docsCount: function(prj) {
+      return (prj.docs && prj.docs.length) || 0;
+    }
+  },
 
-      tasks() {
-        return this.$store.getters.tasks;
-      },
+  computed: {
+    query() {
+      return this.$route.params.query;
+    },
 
-      docs() {
-        return this.$store.getters.docs;
-      },
+    projects() {
+      return this.$store.getters.projects;
+    },
 
-      teammates() {
-        return this.$store.getters.teammates;
-      },
+    tasks() {
+      return this.$store.getters.tasks;
+    },
 
-      foundTasks() {
-        return this.foundItems.filter((item) => item.type === 'task');
-      },
+    docs() {
+      return this.$store.getters.docs;
+    },
 
-      foundDocs() {
-        return this.foundItems.filter((item) => item.type === 'doc');
-      },
+    teammates() {
+      return this.$store.getters.teammates;
+    },
 
-      foundProjects() {
-        return this.foundItems.filter((item) => item.type === 'project');
-      },
+    foundTasks() {
+      return this.foundItems.filter(item => item.type === "task");
+    },
 
-      foundMates() {
-        return this.foundItems.filter((item) => item.type === 'teammate');
-      }
+    foundDocs() {
+      return this.foundItems.filter(item => item.type === "doc");
+    },
+
+    foundProjects() {
+      return this.foundItems.filter(item => item.type === "project");
+    },
+
+    foundMates() {
+      return this.foundItems.filter(item => item.type === "teammate");
     }
   }
+};
 </script>
 
 <style lang="scss">
-
-  .search-view {
-    &__section {
-      margin-bottom: 1rem;
-    }
-
-    &__item {
-      margin-bottom: .5rem;
-    }
+.search-view {
+  &__section {
+    margin-bottom: 1rem;
   }
+
+  &__item {
+    margin-bottom: 0.5rem;
+  }
+}
 </style>

@@ -11,41 +11,45 @@
     <template v-if="!member">
       <div class="card-body">
         <h4 class="card-title">Member not found</h4>
-        <p class="card-text">He was lost somewhere in the abyss of immense tasks.</p>
-        <router-link to="/dashboard" class="btn btn-primary">Go to Dashboard</router-link>
+        <p class="card-text">
+          He was lost somewhere in the abyss of immense tasks.
+        </p>
+        <router-link to="/dashboard" class="btn btn-primary"
+          >Go to Dashboard</router-link
+        >
       </div>
     </template>
   </div>
 </template>
 
 <script>
-  import TeamMember from '@/containers/TeamMember';
+import TeamMember from "@/containers/TeamMember";
 
-  export default {
-    name: 'member-view',
+export default {
+  name: "member-view",
 
-    components: {TeamMember},
+  components: { TeamMember },
 
-    data() {
-      return {};
+  data() {
+    return {};
+  },
+
+  computed: {
+    projects() {
+      return this.$store.getters.projects;
     },
 
-    computed: {
-      projects() {
-        return this.$store.getters.projects;
-      },
+    teammates() {
+      return this.$store.getters.teammates;
+    },
 
-      teammates() {
-        return this.$store.getters.teammates;
-      },
+    tasks() {
+      return this.$store.state.tasks;
+    },
 
-      tasks() {
-        return this.$store.state.tasks;
-      },
-
-      member() {
-        return this.teammates.find((t) => t._id === this.$route.params.id)
-      }
+    member() {
+      return this.teammates.find(t => t._id === this.$route.params.id);
     }
   }
+};
 </script>

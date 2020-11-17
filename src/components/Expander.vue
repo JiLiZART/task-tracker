@@ -6,31 +6,32 @@
 </template>
 
 <script>
-  export default {
-    name: 'Expander',
+export default {
+  name: "Expander",
 
-    props: {
-      expanded: {type: Boolean, 'default': false}
-    },
+  props: {
+    expanded: { type: Boolean, default: false }
+  },
 
-    methods: {
-      toggleExpanded() {
-        this.$emit('toggle')
-      }
+  methods: {
+    toggleExpanded() {
+      this.$emit("toggle");
     }
   }
+};
 </script>
 
-<style lang="scss" >
-  .expander {
-    padding: 0.5rem;
-    font-size: 1rem;
-    color: #818a91;
-    cursor: pointer;
+<style lang="scss">
+.expander {
+  padding: 0.5rem;
+  font-size: 1rem;
+  color: #818a91;
+  cursor: pointer;
 
-    &:hover, &:focus {
-      color: #818a91;
-      text-decoration: none;
-    }
+  &:hover,
+  &:focus {
+    color: #818a91;
+    text-decoration: none;
   }
+}
 </style>
