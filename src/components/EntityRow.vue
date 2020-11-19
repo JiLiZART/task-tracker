@@ -27,10 +27,8 @@ export default {
 
 <style lang="scss">
 .entity-row {
-  padding: 0.5rem 1rem;
+  padding: 0;
   padding-right: 38px;
-  height: 50px;
-  font-size: 1rem;
   display: flex;
   align-items: center;
 

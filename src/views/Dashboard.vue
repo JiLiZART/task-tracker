@@ -1,5 +1,5 @@
 <template>
-  <div class="container dashboard-view">
+  <div class="container dashboard-view mt-4">
     <div class="dashboard-view__actions" v-hotkey="actionsKeymap">
       <v-btn
         class="dashboard-view__action-button"
@@ -9,10 +9,10 @@
         @click="createTask"
         :disabled="!canCreateTask"
       >
-        <v-icon left dark class="dashboard-view__action-icon">
-          mdi-notebook-plus
+        <v-icon left dark>
+          add
         </v-icon>
-        <span class="dashboard-view__action-label">New Task</span>
+        New Task
       </v-btn>
       <v-btn
         class="dashboard-view__action-button"
@@ -22,10 +22,8 @@
         @click="createProject"
         :disabled="!canCreateProject"
       >
-        <v-icon left dark class="dashboard-view__action-icon"
-          >mdi-object-group</v-icon
-        >
-        <span class="dashboard-view__action-label">New Bundle</span>
+        <v-icon left dark>playlist_add</v-icon>
+        New Bundle
       </v-btn>
     </div>
     <GroupList class="group-list">
@@ -284,14 +282,6 @@ export default {
     @media (max-width: 992px) {
       margin-right: 0;
     }
-  }
-
-  &__action-icon {
-    margin-right: 0.5rem;
-  }
-
-  &__action-label {
-    font-size: 0.9rem;
   }
 }
 </style>

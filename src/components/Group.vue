@@ -1,71 +1,71 @@
 <template>
-  <drop
-    class="card group"
-    :class="classObject"
+  <v-expansion-panel
+    class="group"
     tabindex="0"
     v-hotkey="keymap"
     @drop="onDrop"
     @dragover="dragover = true"
     @dragleave="dragover = false"
   >
-    <div class="group__body" v-if="isExpanded">
-      <div class="group__header">
-        <form
-          class="group__title-form"
-          @submit.prevent="onTitleSubmit"
-          @click="onTitleFormClick"
-        >
-          <label>
-            <input
-              type="text"
-              class="group__title-input"
-              placeholder="Enter title here..."
-              v-model="newTitle"
-              ref="inputTitle"
-              @blur="onTitleBlur"
-              @focus="onTitleFocus"
-              :tabindex="editable ? 0 : -1"
-              :readonly="!editable"
-              :required="editable"
-            />
-          </label>
-        </form>
-        <div class="group__spacer" @click="toggleExpanded">&nbsp;</div>
-        <div class="group__actions">
-          <slot name="actions"></slot>
-        </div>
-      </div>
-      <div class="group__content">
-        <slot name="content"></slot>
-      </div>
-    </div>
-
-    <entity-row v-if="!isExpanded" @click:title="toggleExpanded">
-      <template slot="icon">
-        <slot name="icon"></slot>
+    <v-expansion-panel-header class="group__header">
+      <template v-slot:default="{ open }">
+        <v-fade-transition leave-absolute>
+          <v-row no-gutters v-if="open">
+            <form
+              class="group__title-form"
+              @submit.prevent="onTitleSubmit"
+              @click="onTitleFormClick"
+            >
+              <label>
+                <input
+                  type="text"
+                  class="group__title-input"
+                  placeholder="Enter title here..."
+                  v-model="newTitle"
+                  ref="inputTitle"
+                  @blur="onTitleBlur"
+                  @focus="onTitleFocus"
+                  :tabindex="editable ? 0 : -1"
+                  :readonly="!editable"
+                  :required="editable"
+                />
+              </label>
+            </form>
+            <div class="group__spacer" @click="toggleExpanded">&nbsp;</div>
+            <div class="group__actions">
+              <slot name="actions"></slot>
+            </div>
+          </v-row>
+          <EntityRow v-if="!open">
+            <template slot="icon">
+              <slot name="icon"></slot>
+            </template>
+            <template slot="title">
+              {{ title }}
+            </template>
+            <template slot="actions">
+              <slot name="row-meta"></slot>
+            </template>
+          </EntityRow>
+        </v-fade-transition>
       </template>
-      <template slot="title">
-        {{ title }}
+      <template v-slot:actions>
+        <v-icon color="primary">
+          $expand
+        </v-icon>
       </template>
-      <template slot="actions">
-        <slot name="row-meta"></slot>
-      </template>
-    </entity-row>
-
-    <expander
-      class="group__expander"
-      @toggle="toggleExpanded"
-      :expanded="isExpanded"
-      v-if="expandable"
-    ></expander>
-  </drop>
+    </v-expansion-panel-header>
+    <v-expansion-panel-content>
+      <slot name="content"></slot>
+    </v-expansion-panel-content>
+  </v-expansion-panel>
 </template>
 
 <script>
 /* eslint-disable @typescript-eslint/camelcase */
 
 import EntityRow from "@/components/EntityRow";
-import Expander from "@/components/Expander";
+// import Expander from "@/components/Expander";
 import getCurrentActiveElement from "@/utils/getCurrentActiveElement";
 
 export default {
@@ -77,7 +77,7 @@ export default {
     expandable: { type: Boolean, default: true },
     editable: { type: Boolean, default: false }
   },
-  components: { EntityRow, Expander },
+  components: { EntityRow },
 
   data() {
     return {
@@ -267,11 +267,11 @@ export default {
 
   &__header {
     background: hsl(183, 61%, 94%);
-    border-radius: 6px 6px 0 0;
-    padding: 0.5rem 2.6rem 0.5rem 1rem;
-    height: 50px;
-    display: flex;
-    align-items: center;
+    /*border-radius: 6px 6px 0 0;*/
+    /*padding: 0.5rem 2.6rem 0.5rem 1rem;*/
+    /*height: 50px;*/
+    /*display: flex;*/
+    /*align-items: center;*/
   }
 
   &_expanded &__header {

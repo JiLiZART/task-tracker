@@ -2,30 +2,36 @@
   <div class="login" id="login-page">
     <div class="login__container">
       <logo class="login__logo" :big="true"></logo>
-      <div class="login__inner cover">
-        <h2 class="cover-heading">
+      <div class="login__inner">
+        <h2 class="text-h4">
           Your team's task tracker and project management tool.
         </h2>
-        <p class="lead">
+        <p class="text-h6 font-weight-regular">
           Runby makes it easy to organize your tasks, projects and conversations
           in a shared space.
         </p>
       </div>
 
-      <template v-if="isLoggedIn == false">
-        <form class="login__form" @submit.prevent="onSubmit">
-          <label for="inputEmail" class="sr-only">Email address</label>
-          <input
+      <template v-if="isLoggedIn === false">
+        <v-form class="login__form" @submit.prevent="onSubmit">
+          <v-text-field
+            class="mb-4 login__input-email"
             type="email"
             id="inputEmail"
             v-model="email"
-            class="form-control form-control-lg login__input-email"
-            placeholder="Email address"
+            placeholder="Your email"
+            hide-details="auto"
             required
             autofocus
+            filled
+            x-large
+            full-width
+            light
           />
-          <button class="btn btn-lg btn-primary btn-block">Sign Up</button>
-        </form>
+          <v-btn type="submit" color="primary" x-large raised block
+            >Sign Up</v-btn
+          >
+        </v-form>
       </template>
     </div>
   </div>

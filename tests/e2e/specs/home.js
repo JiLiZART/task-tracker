@@ -10,7 +10,7 @@ describe("Home Page", () => {
     );
     cy.get('input[type="email"]')
       .invoke("attr", "placeholder")
-      .should("contain", "Email address");
+      .should("contain", "Your email");
     cy.get('input[type="email"]')
       .invoke("attr", "autofocus")
       .should("contain", "autofocus");

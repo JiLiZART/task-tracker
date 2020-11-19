@@ -1,19 +1,18 @@
 <template>
-  <div class="task-list">
-    <template v-for="(item, index) in items">
-      <task
-        class="task-list__item"
-        :key="item._id"
-        :index="index"
-        :id="item._id"
-        :task.sync="item"
-        :expandable="expandable"
-        :editable="editable"
-        :canMoveToProject="canMoveToProject"
-        :showProjectTitle="showProjectTitle"
-      ></task>
-    </template>
-  </div>
+  <v-expansion-panels popout focusable class="task-list">
+    <Task
+      v-for="(item, index) in items"
+      class="task-list__item"
+      :key="item._id"
+      :index="index"
+      :id="item._id"
+      :task.sync="item"
+      :expandable="expandable"
+      :editable="editable"
+      :canMoveToProject="canMoveToProject"
+      :showProjectTitle="showProjectTitle"
+    />
+  </v-expansion-panels>
 </template>
 
 <script>
@@ -35,12 +34,12 @@ export default {
 <style lang="scss">
 .task-list {
   &__item {
-    margin-bottom: 0.25rem;
+    /*margin-bottom: 0.25rem;*/
 
-    &.task_expanded {
-      margin-bottom: 1rem;
-      margin-top: 1rem;
-    }
+    /*&.task_expanded {*/
+    /*  margin-bottom: 1rem;*/
+    /*  margin-top: 1rem;*/
+    /*}*/
   }
 }
 </style>

@@ -1,10 +1,14 @@
 <template>
-  <b-navbar toggleable type="inverse" variant="secondary">
-    <div class="navbar__workspace-title">
-      <router-link class="navbar-brand navbar__workspace-link" to="/dashboard">
+  <v-app-bar class="appbar" :color="barColor" app>
+    <v-app-bar-nav-icon class="hidden-sm-and-down"></v-app-bar-nav-icon>
+
+    <v-toolbar-title
+      class="title mr-6 hidden-sm-and-down navbar__workspace-title"
+    >
+      <v-btn text class="navbar__workspace-link" to="/dashboard">
         {{ workspace.title }}
-      </router-link>
-    </div>
+      </v-btn>
+    </v-toolbar-title>
 
     <div class="navbar__workspaces" v-if="false">
       <b-dropdown class="navbar__workspaces-dropdown" variant="transparent">
@@ -24,45 +28,39 @@
       </b-dropdown>
     </div>
 
-    <form class="form-inline navbar__form">
-      <input
-        class="form-control mr-sm-2 navbar__input"
-        :value="searchValue"
-        @input="onSearch"
-        placeholder="Search"
-      />
-    </form>
+    <v-text-field
+      class="mr-sm-2 navbar__input"
+      :value="searchValue"
+      @input="onSearch"
+      @focus="searchFocused = true"
+      @blur="searchFocused = false"
+      placeholder="Search"
+      clearable
+      hide-details
+      hide-selected
+      solo
+    />
 
-    <b-dropdown class="navbar__user" variant="transparent" :right="true">
-      <author
-        class="navbar__user-toggle"
-        slot="button-content"
-        :item="user"
-        :haveLink="false"
-      ></author>
-
-      <router-link class="dropdown-item" to="/settings">Settings</router-link>
-      <span class="dropdown-item" @click="logout">Sign out</span>
-      <b-dropdown-divider></b-dropdown-divider>
-      <span class="dropdown-item" @click="clear">Clear sandbox</span>
-    </b-dropdown>
-  </b-navbar>
+    <NavUserDropdown :user="user" @logout="logout" @clear="clear" />
+  </v-app-bar>
 </template>
 
 <script>
-import Author from "@/components/Author";
-
-import "vue-awesome/icons/desktop";
-import Icon from "vue-awesome/components/Icon";
+import NavUserDropdown from "@/containers/NavUserDropdown";
 
 export default {
   name: "Navbar",
   props: ["workspace", "workspaces", "user"],
-  components: { Author, Icon },
+  components: { NavUserDropdown },
+
+  data() {
+    return {
+      searchFocused: false
+    };
+  },
 
   methods: {
-    onSearch(e) {
-      const query = e.target.value;
+    onSearch(query) {
       const route =
         query.length > 0
           ? { name: "search", params: { query } }
@@ -95,12 +93,24 @@ export default {
       }
 
       return "";
+    },
+
+    barColor() {
+      if (!this.searchFocused) {
+        return "orange accent-1";
+      }
+
+      return "white";
     }
   }
 };
 </script>
 
 <style lang="scss">
+.appbar {
+  transition: background-color 3s ease;
+}
+
 .navbar {
   margin-bottom: 30px;
 
@@ -112,23 +122,13 @@ export default {
     width: 100%;
   }
 
-  &-inverse &__workspace-link {
-    color: white;
-  }
-
   &__workspace {
     padding: 0 0.5rem;
   }
 
   &__workspace-title {
-    max-width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    @media (min-width: 992px) {
-      max-width: 200px;
-    }
+    display: inline-flex;
+    flex: 0 0 auto;
   }
 
   &__workspaces-dropdown {

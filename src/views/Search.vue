@@ -31,7 +31,7 @@ function createFuse(items, keys) {
 }
 
 export default {
-  name: "search-view",
+  name: "SearchView",
 
   components: { TaskList, GroupList, ProjectGroup },
 
@@ -58,20 +58,7 @@ export default {
             .concat(this.tasks)
             .concat(this.docs)
             .concat(this.teammates),
-          [
-            {
-              name: "title",
-              weight: 0.3
-            },
-            {
-              name: "username",
-              weight: 0.3
-            },
-            {
-              name: "text",
-              weight: 0.7
-            }
-          ]
+          ["title", "username", "text"]
         );
       }
 

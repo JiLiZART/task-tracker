@@ -9,9 +9,11 @@
       @clear="clear"
       @changeWorkspace="changeWorkspace"
     />
-    <transition name="slide-x-transition" mode="out-in">
-      <router-view class="view"></router-view>
-    </transition>
+    <v-main>
+      <transition name="slide-x-transition" mode="out-in">
+        <router-view class="view"></router-view>
+      </transition>
+    </v-main>
   </v-app>
 </template>
 
@@ -22,7 +24,7 @@ import { clearStorage } from "@/store/index";
 import Navbar from "@/components/Navbar";
 
 export default {
-  name: "app",
+  name: "App",
   components: { Navbar },
 
   created() {
@@ -83,11 +85,13 @@ body {
 }
 
 #app {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  min-width: 100%;
-  min-height: 100%;
+  /*position: absolute;*/
+  /*width: 100%;*/
+  /*height: 100%;*/
+  /*min-width: 100%;*/
+  /*min-height: 100%;*/
+  color: #2c3e50;
+  background: #f7f2f0;
 }
 
 .slide-x-transition-enter-active,
