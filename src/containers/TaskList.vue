@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panels popout focusable class="task-list">
+  <div class="task-list">
     <Task
       v-for="(item, index) in items"
       class="task-list__item"
@@ -12,7 +12,7 @@
       :canMoveToProject="canMoveToProject"
       :showProjectTitle="showProjectTitle"
     />
-  </v-expansion-panels>
+  </div>
 </template>
 
 <script>

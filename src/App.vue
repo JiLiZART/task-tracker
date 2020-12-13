@@ -71,8 +71,13 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~bootstrap/scss/bootstrap.scss";
-@import "~bootstrap-vue/dist/bootstrap-vue.css";
+/*! @import */
+/*@tailwind base;*/
+/*@tailwind components;*/
+/*@tailwind utilities;*/
+
+/*@import "~bootstrap/scss/bootstrap.scss";*/
+/*@import "~bootstrap-vue/dist/bootstrap-vue.css";*/
 
 body {
   margin: 0;

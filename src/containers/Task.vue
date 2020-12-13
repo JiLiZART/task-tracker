@@ -1,73 +1,61 @@
 <template>
-  <v-expansion-panel
+  <ExpansionPanel
     class="task"
     :class="classObject"
     v-hotkey="keymap"
     :transfer-data="{ task, project }"
     tabindex="0"
+    :active="true"
+    @click:title="toggleExpanded"
   >
-    <v-expansion-panel-header>
-      <template v-slot:default="{ open }">
-        <entity-row v-if="!open" @click:title="toggleExpanded">
-          <template slot="icon">
-            <template v-for="item in task.performers">
-              <author
-                :item="item"
-                :small="true"
-                :haveName="false"
-                :key="item._id"
-              ></author>
-            </template>
-          </template>
-          <template slot="title">
-            {{ task.title }}
-          </template>
-          <template slot="actions">
-            <div
-              class="task-teaser__project"
-              v-if="project && showProjectTitle"
-            >
-              {{ project.title }}
-            </div>
-            <div class="task-teaser__deadline" v-if="task.deadline">
-              {{ task.deadline | daysLeft }}
-            </div>
+    <template v-slot:title>
+      <author
+        v-for="item in task.performers"
+        :item="item"
+        :small="true"
+        :haveName="false"
+        :key="item._id"
+      ></author>
+      {{ title }}
+    </template>
+    <template v-slot:actions>
+      <div class="task-teaser__project" v-if="project && showProjectTitle">
+        {{ project.title }}
+      </div>
+      <div class="task-teaser__deadline" v-if="task.deadline">
+        {{ task.deadline | daysLeft }}
+      </div>
 
-            <div class="task-teaser__comments" v-if="commentsCount">
-              <icon name="comment" class="task-teaser__comments-icon"></icon>
-              <span class="task-teaser__comments-label">{{
-                commentsCount
-              }}</span>
-            </div>
+      <div class="task-teaser__comments" v-if="commentsCount">
+        <icon name="comment" class="task-teaser__comments-icon"></icon>
+        <span class="task-teaser__comments-label">{{ commentsCount }}</span>
+      </div>
 
-            <div class="task-teaser__move" v-if="!project">
-              <form
-                @submit.prevent="onCreateProjectSubmit"
-                v-if="inCreateProjectMode"
-              >
-                <autocomplete
-                  placeholder="Enter label name..."
-                  :querySearch="queryProjects"
-                  @select="onCreateProjectSelect"
-                  @change="onCreateProjectChange"
-                  @submit="onCreateProjectSubmit"
-                  @blur="inCreateProjectMode = false"
-                ></autocomplete>
-              </form>
-              <button
-                type="button"
-                class="btn btn-sm btn-link"
-                @click="inCreateProjectMode = true"
-                v-else
-              >
-                {{ createProjectTitle }}
-              </button>
-            </div>
-          </template>
-        </entity-row>
-      </template>
-    </v-expansion-panel-header>
-    <v-expansion-panel-content>
+      <div class="task-teaser__move" v-if="!project">
+        <form
+          @submit.prevent="onCreateProjectSubmit"
+          v-if="inCreateProjectMode"
+        >
+          <autocomplete
+            placeholder="Enter label name..."
+            :querySearch="queryProjects"
+            @select="onCreateProjectSelect"
+            @change="onCreateProjectChange"
+            @submit="onCreateProjectSubmit"
+            @blur="inCreateProjectMode = false"
+          ></autocomplete>
+        </form>
+        <button
+          type="button"
+          class="btn btn-sm btn-link"
+          @click="inCreateProjectMode = true"
+          v-else
+        >
+          {{ createProjectTitle }}
+        </button>
+      </div>
+    </template>
+    <template v-slot:default>
       <div class="task__body">
         <div class="card-body">
           <div class="task__header">
@@ -82,118 +70,78 @@
               {{ project.title }}
             </div>
 
-            <button
+            <v-btn
               class="btn task__btn-done"
               :class="{ 'btn-secondary': !task.done, 'btn-success': task.done }"
               v-if="!inEdit"
               @click="toggleDone"
             >
               {{ task.done ? "Mark Undone" : "Mark as Done" }}
-            </button>
+            </v-btn>
           </div>
 
-          <editor
+          <Editor
             class="task__content"
             v-show="!inEdit"
             @click.native="inEdit = true"
             :bordered="false"
             :readonly="true"
-            :text="text"
+            :value="text"
             :placeholder="textPlaceholder"
-          >
-          </editor>
+          />
 
           <!-- Edit Form -->
-          <form class="task__form" @submit.prevent="onSubmit" v-if="inEdit">
-            <!-- Edit title -->
-            <div class="form-group">
-              <label for="task-title" class="sr-only">Title</label>
-              <input
-                class="form-control task__input-title"
-                v-model="title"
-                id="task-title"
-                ref="inputTitle"
-                placeholder="Enter Title..."
-                @keyup.enter="onEnterHotkey"
-                required
+          <TaskEditForm
+            v-if="inEdit"
+            @submit="onSubmit"
+            @cancel="onCancelClick"
+            v-model="text"
+            :textPlaceholder="textPlaceholder"
+            :canCancel="canCancel"
+            :canSave="!title"
+          >
+            <template v-slot:actionsLeft>
+              <MatePicker
+                label="Add Performer"
+                class="task__action"
+                :members="teammates"
+                :selectedMembers="task.performers"
+                @change="onPerformerChange"
               />
-            </div>
 
-            <!-- Edit text -->
-            <div class="form-group">
-              <editor
-                class="task__text-editor"
-                :bordered="true"
-                :text="text"
-                :placeholder="textPlaceholder"
-                @change="onEditorChange"
-              >
-              </editor>
-            </div>
-
-            <!-- Actions -->
-            <div class="task__actions">
-              <div class="task__actions-left">
-                <button class="btn btn-primary task__action" :disabled="!title">
-                  Save
-                  <hotkey name="command+enter"></hotkey>
-                </button>
-                <button
-                  class="btn btn-secondary task__action"
-                  @click="onCancelClick"
-                  v-if="canCancel"
-                >
-                  Cancel
-                  <hotkey name="esc"></hotkey>
-                </button>
-
-                <mate-picker
-                  label="Add Performer"
-                  class="task__action"
-                  :members="teammates"
-                  :selectedMembers="task.performers"
-                  @change="onPerformerChange"
-                ></mate-picker>
-
-                <mate-picker
-                  label="Add Followers"
-                  class="task__action"
-                  :multiple="true"
-                  :members="teammates"
-                  :selectedMembers="task.followers"
-                  @change="onFollowersChange"
-                ></mate-picker>
-              </div>
-
-              <div class="task__actions-right">
-                <div class="task__action task__action_align_right"></div>
-
-                <div class="task__action task__action_last">
-                  <form @submit.prevent="onSubmit">
-                    <date-picker
-                      :value="deadline"
-                      class="task__action-deadline"
-                      placeholder="Deadline"
-                      @change="onDeadlineChange"
-                    ></date-picker>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </form>
+              <MatePicker
+                label="Add Followers"
+                class="task__action"
+                :multiple="true"
+                :members="teammates"
+                :selectedMembers="task.followers"
+                @change="onFollowersChange"
+              />
+            </template>
+            <template v-slot:actionRight>
+              <form @submit.prevent="onSubmit">
+                <date-picker
+                  :value="deadline"
+                  class="task__action-deadline"
+                  placeholder="Deadline"
+                  @change="onDeadlineChange"
+                ></date-picker>
+              </form>
+            </template>
+          </TaskEditForm>
         </div>
 
         <!-- Comments -->
-        <comments
+        <Comments
           class="task__comments"
           type="tasks"
           :items.sync="comments"
           :entity="task"
           v-if="!inEdit"
-        ></comments>
+        />
       </div>
-    </v-expansion-panel-content>
-  </v-expansion-panel>
+    </template>
+  </ExpansionPanel>
 </template>
 
 <script>
@@ -205,16 +153,18 @@ import isMac from "@/utils/isMac";
 import daysLeft from "@/utils/daysLeft";
 import Comments from "@/containers/Comments";
 // import Expander from "@/components/Expander";
-import EntityRow from "@/components/EntityRow";
+// import EntityRow from "@/components/EntityRow";
+import ExpansionPanel from "@/components/ExpansionPanel";
 import DatePicker from "@/components/DatePicker";
 import Autocomplete from "@/components/Autocomplete";
 import Author from "@/components/Author";
 import Editor from "@/components/Editor";
 import MatePicker from "@/components/MatePicker";
-import Hotkey from "@/components/Hotkey";
+import TaskEditForm from "@/components/TaskEditForm";
 
 import "vue-awesome/icons/comment";
 import Icon from "vue-awesome/components/Icon";
+import { getTaskTitle } from "@/utils/taskTitle";
 
 export default {
   name: "Task",
@@ -227,27 +177,26 @@ export default {
     showProjectTitle: { type: Boolean, default: false }
   },
   components: {
-    EntityRow,
+    ExpansionPanel,
+    TaskEditForm,
     Comments,
     DatePicker,
     Autocomplete,
     Author,
     Editor,
     MatePicker,
-    Hotkey,
     Icon
   },
 
   data() {
     const task = this.task;
-    const isTitleEmpty = !task.title;
+    const isTitleEmpty = !getTaskTitle(task.text);
 
     return {
       deadline: task.deadline,
       performers: task.performers,
       followers: task.followers,
       done: task.done,
-      title: task.title,
       text: task.text,
 
       newProjectName: null,
@@ -262,7 +211,9 @@ export default {
   mounted() {
     if (this.inEdit) {
       this.$nextTick(() => {
-        this.$refs.inputTitle.focus();
+        if (this.$refs.inputTitle) {
+          this.$refs.inputTitle.focus();
+        }
       });
     }
   },
@@ -372,7 +323,7 @@ export default {
       return this.$el === getCurrentActiveElement();
     },
 
-    onCreateProjectSubmit(e) {
+    onCreateProjectSubmit() {
       const title = this.newProjectName;
       const task = this.task;
       let project;
@@ -511,6 +462,10 @@ export default {
 
     createProjectTitle() {
       return this.project ? "Move label" : "Add label";
+    },
+
+    title() {
+      return getTaskTitle(this.text);
     },
 
     titlePlaceholder() {

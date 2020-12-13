@@ -1,7 +1,7 @@
 <template>
-  <v-expansion-panels focusable popout class="group-list">
+  <div class="group-list">
     <slot></slot>
-  </v-expansion-panels>
+  </div>
 </template>
 
 <script>

@@ -5,102 +5,86 @@
         class="editor"
         :class="editorClasses"
         ref="textEditor"
-        v-html="text"
+        v-html="value"
       ></div>
     </template>
     <template v-else>
-      <textarea
+      <div
+        id="editor"
         ref="textEditor"
-        class="form-control editor"
+        class="editor"
         :class="editorClasses"
-        cols="30"
-        rows="10"
-        :placeholder="placeholder"
-        :readonly="readonly"
-        v-html="text"
         @focus="onFocus"
         @blur="onBlur"
         @input="onChange"
-      >
-      </textarea>
+      ></div>
     </template>
   </span>
-  <!-- <quill-editor class="editor"
-                ref="textEditor"
-                :class="editorClasses"
-                :content="text"
-                :options="editorOption"
-                :placeholder="placeholder"
-                :disabled="disabled"
-                @focus="onFocus"
-                @blur="onBlur"
-                @change="onChange">
-  </quill-editor> -->
-
-  <!-- /# -->
 </template>
 
 <script>
 /* eslint-disable @typescript-eslint/camelcase */
 
+import { keymap } from "@codemirror/next/view";
+import {
+  EditorState,
+  EditorView,
+  basicSetup
+} from "@codemirror/next/basic-setup";
+import { html } from "@codemirror/next/lang-html";
+import { defaultKeymap } from "@codemirror/next/commands";
+
 export default {
   name: "Editor",
 
   props: {
-    placeholder: { type: String },
-    text: { type: String },
+    value: { type: String },
     light: { type: Boolean, default: true },
     bordered: { type: Boolean, default: false }, //@TODO remove ugly param
     readonly: { type: Boolean, default: false },
-    disabled: { type: Boolean, default: false }
+    disabled: { type: Boolean, default: false },
+    placeholder: { type: String }
   },
 
   data() {
-    const fullToolbarOptions = [
-      ["bold", "italic", "underline", "strike"], // toggled buttons
-      ["blockquote", "code-block"],
-
-      [{ header: [3, 4, 5, 6, false] }], // custom button values
-      [{ list: "ordered" }, { list: "bullet" }],
-      [{ script: "sub" }, { script: "super" }], // superscript/subscript
-      [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-      //[{'direction': 'rtl'}],                         // text direction
-
-      [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-      //[{'header': [1, 2, 3, 4, 5, 6, false]}],
-
-      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-      //[{'font': []}],
-      [{ align: [] }],
-
-      ["link", "image"],
-
-      ["clean"] // remove formatting button
-    ];
-
-    const lightToolbarOptions = [
-      ["bold", "italic", "underline", "strike"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"],
-      ["clean"]
-    ];
-
-    console.log("text", this.text);
-
     return {
       isFocused: false,
 
-      editorOption: {
-        theme: this.light ? "bubble" : "snow",
-        placeholder: this.placeholder,
-        modules: {
-          toolbar: this.light ? lightToolbarOptions : fullToolbarOptions
-        }
+      raw: this.value,
+
+      globalOptions: {
+        mode: "gfm",
+        theme: "base16-light",
+        lineNumbers: false,
+        lineWrapping: true,
+        styleActiveLine: { nonEmpty: true },
+        viewportMargin: Infinity,
+        keyMap: "default",
+        dragDrop: false,
+        direction: "ltr",
+        scrollPastEnd: false
       }
     };
   },
 
   mounted() {
+    if (!this.readonly) {
+      this.startState = EditorState.create({
+        doc: this.value,
+        extensions: [keymap(defaultKeymap), basicSetup, html()]
+      });
+
+      this.editorView = new EditorView({
+        state: this.startState,
+        parent: this.$refs.textEditor,
+        extensions: EditorView.theme({
+          content: { color: "orange" }
+        })
+      });
+
+      console.log(this.editorView, this.startState);
+    }
+
     if (this.disabled) {
       this.disable();
     }
@@ -140,7 +124,9 @@ export default {
     },
 
     onChange(e) {
+      console.log("onChange", e);
       this.$emit("change", e.target.value);
+      this.$emit("input", e.target.value);
     }
   },
 
@@ -162,6 +148,13 @@ export default {
 </script>
 
 <style lang="scss">
+.cm-wrap {
+  height: 300px;
+  border: 1px solid #ddd;
+}
+.cm-scroller {
+  overflow: auto;
+}
 .editor {
   font-family: inherit;
 

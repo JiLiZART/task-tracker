@@ -3,7 +3,7 @@
     <div class="entity-row__icon">
       <slot name="icon"></slot>
     </div>
-    <div class="entity-row__title" @click="onTitleClick">
+    <div class="entity-row__title" @click="$emit('click:title', $event)">
       <slot name="title"></slot>
     </div>
     <div class="entity-row__spacer"></div>
@@ -15,13 +15,7 @@
 
 <script>
 export default {
-  name: "EntityRow",
-
-  methods: {
-    onTitleClick(e) {
-      this.$emit("click:title", e);
-    }
-  }
+  name: "EntityRow"
 };
 </script>
 
