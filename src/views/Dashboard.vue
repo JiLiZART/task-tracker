@@ -3,106 +3,111 @@
     <div class="dashboard-view__actions" v-hotkey="actionsKeymap">
       <v-btn
         class="dashboard-view__action-button"
-        color="success"
+        color="primary"
         depressed
+        elevation="2"
         large
         @click="createTask"
         :disabled="!canCreateTask"
       >
         <v-icon left dark class="dashboard-view__action-icon">
-          mdi-notebook-plus
+          mdi-notebook-plus-outline
         </v-icon>
         <span class="dashboard-view__action-label">New Task</span>
       </v-btn>
-      <v-btn
-        class="dashboard-view__action-button"
-        color="primary"
-        depressed
-        large
+      <button
+        class="btn btn-primary dashboard-view__action-button"
         @click="createProject"
         :disabled="!canCreateProject"
       >
-        <v-icon left dark class="dashboard-view__action-icon"
-          >mdi-object-group</v-icon
-        >
+        <icon name="object-group" class="dashboard-view__action-icon"></icon>
         <span class="dashboard-view__action-label">New Bundle</span>
-      </v-btn>
+      </button>
     </div>
-    <GroupList class="group-list">
-      <TaskList :items="newTasks" class="dashboard-view__new-tasks" />
+    <group-list class="group-list">
+      <task-list
+        :items="newTasks"
+        class="dashboard-view__new-tasks"
+      ></task-list>
 
-      <ProjectGroup
-        class="group-list__item"
-        v-for="item in newProjects"
-        :item="item"
-        :key="item._id"
-      />
+      <template v-for="item in newProjects">
+        <project-group
+          class="group-list__item"
+          :item="item"
+          :key="item._id"
+        ></project-group>
+      </template>
 
       <!-- My Tasks -->
-      <Group class="group-list__item" :title="`My Tasks (${myTasks.length})`">
+      <group class="group-list__item" :title="`My Tasks (${myTasks.length})`">
         <template slot="content">
           <template v-if="myTasks.length">
-            <TaskList :items="myUngroupedTasks" />
+            <task-list :items="myUngroupedTasks"></task-list>
 
-            <div
-              class="project-group"
-              v-for="item in myProjects"
-              :key="item._id"
-            >
-              <div class="group-header">{{ item.title }}</div>
-              <TaskList :items="myUndoneTasksByProject(item)" />
-            </div>
+            <template v-for="item in myProjects">
+              <div class="project-group" :key="item._id">
+                <div class="group-header">{{ item.title }}</div>
+                <task-list :items="myUndoneTasksByProject(item)"></task-list>
+              </div>
+            </template>
 
             <div class="group-header" v-if="myDoneTasks.length">
               Recently done tasks
             </div>
-            <TaskList :items="myDoneTasks" :showProjectTitle="true" />
+            <task-list
+              :items="myDoneTasks"
+              :showProjectTitle="true"
+            ></task-list>
           </template>
-          <Empty v-else text="There are no tasks assigned to you." />
+          <empty text="There are no tasks assigned to you." v-else></empty>
         </template>
-      </Group>
+      </group>
 
       <!-- My Team -->
-      <Group class="group-list__item" title="My Team">
-        <template #content>
-          <div class="teammate-group" :key="item._id" v-for="item in teammates">
-            <div class="group-header">
-              <Author :small="true" :item="item" />
-              tasks
-            </div>
+      <group class="group-list__item" title="My Team">
+        <template slot="content">
+          <template v-for="item in teammates">
+            <div class="teammate-group" :key="item._id">
+              <div class="group-header">
+                <author :small="true" :item="item"></author>
+                tasks
+              </div>
 
-            <TaskList
-              v-if="undoneTasksByMate(item).length"
-              :items="undoneTasksByMate(item)"
-              :showProjectTitle="true"
-            />
-            <Empty
-              v-else
-              text="There are no tasks assigned. You can assign a task to him."
-            />
-          </div>
+              <template v-if="undoneTasksByMate(item).length">
+                <task-list
+                  :items="undoneTasksByMate(item)"
+                  :showProjectTitle="true"
+                ></task-list>
+              </template>
+              <empty
+                text="There are no tasks assigned. You can assign a task to him."
+                v-else
+              ></empty>
+            </div>
+          </template>
         </template>
 
-        <template #actions>
+        <template slot="actions">
           <router-link class="btn btn-outline-primary btn-sm" to="/team/add"
             >Invite Teammates</router-link
           >
         </template>
-      </Group>
+      </group>
 
       <!-- NotNew Projects -->
-      <ProjectGroup
-        class="group-list__item"
-        v-for="item in notNewProjects"
-        :item="item"
-        :key="item._id"
-      />
-    </GroupList>
+      <template v-for="item in notNewProjects">
+        <project-group
+          class="group-list__item"
+          :item="item"
+          :key="item._id"
+        ></project-group>
+      </template>
+    </group-list>
 
     <!-- Unlabeled tasks -->
-    <EmptyGroup>
-      <TaskList :items="ungroupedNotNewTasks" />
-    </EmptyGroup>
+    <empty-group>
+      <task-list :items="ungroupedNotNewTasks"></task-list>
+    </empty-group>
   </div>
 </template>
 
@@ -116,6 +121,10 @@ import TaskList from "@/containers/TaskList";
 import isBodyActiveElement from "@/utils/isBodyActiveElement";
 import ProjectGroup from "@/containers/ProjectGroup";
 import EmptyGroup from "@/containers/EmptyGroup";
+
+import "vue-awesome/icons/tasks";
+import "vue-awesome/icons/object-group";
+import Icon from "vue-awesome/components/Icon";
 
 const isTaskUndone = t => !t.done;
 const isTaskDone = t => t.done;
@@ -131,7 +140,8 @@ export default {
     GroupList,
     Author,
     ProjectGroup,
-    EmptyGroup
+    EmptyGroup,
+    Icon
   },
 
   methods: {
