@@ -1,5 +1,5 @@
 <template>
-  <v-app id="app">
+  <div id="app">
     <Navbar
       v-if="isLoggedIn && haveWorkspaces"
       :workspace="workspace"
@@ -12,7 +12,7 @@
     <transition name="slide-x-transition" mode="out-in">
       <router-view class="view"></router-view>
     </transition>
-  </v-app>
+  </div>
 </template>
 
 <script>
