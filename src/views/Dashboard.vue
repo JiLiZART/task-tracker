@@ -1,20 +1,14 @@
 <template>
   <div class="container dashboard-view">
     <div class="dashboard-view__actions" v-hotkey="actionsKeymap">
-      <v-btn
-        class="dashboard-view__action-button"
-        color="primary"
-        depressed
-        elevation="2"
-        large
+      <button
+        class="btn btn-success dashboard-view__action-button"
         @click="createTask"
         :disabled="!canCreateTask"
       >
-        <v-icon left dark class="dashboard-view__action-icon">
-          mdi-notebook-plus-outline
-        </v-icon>
+        <icon name="tasks" class="dashboard-view__action-icon"></icon>
         <span class="dashboard-view__action-label">New Task</span>
-      </v-btn>
+      </button>
       <button
         class="btn btn-primary dashboard-view__action-button"
         @click="createProject"
