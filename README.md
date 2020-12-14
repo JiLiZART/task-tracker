@@ -1,4 +1,4 @@
-# runby
+# Runby
 
 > Runby a task tracker
 
