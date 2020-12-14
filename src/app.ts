@@ -35,7 +35,6 @@ function registerPlugins(Vue: any) {
 
     Vue.use(Vuec, {
         register: {
-            // auth: require('./services/AuthService').auth
         }
     });
 }
